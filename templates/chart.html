@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <br>
+  <div class="chart-container" style="width:95%;background-color:#F7F7F7">
+    <canvas id="chart" height="400"></canvas>
+  </div>
+  <div class="border-top" style="background-color:#FFF;width:100%;bottom:0;position:fixed">
+    <h4>{{ title }}</h4>
+  </div>
+  <script>
+    // bar chart data
+    var titleData = "{{ title }}"
+    var barData = {
+      labels : [
+        {% for item in labels %}
+          "{{ item }}",
+        {% endfor %}
+      ],
+      datasets : [{
+        fillColor: "{{ colorFill }}",
+        strokeColor: "{{ colorLine }}",
+        pointColor: "rgba(0,0,0,0)",
+        pointStrokeColor: "rgba(0,0,0,0)",
+        pointHighlightFill: "#fff",
+        pointHighlightStroke: "{{ colorLine }}",
+        bezierCurve : false,
+        data : [
+          {% for item in values %}
+            {{ item }},
+          {% endfor %}]
+        }
+      ],
+      options:{
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            }
+          }]
+      }
+    }
+
+    Chart.defaults.global.animationSteps = 50;
+    Chart.defaults.global.tooltipYPadding = 16;
+    Chart.defaults.global.tooltipCornerRadius = 10;
+    Chart.defaults.global.tooltipTitleFontStyle = "normal";
+    Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,0.8)";
+    Chart.defaults.global.animationEasing = "easeOutBounce";
+    Chart.defaults.global.responsive = true;
+    Chart.defaults.global.scaleLineColor = "black";
+    Chart.defaults.global.scaleFontSize = 12;
+    Chart.defaults.global.maintainAspectRatio = false;
+
+    // get bar chart canvas
+    var mychart = document.getElementById("chart").getContext("2d");
+    steps = 10
+    max = {{ max }}
+    // draw bar chart
+    var LineChartDemo = new Chart(mychart).Line(barData, {
+
+      scaleOverride: true,
+      scaleSteps: steps,
+      scaleStepWidth: Math.ceil(max / steps),
+      scaleStartValue: 0,
+      scaleShowVerticalLines: true,
+      scaleShowGridLines : true,
+      barShowStroke : true,
+      scaleShowLabels: true,
+      bezierCurve: true,
+
+    });
+  </script>
+{% endblock %}
