@@ -2,7 +2,7 @@ import datetime
 
 
 def format_date(date):
-    cur = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%f+00:00")
+    cur = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%f")
     if cur.hour == 0 or cur.hour == 1:
         return datetime.datetime.strftime(cur, format="%d %b %H:%M")
     else:
