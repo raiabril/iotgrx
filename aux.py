@@ -17,9 +17,9 @@ def get_color(value):
     redFill = "rgba(234,121,106,0.2)"
     redLine = "rgba(210,50,28,1)"
 
-    if value > 3000:
+    if value > 3500:
         return redFill, redLine
-    elif value > 2000:
+    elif value > 2500:
         return yellowFill, yellowLine
     else:
         return greenFill, greenLine
