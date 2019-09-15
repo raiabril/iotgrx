@@ -11,3 +11,5 @@ static/images/.DS_Store
 templates/.DS_Store
 
 credentials.py
+
+.DS_Store

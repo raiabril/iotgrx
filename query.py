@@ -45,3 +45,15 @@ def get_sensors_query():
 
     session.close()
     return result
+
+
+def get_sensor_query(sensor_id):
+    session = Session()
+    result_objects = session.query(Sensor).filter(Sensor.id == sensor_id).all()
+
+    # transforming into JSON-serializable objects
+    schema = SensorSchema(many=True)
+    result = schema.dump(result_objects)
+
+    session.close()
+    return result
