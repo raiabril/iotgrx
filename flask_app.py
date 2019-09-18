@@ -48,11 +48,11 @@ def testChart():
 
 @app.route('/sensor/<int:sensor_id>')
 def sensor(sensor_id):
-    event_list = get_events_query(sensor_id, '2019-01-01', '2020-01-01', 36)
+    event_list = get_events_query(sensor_id, '2019-01-01', '2020-01-01', 72)
     sensor_list = get_sensors_query()
     sensor_object = next((item for item in sensor_list if item['id'] == sensor_id), None)
-    labels = [format_date(event['created_at']) for event in event_list][::2]
-    values = [event['value'] for event in event_list][::2]
+    labels = [format_date(event['created_at']) for event in event_list][::4]
+    values = [event['value'] for event in event_list][::4]
     colorFill, colorLine = get_color(int(values[::-1][-1]))
 
     return render_template('chart.html',
