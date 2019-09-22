@@ -15,7 +15,7 @@
         data: {
             labels: [
         {% for item in labels %}
-          moment("{{ item }}").tz('Europe/Madrid'),
+          moment.utc("{{ item }}").tz('Europe/Madrid'),
         {% endfor %}
       ],
             datasets: [{
@@ -38,7 +38,7 @@
             },
             elements: {
                 point:{
-                    radius: 0
+                    radius: 2
                  }
             },
             scales: {
