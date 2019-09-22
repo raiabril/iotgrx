@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from datetime import datetime
+import datetime
 from sqlalchemy import create_engine, Column, String, Integer, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -23,6 +23,6 @@ class Entity:
     last_updated_by = Column(String)
 
     def __init__(self, created_by):
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        self.created_at = datetime.datetime.now(datetime.timezone.utc)
+        self.updated_at = datetime.datetime.now(datetime.timezone.utc)
         self.last_updated_by = created_by
