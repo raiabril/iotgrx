@@ -42,7 +42,7 @@ def index():
 
 @app.route('/sensor/<int:sensor_id>')
 def sensor(sensor_id):
-    event_list = get_events_query(sensor_id, '2019-01-01', '2020-01-01', 144)
+    event_list = get_events_query(sensor_id, '2019-01-01', '2020-01-01', 288)
     sensor_list = get_sensors_query()
     sensor_object = next((item for item in sensor_list if item['id'] == sensor_id), None)
     labels = [event['created_at'] for event in event_list]
