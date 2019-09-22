@@ -3,7 +3,7 @@
 {% block content %}
   <br>
   <div class="chart-container" style="width:95%;background-color:#F7F7F7">
-    <canvas id="myChart" height="450""></canvas>
+    <canvas id="myChart" height="420""></canvas>
   </div>
   <div class="border-top" style="background-color:#FFF;width:100%;bottom:0;position:fixed">
     <h4>{{ title }}</h4>
@@ -33,10 +33,13 @@
         options: {
             responsive:true,
             maintainAspectRatio:false,
+            legend: {
+                display: false
+            },
             elements: {
-                    point:{
-                        radius: 0
-                     }
+                point:{
+                    radius: 0
+                 }
             },
             scales: {
                 yAxes: [{
