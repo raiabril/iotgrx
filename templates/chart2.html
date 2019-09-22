@@ -15,7 +15,7 @@
         data: {
             labels: [
         {% for item in labels %}
-          moment("{{ item }}"),
+          moment("{{ item }}").tz('Europe/Madrid'),
         {% endfor %}
       ],
             datasets: [{
