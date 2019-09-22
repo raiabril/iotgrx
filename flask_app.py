@@ -40,22 +40,16 @@ def index():
     return render_template('index.html', sensors=sensor_list, title="iotHome")
 
 
-@app.route('/testChart')
-def testChart():
-    sensor_list = get_sensors_query()
-    return render_template('chart2.html', sensors=sensor_list, title="iotHome")
-
-
 @app.route('/sensor/<int:sensor_id>')
 def sensor(sensor_id):
     event_list = get_events_query(sensor_id, '2019-01-01', '2020-01-01', 72)
     sensor_list = get_sensors_query()
     sensor_object = next((item for item in sensor_list if item['id'] == sensor_id), None)
-    labels = [format_date(event['created_at']) for event in event_list][::4]
-    values = [event['value'] for event in event_list][::4]
+    labels = [event['created_at'] for event in event_list]
+    values = [event['value'] for event in event_list]
     colorFill, colorLine = get_color(int(values[::-1][-1]))
 
-    return render_template('chart.html',
+    return render_template('chart2.html',
                            values=values[::-1],
                            labels=labels[::-1],
                            max=4096,
