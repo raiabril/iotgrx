@@ -3,7 +3,7 @@
 {% block content %}
   <br>
   <div class="chart-container" style="width:95%;background-color:#F7F7F7">
-    <canvas id="myChart" style="max-height:500px"></canvas>
+    <canvas id="myChart" height="450""></canvas>
   </div>
   <div class="border-top" style="background-color:#FFF;width:100%;bottom:0;position:fixed">
     <h4>{{ title }}</h4>
@@ -26,11 +26,18 @@
           {% endfor %}],
                 backgroundColor: "{{ colorFill }}",
                 borderColor: "{{ colorLine }}",
-                borderWidth: 2
+                borderWidth: 2,
+
             }]
         },
         options: {
             responsive:true,
+            maintainAspectRatio:false,
+            elements: {
+                    point:{
+                        radius: 0
+                     }
+            },
             scales: {
                 yAxes: [{
                     ticks: {
