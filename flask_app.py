@@ -53,6 +53,7 @@ def sensor(sensor_id):
     return render_template('chart2.html',
                            values=values[::-1],
                            labels=labels[::-1],
+                           updated=labels[::-1][-1],
                            max=4096,
                            sensors=sensor_list,
                            title=' AIO' +
