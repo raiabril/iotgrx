@@ -6,12 +6,17 @@
     <canvas id="myChart" height="420""></canvas>
   </div>
   <div style="text-align:right;padding-right:40px;padding-top:0px;font-size:x-small">
-    <i>Last Updated: <label id="updated_last">test</label></i>
+    <i>
+      Last:
+      <label id="last_update_value">test</label>
+      <label id="last_update_time">test</label>
+    </i>
   </div>
 
     <script>
     var ctx = document.getElementById('myChart').getContext('2d');
-    document.getElementById('updated_last').innerHTML = moment.utc("{{ updated }}")._d.toLocaleString()
+    document.getElementById('last_update_time').innerHTML = moment.utc("{{ updated_time }}")._d.toLocaleString();
+    document.getElementById('last_update_value').innerHTML = "{{ updated_value }}";
 
     var myChart = new Chart(ctx, {
         type: 'line',
