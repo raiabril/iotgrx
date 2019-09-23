@@ -10,7 +10,7 @@ from logging.handlers import RotatingFileHandler
 import json
 from flask import Flask, jsonify, request, render_template
 
-from aux import format_date, get_color
+from aux import format_date, get_color, filter_values
 from credentials import local_url, device_host, device_port
 from entities.device import Device, DeviceSchema
 from entities.entity import Session, engine, Base
@@ -47,6 +47,7 @@ def sensor(sensor_id):
     sensor_object = next((item for item in sensor_list if item['id'] == sensor_id), None)
     labels = [event['created_at'] for event in event_list]
     values = [event['value'] for event in event_list]
+    values = filter_values(values)
     colorFill, colorLine = get_color(int(values[::-1][-1]))
 
     return render_template('chart2.html',
