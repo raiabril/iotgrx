@@ -16,7 +16,6 @@ def get_events():
 @bp.route('/events', methods=['POST'])
 @token_auth.login_required
 def post_events():
-    device = request.get_json()["device"]
     data = request.get_json()["data"]
 
     for event in data:

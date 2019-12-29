@@ -96,6 +96,14 @@ class Device(db.Model):
     def __repr__(self):
         return f"Device('{self.id}','{self.name}')"
 
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'date_created':self.date_created.strftime("%Y-%m-%d %H:%M:%S"),
+            'name': self.name
+            }
+        return data
+
 
 class Sensor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -105,7 +113,16 @@ class Sensor(db.Model):
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
     
     def __repr__(self):
-        return f"Device('{self.id}','{self.name}')"
+        return f"Sensor('{self.id}','{self.name}')"
+
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'date_created':self.date_created.strftime("%Y-%m-%d %H:%M:%S"),
+            'name': self.name,
+            'device_id': self.device_id
+            }
+        return data
 
 
 class Event(db.Model):
