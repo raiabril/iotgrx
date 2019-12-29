@@ -1,5 +1,4 @@
 flask
-pandas
 requests
 marshmallow
 flask_wtf
@@ -8,6 +7,6 @@ flask_login
 flask_sqlalchemy
 flask_bcrypt
 flask_mail
+flask_httpauth
 datetime
 Pillow
-flask_httpauth
