@@ -1,0 +1,4 @@
+Welcome to iotHome!
+Your new account has been created.
+
+If you do not make this request then simply ignore this email.

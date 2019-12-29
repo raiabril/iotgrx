@@ -1,15 +1,8 @@
 *.pyc
 __pycache__
-
-
 entities/.DS_Store
-
 static/.DS_Store
-
 static/images/.DS_Store
-
 templates/.DS_Store
-
 credentials.py
-
 .DS_Store

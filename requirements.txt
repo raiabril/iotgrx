@@ -1,0 +1,13 @@
+flask
+pandas
+requests
+marshmallow
+flask_wtf
+wtforms
+flask_login
+flask_sqlalchemy
+flask_bcrypt
+flask_mail
+datetime
+Pillow
+flask_httpauth
