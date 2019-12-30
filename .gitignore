@@ -8,3 +8,4 @@ templates/.DS_Store
 credentials.py
 .DS_Store
 *.db
+*.db
