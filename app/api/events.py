@@ -23,7 +23,7 @@ def post_events():
         event_created = Event(
                             value=event['value'],
                             sensor_id = event['sensor_id'],
-                            user_id = g.current_user.id)
+                            user_id = 1)
         db.session.add(event_created)
         db.session.commit()
 
