@@ -14,7 +14,7 @@ def get_events():
     return jsonify(data)
 
 @bp.route('/events', methods=['POST'])
-@token_auth.login_required
+#@token_auth.login_required
 def post_events():
     data = request.get_json()["data"]
 

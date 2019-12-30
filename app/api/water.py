@@ -6,6 +6,6 @@ from app.api.auth import token_auth
 from app.api.errors import bad_request
 
 @bp.route('/water', methods=['GET'])
-@token_auth.login_required
+#@token_auth.login_required
 def get_water():
     return 'OK',200
