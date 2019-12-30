@@ -6,6 +6,7 @@ from app.models import Event
 from app.api import bp
 from app.api.auth import token_auth
 from app.api.errors import bad_request
+import json
 
 @bp.route('/events', methods=['GET'])
 @token_auth.login_required
@@ -16,10 +17,9 @@ def get_events():
 @bp.route('/events', methods=['POST'])
 #@token_auth.login_required
 def post_events():
-    print(request.get_json())
-    data = request.get_json()["data"]
+    request_json = json.loads(request.data)
 
-    for event in data:
+    for event in request_json["data"]:
         event_created = Event(
                             value=event['value'],
                             sensor_id = event['sensor_id'],
