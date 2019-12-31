@@ -66,7 +66,7 @@
     </nav>
 
     </header>
-    <main role="main" class="container">
+    <main role="main" class="container-fluid">
       <div class="row">
         <div class="col-md-8">
             {%with messages = get_flashed_messages(with_categories=true)%}
@@ -85,7 +85,7 @@
       </div>
     </main>
     {%if current_user.is_authenticated%}
-    <footer class="page-footer font-small border-top fixed-bottom">
+    <footer class="page-footer font-small navbar-light bg-white border-top fixed-bottom">
       <div class="container-fluid text-center">
         <h5>{{ title }}</h5>
       </div>

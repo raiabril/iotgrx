@@ -1,22 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <br>
-  <div class="chart-container">
-    <canvas id="myChart" height="400px" width="100%"></canvas>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="content-section">
+        <h1>{{title}}</h1>
+        <hr>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="chart-container content-section">
+        <canvas id="myChart" height="400px" width="100%"></canvas>
+      </div>
+      <p class="text-right">{{updated_value}} at <span id="last_update_time">{{updated_time}}</span></p>
+    </div>
   </div>
-  <div style="text-align:right;padding-right:40px;padding-top:0px;font-size:x-small">
-    <i>
-      Last:
-      <label id="last_update_value">{{updated_value}}</label>
-      <label id="last_update_time">{{updated_time}}</label>
-    </i>
-  </div>
+
+
+
 
     <script>
     var ctx = document.getElementById('myChart').getContext('2d');
     document.getElementById('last_update_time').innerHTML = moment.utc("{{ updated_time }}")._d.toLocaleString();
-    document.getElementById('last_update_value').innerHTML = "{{ updated_value }}";
 
     var myChart = new Chart(ctx, {
         type: 'line',
