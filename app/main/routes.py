@@ -2,18 +2,15 @@ from flask import render_template, request, Blueprint
 from flask_login import current_user, login_required
 from sqlalchemy import func
 from app.models import Sensor, Event, Device, User
-from app.users.forms import UpdateAccountForm
 
 main = Blueprint('main', __name__)
 
 @main.route("/")
 def home():
-    form = UpdateAccountForm()
     sensors = Sensor.query.all()
     return render_template('index.html', 
                             title='iotHome', 
-                            sensors=sensors,
-                            form=form)
+                            sensors=sensors)
 
 
 @main.route('/sensor/<int:sensor_id>')
