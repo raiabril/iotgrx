@@ -13,15 +13,6 @@ def get_user(id):
 
 
 
-@bp.route('/users/<int:id>', methods=['GET'])
-@token_auth.login_required
-def get_followers(id):
-    user = User.query.get_or_404(id)
-    data = user.to_dict(include_email=True)
-    return jsonify(data)
-
-
-
 @bp.route('/users', methods=['POST'])
 def create_user():
     data = request.get_json() or {}

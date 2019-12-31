@@ -2,8 +2,8 @@
 
 {% block content %}
   <br>
-  <div class="chart-container" style="width:95%;background-color:#F7F7F7">
-    <canvas id="myChart" height="400""></canvas>
+  <div class="chart-container">
+    <canvas id="myChart" height="400px" width="100%"></canvas>
   </div>
   <div style="text-align:right;padding-right:40px;padding-top:0px;font-size:x-small">
     <i>
@@ -32,8 +32,8 @@
           {% for item in values %}
             {{ item }},
           {% endfor %}],
-                backgroundColor: #F7F7F7,
-                borderColor: "#0000",
+                backgroundColor: "rgba(73,193,71,1)",
+                borderColor: "rgba(151,220,150,0.2)",
                 borderWidth: 2,
 
             }]
