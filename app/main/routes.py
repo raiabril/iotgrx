@@ -35,8 +35,8 @@ def sensor(sensor_id):
         labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
         values.append(event.value)
     
-    updated_time = labels[-1]
-    updated_value = values[-1]
+    updated_time = labels[0]
+    updated_value = values[0]
 
     return render_template('chart.html', 
                             sensors=sensors,

@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 from app import db, bcrypt
-from app.models import User, Device
+from app.models import User, Device, Sensor
 from app.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm)
 from app.users.utils import save_picture, send_reset_email, send_welcome_email
 import logging
@@ -55,6 +55,7 @@ def logout():
 @users.route("/account", methods=['GET','POST'])
 @login_required
 def account():
+    sensors = Sensor.query.all()
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
@@ -70,7 +71,8 @@ def account():
         form.email.data = current_user.email
     image_file = url_for('static', filename='profile_pics/'+current_user.image_file)
     return render_template('account.html', title='Account', 
-                           image_file=image_file, form=form)
+                           image_file=image_file, form=form,
+                           sensors=sensors)
 
 
 @users.route("/user/<string:username>")
