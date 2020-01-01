@@ -16,11 +16,11 @@ def home():
 @main.route('/sensor/<int:sensor_id>')
 def sensor(sensor_id):
 
-    greenFill = "rgba(151,220,150,0.2)"
+    greenFill = "rgba(151,220,150,0.3)"
     greenLine = "rgba(73,193,71,1)"
-    yellowFill = "rgba(245,240,50,0.2)"
+    yellowFill = "rgba(245,240,50,0.3)"
     yellowLine = "rgba(240,245,50,1)"
-    redFill = "rgba(234,121,106,0.2)"
+    redFill = "rgba(234,121,106,0.3)"
     redLine = "rgba(210,50,28,1)"
 
     sensors = Sensor.query.all()
@@ -41,7 +41,7 @@ def sensor(sensor_id):
     if updated_value < 2800:
         colorFill=greenFill
         colorLine=greenLine
-    elif updated_value > 3500:
+    elif updated_value < 3500:
         colorFill=yellowFill
         colorLine=yellowLine
     else:
