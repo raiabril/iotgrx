@@ -38,10 +38,22 @@ def sensor(sensor_id):
     updated_time = labels[0]
     updated_value = values[0]
 
+    if updated_value < 2800:
+        colorFill=greenFill
+        colorLine=greenLine
+    elif updated_value > 3500:
+        colorFill=yellowFill
+        colorLine=yellowLine
+    else:
+        colorFill=redFill
+        colorLine=redLine
+
     return render_template('chart.html', 
                             sensors=sensors,
                             title=sensor.name,
                             labels=labels,
                             values=values,
                             updated_time=updated_time,
-                            updated_value=updated_value)
+                            updated_value=updated_value,
+                            colorFill=colorFill,
+                            colorLine=colorLine)
