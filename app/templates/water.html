@@ -43,13 +43,13 @@
         {% else %}
         <table style="width:100%">
           <tr>
-              <th>DeviceID</th>
+              <th>Device</th>
               <th>Date</th>
-              <th>Duration</th>
+              <th>Duration [ms]</th>
           </tr>
           {% for request in requests %}
           <tr>
-            <td>{{request.device_id}}</td>
+            <td>{{request.device.name}}</td>
             <td>{{request.date_created.strftime('%d-%m-%Y  %H:%M:%S')}}</td>
             <td>{{request.duration}}</td>
           </tr>
@@ -64,13 +64,13 @@
 
         <table style="width:100%">
           <tr>
-              <th>DeviceID</th>
+              <th>Device</th>
               <th>Date</th>
-              <th>Duration</th>
+              <th>Duration [ms]</th>
           </tr>
           {% for log in logs %}
           <tr>
-              <td>{{log.device_id}}</td>
+              <td>{{log.device.name}}</td>
               <td>{{log.date_created.strftime('%d-%m-%Y  %H:%M:%S')}}</td>
               <td>{{log.duration}}</td>
           </tr>

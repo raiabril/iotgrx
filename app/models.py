@@ -112,7 +112,7 @@ class Sensor(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
     device = db.relationship('Device', lazy=True)
-    
+
     def __repr__(self):
         return f"Sensor('{self.id}','{self.name}')"
 
@@ -153,14 +153,15 @@ class WaterRequest(db.Model):
     status = db.Column(db.Boolean, nullable=False)
     duration = db.Column(db.Integer, nullable=False)
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
-
+    device = db.relationship('Device', lazy=True)
 
 class WaterLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     duration = db.Column(db.Integer, nullable=False)
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
-
+    device = db.relationship('Device', lazy=True)
+    
     def to_dict(self):
         data = {
             'id': self.id,
