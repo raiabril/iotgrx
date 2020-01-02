@@ -159,4 +159,13 @@ class WaterLog(db.Model):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     duration = db.Column(db.Integer, nullable=False)
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
+
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'date_created':self.date_created.strftime("%Y-%m-%d %H:%M:%S"),
+            'duration':self.duration,
+            'device_id': self.device_id
+            }
+        return data
     
