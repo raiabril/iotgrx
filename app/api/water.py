@@ -17,13 +17,28 @@ def get_water(device_id):
 
     return jsonify(request.duration),200
 
-@bp.route('/water', methods=['POST'])
+@bp.route('/water/log', methods=['POST'])
 #@token_auth.login_required
-def post_water():
+def post_log():
     request_headers = request.headers.environ
     request_json = json.loads(request.data)
     try:
         log = WaterLog(duration=request_json['duration'],device_id=request_json['device_id'])
+        db.session.add(log)
+        db.session.commit()
+    except:
+        return 'Error',500
+    
+    return 'Created',201
+
+
+@bp.route('/water/request', methods=['POST'])
+#@token_auth.login_required
+def post_request():
+    request_headers = request.headers.environ
+    request_json = json.loads(request.data)
+    try:
+        log = WaterRequest(duration=request_json['duration'],device_id=request_json['device_id'],status=True)
         db.session.add(log)
         db.session.commit()
     except:
