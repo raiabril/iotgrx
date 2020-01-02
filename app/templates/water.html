@@ -92,8 +92,8 @@
           {% for event in events %}
           <tr>
             <td>{{event.date_created.strftime('%d-%m-%Y  %H:%M:%S')}}</td>
-            <td>{{event.device_id}}</td>
-            <td>{{event.sensor_id}}</td>
+            <td>{{event.sensor.device.name}}</td>
+            <td>{{event.sensor.name}}</td>
             <td>{{event.value}}</td>
           </tr>
           {% endfor %}
