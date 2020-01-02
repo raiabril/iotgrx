@@ -77,6 +77,28 @@
           {% endfor %}
         </table>
         {% endif %}
+        <hr>
+        <h2>Last events</h2>
+        {% if events.__len__() == 0%}
+            <p>No recent data.</p>
+        {% else %}
+        <table style="width:100%">
+          <tr>
+              <th>Date</th>
+              <th>DeviceID</th>
+              <th>SensorID</th>
+              <th>Value</th>
+          </tr>
+          {% for event in events %}
+          <tr>
+            <td>{{event.date_created.strftime('%d-%m-%Y  %H:%M:%S')}}</td>
+            <td>{{event.device_id}}</td>
+            <td>{{event.sensor_id}}</td>
+            <td>{{event.value}}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% endif %}
       </div>
     </div>
   </div>
