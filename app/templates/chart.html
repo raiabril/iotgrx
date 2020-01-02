@@ -4,9 +4,15 @@
   <div class="row">
     <div class="col-md-12">
       <div class="chart-container content-section">
+        {% if values.__len__() > 0%}
         <canvas id="myChart" height="400px" width="100%"></canvas>
+        {% else %}
+        <p>No data for sensor retrieved.</p>
+        {% endif %}
       </div>
+      {% if values.__len__() > 0%}
       <p class="text-right">{{updated_value}} at <span id="last_update_time">{{updated_time}}</span></p>
+      {% endif %}
     </div>
   </div>
 

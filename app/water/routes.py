@@ -8,6 +8,7 @@ from app import db
 water = Blueprint('water', __name__)
 
 @water.route("/check",methods=['GET','POST'])
+@login_required
 def check():
     sensors = Sensor.query.all()
     requests = WaterRequest.query.filter_by(status=True).order_by(WaterRequest.date_created.desc()).all()

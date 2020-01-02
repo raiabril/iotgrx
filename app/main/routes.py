@@ -27,26 +27,36 @@ def sensor(sensor_id):
     sensor = Sensor.query.filter_by(id=sensor_id).first_or_404()
     events = Event.query.filter_by(sensor_id=sensor_id)\
             .order_by(Event.date_created.desc())\
-            .limit(2*24*3)
+            .limit(2*24*3).all()
 
-    labels=[]
-    values=[]
-    for event in events:
-        labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
-        values.append(event.value)
-    
-    updated_time = labels[0]
-    updated_value = values[0]
+    if events.__len__() == 0:
+        labels=[]
+        values=[]
+        updated_time="";
+        updated_value="";
+        colorFill="";
+        colorLine="";
 
-    if updated_value < 2800:
-        colorFill=greenFill
-        colorLine=greenLine
-    elif updated_value < 3500:
-        colorFill=yellowFill
-        colorLine=yellowLine
     else:
-        colorFill=redFill
-        colorLine=redLine
+        labels=[]
+        values=[]
+
+        for event in events:
+            labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
+            values.append(event.value)
+        
+        updated_time = labels[0]
+        updated_value = values[0]
+
+        if updated_value < 2800:
+            colorFill=greenFill
+            colorLine=greenLine
+        elif updated_value < 3500:
+            colorFill=yellowFill
+            colorLine=yellowLine
+        else:
+            colorFill=redFill
+            colorLine=redLine
 
     return render_template('chart.html', 
                             sensors=sensors,
