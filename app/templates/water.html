@@ -2,9 +2,81 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
       <div class="chart-container content-section">
-        <p>Hola</p>
+        <h2>My devices</h2>
+        {% if devices.__len__() == 0%}
+            <p>No se han recuperado devices para el usuario.</p>
+        {% else %}
+        <table style="width:100%">
+          <tr>
+              <th>DeviceID</th>
+              <th>Date created</th>
+              <th>Name</th>
+              <th>Water</th>
+          </tr>
+          {% for device in devices %}
+          <tr>
+            <td>{{device.id}}</td>
+            <td>{{device.date_created.strftime('%d-%m-%Y')}}</td>
+            <td>{{device.name}}</td>
+            <td>
+              <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{form.submit(class="btn btn-outline-info")}}
+                </div>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% endif %}
+        
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="chart-container content-section">
+        <h2>Active requests</h2>
+        {% if requests.__len__() == 0%}
+            <p>No se han recuperado requests para el usuario.</p>
+        {% else %}
+        <table style="width:100%">
+          <tr>
+              <th>DeviceID</th>
+              <th>Date</th>
+              <th>Duration</th>
+          </tr>
+          {% for request in requests %}
+          <tr>
+            <td>{{request.device_id}}</td>
+            <td>{{request.date_created.strftime('%d-%m-%Y  %H:%M:%S')}}</td>
+            <td>{{request.duration}}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% endif %}
+        <hr>
+        <h2>Last logs</h2>
+        {% if logs.__len__() == 0%}
+            <p>No se han recuperado requests para el usuario.</p>
+        {% else %}
+
+        <table style="width:100%">
+          <tr>
+              <th>DeviceID</th>
+              <th>Date</th>
+              <th>Duration</th>
+          </tr>
+          {% for log in logs %}
+          <tr>
+              <td>{{log.device_id}}</td>
+              <td>{{log.date_created.strftime('%d-%m-%Y  %H:%M:%S')}}</td>
+              <td>{{log.duration}}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% endif %}
       </div>
     </div>
   </div>

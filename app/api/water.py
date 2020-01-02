@@ -21,7 +21,7 @@ def get_water(device_id):
 @bp.route('/water/log/<int:device_id>', methods=['GET'])
 #@token_auth.login_required
 def get_water_log(device_id):
-    request = [x.to_dict() for x in WaterLog.query.filter_by(device_id=device_id).all()]
+    request = [x.to_dict() for x in WaterLog.query.filter_by(device_id=device_id).order_by(WaterLog.date_created.desc()).limit(10)]
     
     return jsonify(request),200
 
