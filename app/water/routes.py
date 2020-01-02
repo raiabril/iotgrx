@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import func
-from app.models import WaterLog, WaterRequest, Device
+from app.models import WaterLog, WaterRequest, Device, Sensor
 from app.water.forms import WaterForm
 from app import db
 
@@ -9,6 +9,7 @@ water = Blueprint('water', __name__)
 
 @water.route("/check",methods=['GET','POST'])
 def check():
+    sensors = Sensor.query.all()
     requests = WaterRequest.query.filter_by(status=True).order_by(WaterRequest.date_created.desc()).all()
     devices = Device.query.all()
     logs = WaterLog.query.order_by(WaterLog.date_created.desc()).all()
@@ -25,4 +26,5 @@ def check():
                             requests=requests,
                             logs=logs,
                             form=form,
-                            devices=devices)
+                            devices=devices,
+                            sensors=sensors)
