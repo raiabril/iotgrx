@@ -144,3 +144,19 @@ class Event(db.Model):
             'value': self.value
             }
         return data
+
+
+class WaterRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    status = db.Column(db.Boolean, nullable=False)
+    duration = db.Column(db.Integer, nullable=False)
+    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
+
+
+class WaterLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    duration = db.Column(db.Integer, nullable=False)
+    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
+    
