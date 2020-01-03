@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="chart-container content-section">
         <h2>My devices</h2>
         {% if devices.__len__() == 0%}
@@ -13,15 +13,11 @@
           <tr>
               <th>DeviceID</th>
               <th>Name</th>
-              <th>Date</th>
-              <th>Time</th>
           </tr>
           {% for device in devices %}
           <tr>
             <td>{{device.id}}</td>
             <td>{{device.name}}</td>
-            <td>{{moment(device.date_created).format('L')}}</td>
-            <td>{{moment(device.date_created).format('LT')}}</td>
             <td>
               <form method="POST" action="">
                 {{ form.hidden_tag() }}
@@ -37,7 +33,7 @@
         
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-8">
       <div class="chart-container content-section">
         <h2>Active requests</h2>
         {% if requests.__len__() == 0%}
@@ -47,14 +43,12 @@
           <tr>
               <th>Device</th>
               <th>Date</th>
-              <th>Time</th>
-              <th>Duration [ms]</th>
+              <th>Duration</th>
           </tr>
           {% for request in requests %}
           <tr>
             <td>{{request.device.name}}</td>
-            <td>{{moment(request.date_created).format('L')}}</td>
-            <td>{{moment(request.date_created).format('LT')}}</td>
+            <td>{{moment(request.date_created).format('LLL')}}</td>
             <td>{{request.duration}}</td>
           </tr>
           {% endfor %}
@@ -70,14 +64,12 @@
           <tr>
               <th>Device</th>
               <th>Date</th>
-              <th>Time</th>
-              <th>Duration [ms]</th>
+              <th>Duration</th>
           </tr>
           {% for log in logs %}
           <tr>
               <td>{{log.device.name}}</td>
-              <td>{{moment(log.date_created).format('L')}}</td>
-              <td>{{moment(log.date_created).format('LT')}}</td>
+              <td>{{moment(log.date_created).format('LLL')}}</td>
               <td>{{log.duration}}</td>
           </tr>
           {% endfor %}
@@ -91,17 +83,13 @@
         <table style="width:100%">
           <tr>
               <th>Date</th>
-              <th>Time</th>
-              <th>DeviceID</th>
-              <th>SensorID</th>
+              <th>Device</th>
               <th>Value</th>
           </tr>
           {% for event in events %}
           <tr>
-            <td>{{moment(event.date_created).format('L')}}</td>
-            <td>{{moment(event.date_created).format('LT')}}</td>
-            <td>{{event.sensor.device.name}}</td>
-            <td>{{event.sensor.name}}</td>
+            <td>{{moment(event.date_created).format('LLL')}}</td>
+            <td>{{event.sensor.device.name}}-{{event.sensor.name}}</td>
             <td>{{event.value}}</td>
           </tr>
           {% endfor %}
