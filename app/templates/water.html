@@ -84,13 +84,11 @@
           <tr>
               <th>Date</th>
               <th>Device</th>
-              <th>Value</th>
           </tr>
           {% for event in events %}
           <tr>
             <td>{{moment(event.date_created).format('lll')}}</td>
-            <td>{{event.sensor.device.name}}-{{event.sensor.name}}</td>
-            <td>{{event.value}}</td>
+            <td>{{event.sensor.device.name}}-{{event.sensor.name}}:{{event.value}}</td>
           </tr>
           {% endfor %}
         </table>
