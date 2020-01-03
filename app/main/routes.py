@@ -2,6 +2,7 @@ from flask import render_template, request, Blueprint
 from flask_login import current_user, login_required
 from sqlalchemy import func
 from app.models import Sensor, Event, Device, User
+from app.main.utils import filter_values
 
 main = Blueprint('main', __name__)
 
@@ -29,7 +30,7 @@ def sensor(sensor_id):
             .order_by(Event.date_created.desc())\
             .limit(2*24*3).all()
 
-    if events.__len__() == 0:
+    if events.__len__() <= 1:
         labels=[]
         values=[]
         updated_time="";
@@ -44,7 +45,9 @@ def sensor(sensor_id):
         for event in events:
             labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
             values.append(event.value)
-        
+            
+        # Filter values
+        values = filter_values(values)
         updated_time = labels[0]
         updated_value = values[0]
 
