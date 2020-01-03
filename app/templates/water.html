@@ -47,7 +47,7 @@
           </tr>
           {% for request in requests %}
           <tr>
-            <td>{{request.device.name}}</td>
+            <td>{{request.device.id}}</td>
             <td>{{moment(request.date_created).format('lll')}}</td>
             <td>{{request.duration}}</td>
           </tr>
@@ -68,7 +68,7 @@
           </tr>
           {% for log in logs %}
           <tr>
-              <td>{{log.device.name}}</td>
+              <td>{{log.device.id}}</td>
               <td>{{moment(log.date_created).format('lll')}}</td>
               <td>{{log.duration}}</td>
           </tr>
@@ -88,7 +88,7 @@
           {% for event in events %}
           <tr>
             <td>{{moment(event.date_created).format('lll')}}</td>
-            <td>{{event.sensor.device.name}}-{{event.sensor.name}}:{{event.value}}</td>
+            <td>{{event.sensor.device_id}}:{{event.sensor.name}}:{{event.value}}</td>
           </tr>
           {% endfor %}
         </table>
