@@ -9,7 +9,7 @@
         {% if devices.__len__() == 0%}
             <p>No se han recuperado devices para el usuario.</p>
         {% else %}
-        <table style="width:100%">
+        <table>
           <tr>
               <th>DeviceID</th>
               <th>Name</th>
@@ -39,7 +39,7 @@
         {% if requests.__len__() == 0%}
             <p>No se han recuperado requests para el usuario.</p>
         {% else %}
-        <table style="width:100%">
+        <table>
           <tr>
               <th>Device</th>
               <th>Date</th>
@@ -48,7 +48,7 @@
           {% for request in requests %}
           <tr>
             <td>{{request.device.name}}</td>
-            <td>{{moment(request.date_created).format('LLL')}}</td>
+            <td>{{moment(request.date_created).format('lll')}}</td>
             <td>{{request.duration}}</td>
           </tr>
           {% endfor %}
@@ -60,7 +60,7 @@
             <p>No se han recuperado requests para el usuario.</p>
         {% else %}
 
-        <table style="width:100%">
+        <table>
           <tr>
               <th>Device</th>
               <th>Date</th>
@@ -69,7 +69,7 @@
           {% for log in logs %}
           <tr>
               <td>{{log.device.name}}</td>
-              <td>{{moment(log.date_created).format('LLL')}}</td>
+              <td>{{moment(log.date_created).format('lll')}}</td>
               <td>{{log.duration}}</td>
           </tr>
           {% endfor %}
@@ -80,7 +80,7 @@
         {% if events.__len__() == 0%}
             <p>No recent data.</p>
         {% else %}
-        <table style="width:100%">
+        <table>
           <tr>
               <th>Date</th>
               <th>Device</th>
@@ -88,7 +88,7 @@
           </tr>
           {% for event in events %}
           <tr>
-            <td>{{moment(event.date_created).format('LLL')}}</td>
+            <td>{{moment(event.date_created).format('lll')}}</td>
             <td>{{event.sensor.device.name}}-{{event.sensor.name}}</td>
             <td>{{event.value}}</td>
           </tr>
