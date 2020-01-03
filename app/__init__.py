@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
 from app.config import Config
+from flask_moment import Moment
 import logging
 
 db = SQLAlchemy()
@@ -22,6 +23,7 @@ def create_app(config_class = Config):
     bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
+    moment = Moment(app)
     
     from app.main.routes import main
     app.register_blueprint(main)

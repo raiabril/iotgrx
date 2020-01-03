@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{{ moment.locale(auto_detect=True) }}
 <div class="row">
     <div class="col-md-6">
       <div class="chart-container content-section">
@@ -19,8 +20,8 @@
           <tr>
             <td>{{device.id}}</td>
             <td>{{device.name}}</td>
-            <td>{{device.date_created.strftime('%d/%m/%Y')}}</td>
-            <td>{{device.date_created.strftime('%H:%M')}}</td>
+            <td>{{moment(device.date_created).format('L')}}</td>
+            <td>{{moment(device.date_created).format('HH:MM')}}</td>
             <td>
               <form method="POST" action="">
                 {{ form.hidden_tag() }}
@@ -52,8 +53,8 @@
           {% for request in requests %}
           <tr>
             <td>{{request.device.name}}</td>
-            <td>{{request.date_created.strftime('%d/%m/%Y')}}</td>
-            <td>{{request.date_created.strftime('%H:%M')}}</td>
+            <td>{{moment(request.date_created).format('L')}}</td>
+            <td>{{moment(request.date_created).format('HH:MM')}}</td>
             <td>{{request.duration}}</td>
           </tr>
           {% endfor %}
@@ -75,8 +76,8 @@
           {% for log in logs %}
           <tr>
               <td>{{log.device.name}}</td>
-              <td>{{log.date_created.strftime('%d/%m/%Y')}}</td>
-              <td>{{log.date_created.strftime('%H:%M')}}</td>
+              <td>{{moment(log.date_created).format('L')}}</td>
+              <td>{{moment(log.date_created).format('HH:MM')}}</td>
               <td>{{log.duration}}</td>
           </tr>
           {% endfor %}
@@ -97,8 +98,8 @@
           </tr>
           {% for event in events %}
           <tr>
-            <td>{{event.date_created.strftime('%d/%m/%Y')}}</td>
-            <td>{{event.date_created.strftime('%H:%M')}}</td>
+            <td>{{moment(event.date_created).format('L')}}</td>
+            <td>{{moment(event.date_created).format('HH:MM')}}</td>
             <td>{{event.sensor.device.name}}</td>
             <td>{{event.sensor.name}}</td>
             <td>{{event.value}}</td>

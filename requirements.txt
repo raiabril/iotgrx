@@ -8,5 +8,6 @@ flask_sqlalchemy
 flask_bcrypt
 flask_mail
 flask_httpauth
+flask_moment
 datetime
 Pillow
