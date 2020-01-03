@@ -54,7 +54,7 @@
           <tr>
             <td>{{request.device.name}}</td>
             <td>{{request.date_created.strftime('%d/%m/%Y)}}</td>
-            <td>{{device.date_created.strftime('%H:%M')}}</td>
+            <td>{{request.date_created.strftime('%H:%M')}}</td>
             <td>{{request.duration}}</td>
           </tr>
           {% endfor %}
@@ -77,7 +77,7 @@
           <tr>
               <td>{{log.device.name}}</td>
               <td>{{log.date_created.strftime('%d/%m/%Y)}}</td>
-              <td>{{device.date_created.strftime('%H:%M')}}</td>
+              <td>{{log.date_created.strftime('%H:%M')}}</td>
               <td>{{log.duration}}</td>
           </tr>
           {% endfor %}
@@ -99,7 +99,7 @@
           {% for event in events %}
           <tr>
             <td>{{event.date_created.strftime('%d-%m-%Y)}}</td>
-            <td>{{device.date_created.strftime('%H:%M')}}</td>
+            <td>{{event.date_created.strftime('%H:%M')}}</td>
             <td>{{event.sensor.device.name}}</td>
             <td>{{event.sensor.name}}</td>
             <td>{{event.value}}</td>
