@@ -91,7 +91,7 @@ body {
   }
 
   table, th, td {
-    font-size: small;
+    font-size: smaller;
     padding-left: 2px;
     padding-right: 2px;
   }
