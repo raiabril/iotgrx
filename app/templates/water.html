@@ -21,7 +21,7 @@
             <td>{{device.id}}</td>
             <td>{{device.name}}</td>
             <td>{{moment(device.date_created).format('L')}}</td>
-            <td>{{moment(device.date_created).format('HH:MM')}}</td>
+            <td>{{moment(device.date_created).format('LT')}}</td>
             <td>
               <form method="POST" action="">
                 {{ form.hidden_tag() }}
@@ -54,7 +54,7 @@
           <tr>
             <td>{{request.device.name}}</td>
             <td>{{moment(request.date_created).format('L')}}</td>
-            <td>{{moment(request.date_created).format('HH:MM')}}</td>
+            <td>{{moment(request.date_created).format('LT')}}</td>
             <td>{{request.duration}}</td>
           </tr>
           {% endfor %}
@@ -77,7 +77,7 @@
           <tr>
               <td>{{log.device.name}}</td>
               <td>{{moment(log.date_created).format('L')}}</td>
-              <td>{{moment(log.date_created).format('HH:MM')}}</td>
+              <td>{{moment(log.date_created).format('LT')}}</td>
               <td>{{log.duration}}</td>
           </tr>
           {% endfor %}
@@ -99,7 +99,7 @@
           {% for event in events %}
           <tr>
             <td>{{moment(event.date_created).format('L')}}</td>
-            <td>{{moment(event.date_created).format('HH:MM')}}</td>
+            <td>{{moment(event.date_created).format('LT')}}</td>
             <td>{{event.sensor.device.name}}</td>
             <td>{{event.sensor.name}}</td>
             <td>{{event.value}}</td>
