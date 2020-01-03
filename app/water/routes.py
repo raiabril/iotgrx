@@ -12,9 +12,9 @@ water = Blueprint('water', __name__)
 def check():
     sensors = Sensor.query.all()
     requests = WaterRequest.query.filter_by(status=True).order_by(WaterRequest.date_created.desc()).all()
-    devices = Device.query.all()
-    events = Event.query.order_by(Event.date_created.desc()).limit(20).all()
-    logs = WaterLog.query.order_by(WaterLog.date_created.desc()).limit(20).all()
+    devices = Device.query.filter_by(user_id=current_user.id).all()
+    events = Event.query.order_by(Event.date_created.desc()).limit(10).all()
+    logs = WaterLog.query.order_by(WaterLog.date_created.desc()).limit(5).all()
     form = WaterForm()
 
     if form.validate_on_submit():
