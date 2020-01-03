@@ -11,17 +11,16 @@
         <table style="width:100%">
           <tr>
               <th>DeviceID</th>
+              <th>Name</th>
               <th>Date</th>
               <th>Time</th>
-              <th>Name</th>
-              <th>Water</th>
           </tr>
           {% for device in devices %}
           <tr>
             <td>{{device.id}}</td>
+            <td>{{device.name}}</td>
             <td>{{device.date_created.strftime('%d/%m/%Y')}}</td>
             <td>{{device.date_created.strftime('%H:%M')}}</td>
-            <td>{{device.name}}</td>
             <td>
               <form method="POST" action="">
                 {{ form.hidden_tag() }}
