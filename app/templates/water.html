@@ -11,14 +11,16 @@
         <table style="width:100%">
           <tr>
               <th>DeviceID</th>
-              <th>Date created</th>
+              <th>Date</th>
+              <th>Time</th>
               <th>Name</th>
               <th>Water</th>
           </tr>
           {% for device in devices %}
           <tr>
             <td>{{device.id}}</td>
-            <td>{{device.date_created.strftime('%d-%m-%Y')}}</td>
+            <td>{{device.date_created.strftime('%d/%m/%Y')}}</td>
+            <td>{{device.date_created.strftime('%H:%M')}}</td>
             <td>{{device.name}}</td>
             <td>
               <form method="POST" action="">
@@ -45,12 +47,14 @@
           <tr>
               <th>Device</th>
               <th>Date</th>
+              <th>Time</th>
               <th>Duration [ms]</th>
           </tr>
           {% for request in requests %}
           <tr>
             <td>{{request.device.name}}</td>
-            <td>{{request.date_created.strftime('%d-%m-%Y  %H:%M:%S')}}</td>
+            <td>{{request.date_created.strftime('%d/%m/%Y)}}</td>
+            <td>{{device.date_created.strftime('%H:%M')}}</td>
             <td>{{request.duration}}</td>
           </tr>
           {% endfor %}
@@ -66,12 +70,14 @@
           <tr>
               <th>Device</th>
               <th>Date</th>
+              <th>Time</th>
               <th>Duration [ms]</th>
           </tr>
           {% for log in logs %}
           <tr>
               <td>{{log.device.name}}</td>
-              <td>{{log.date_created.strftime('%d-%m-%Y  %H:%M:%S')}}</td>
+              <td>{{log.date_created.strftime('%d/%m/%Y)}}</td>
+              <td>{{device.date_created.strftime('%H:%M')}}</td>
               <td>{{log.duration}}</td>
           </tr>
           {% endfor %}
@@ -85,13 +91,15 @@
         <table style="width:100%">
           <tr>
               <th>Date</th>
+              <th>Time</th>
               <th>DeviceID</th>
               <th>SensorID</th>
               <th>Value</th>
           </tr>
           {% for event in events %}
           <tr>
-            <td>{{event.date_created.strftime('%d-%m-%Y  %H:%M:%S')}}</td>
+            <td>{{event.date_created.strftime('%d-%m-%Y)}}</td>
+            <td>{{device.date_created.strftime('%H:%M')}}</td>
             <td>{{event.sensor.device.name}}</td>
             <td>{{event.sensor.name}}</td>
             <td>{{event.value}}</td>
