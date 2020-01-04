@@ -41,14 +41,14 @@
         {% else %}
         <table>
           <tr>
-              <th>Device</th>
-              <th>Date</th>
-              <th>Millis</th>
+            <th>Date</th>
+            <th>Device</th>
+            <th>Millis</th>
           </tr>
           {% for request in requests %}
           <tr>
-            <td>{{request.device.id}}</td>
             <td>{{moment(request.date_created).format('l')}} {{moment(request.date_created).format('LT')}}</td>
+            <td>{{request.device.name}}</td>
             <td>{{request.duration}}</td>
           </tr>
           {% endfor %}
@@ -62,15 +62,15 @@
 
         <table>
           <tr>
-              <th>Device</th>
-              <th>Date</th>
-              <th>Millis</th>
+            <th>Date</th>
+            <th>Device</th>  
+            <th>Millis</th>
           </tr>
           {% for log in logs %}
           <tr>
-              <td>{{log.device.id}}</td>
-              <td>{{moment(log.date_created).format('l')}} {{moment(log.date_created).format('LT')}}</td>
-              <td>{{log.duration}}</td>
+            <td>{{moment(log.date_created).format('l')}} {{moment(log.date_created).format('LT')}}</td>
+            <td>{{log.device.name}}</td>
+            <td>{{log.duration}}</td>
           </tr>
           {% endfor %}
         </table>
