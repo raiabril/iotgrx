@@ -91,7 +91,7 @@ body {
   }
 
   table, th, td {
-    font-size: smaller;
+    font-size: medium;
     padding-left: 2px;
     padding-right: 2px;
   }
@@ -99,3 +99,11 @@ body {
   table {
     width: auto;
   }
+
+  @media only screen and (max-width: 320px) {
+
+    table, th, td { 
+       font-size: smaller; 
+    }
+ 
+ }
