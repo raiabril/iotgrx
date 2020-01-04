@@ -21,6 +21,7 @@ def check():
         request = WaterRequest(duration=1000,device_id=1,status=True)
         db.session.add(request)
         db.session.commit()
+        flash('Watering requested!','success')
         return redirect(url_for('water.check'))
 
     return render_template('water.html', 
