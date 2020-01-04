@@ -92,8 +92,8 @@ body {
 
   table, th, td {
     font-size: medium;
-    padding-left: 2px;
-    padding-right: 2px;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   table {
@@ -104,6 +104,8 @@ body {
 
     table, th, td { 
        font-size: smaller; 
+       padding-left: 5px;
+       padding-right: 5px;
     }
  
  }
