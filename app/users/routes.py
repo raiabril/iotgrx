@@ -49,7 +49,7 @@ def login():
 @users.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('main.home'))
+    return redirect(url_for('users.login'))
 
 
 @users.route("/account", methods=['GET','POST'])
