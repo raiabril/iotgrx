@@ -30,7 +30,7 @@ def send_reset_email(user):
 
 def send_welcome_email(user):
     msg = Message('Welcome to iotHome',
-                  sender=('iotHome','raiabril.grx6@gmail.com'), 
+                  sender=('iotHome','raiablp@gmail.com'), 
                   recipients=[user.email])
     msg.html = render_template('email/welcome.html')
     msg.body = render_template('email/welcome.txt')

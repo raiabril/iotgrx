@@ -9,7 +9,6 @@ import logging
 users = Blueprint('users', __name__)
 
 @users.route("/register", methods=['GET','POST'])
-@login_required
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))

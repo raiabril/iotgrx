@@ -1,3 +1,1 @@
-Abierto el plazo para la presentación de:{{resource.name}}
-{{url_for('resource',resource_id = resource.id))}}
-If you do not make this request then simply ignore this email.
+Starting water

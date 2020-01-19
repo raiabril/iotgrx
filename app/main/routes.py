@@ -7,6 +7,7 @@ from app.main.utils import filter_values
 main = Blueprint('main', __name__)
 
 @main.route("/")
+@login_required
 def home():
     sensors = Sensor.query.all()
     return render_template('index.html', 
@@ -15,6 +16,7 @@ def home():
 
 
 @main.route('/sensor/<int:sensor_id>')
+@login_required
 def sensor(sensor_id):
 
     greenFill = "rgba(151,220,150,0.3)"
