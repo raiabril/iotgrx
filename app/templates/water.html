@@ -85,12 +85,14 @@
               <th>Date</th>
               <th>Device</th>
               <th>Value</th>
+              <th>Boot</th>
           </tr>
           {% for event in events %}
           <tr>
             <td>{{moment(event.date_created).format('l')}} {{moment(event.date_created).format('LT')}}</td>
             <td>{{event.sensor.device_id}}:{{event.sensor.name}}</td>
             <td>{{event.value}}</td>
+            <td>{{event.boot}}</td>
           </tr>
           {% endfor %}
         </table>

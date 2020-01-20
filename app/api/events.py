@@ -24,6 +24,7 @@ def post_events():
         event_created = Event(
                             value=event['value'],
                             sensor_id = event['sensor_id'],
+                            boot = request_json['device']['boot'],
                             user_id = 1)
         db.session.add(event_created)
         db.session.commit()

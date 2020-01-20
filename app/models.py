@@ -130,6 +130,7 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     value = db.Column(db.Float, nullable=False)
+    boot = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
     sensor_id = db.Column(db.Integer, db.ForeignKey('sensor.id'), nullable=False, index=True)
     sensor = db.relationship('Sensor', lazy=True)
