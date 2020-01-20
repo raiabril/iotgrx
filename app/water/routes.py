@@ -13,7 +13,7 @@ def check():
     sensors = Sensor.query.all()
     requests = WaterRequest.query.filter_by(status=True).order_by(WaterRequest.date_created.desc()).all()
     devices = Device.query.filter_by(user_id=current_user.id).all()
-    events = Event.query.order_by(Event.date_created.desc()).limit(10).all()
+    events = Event.query.order_by(Event.date_created.desc()).limit(25).all()
     logs = WaterLog.query.order_by(WaterLog.date_created.desc()).limit(5).all()
     form = WaterForm()
 
