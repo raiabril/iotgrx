@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint
+from flask import render_template, request, Blueprint, redirect, url_for
 from flask_login import current_user, login_required
 from sqlalchemy import func
 from app.models import Sensor, Event, Device, User
@@ -7,12 +7,14 @@ from app.main.utils import filter_values
 main = Blueprint('main', __name__)
 
 @main.route("/")
-@login_required
 def home():
-    sensors = Sensor.query.all()
-    return render_template('index.html', 
+    if current_user.is_authenticated:
+        sensors = Sensor.query.all()
+        return render_template('index.html', 
                             title='iotHome', 
                             sensors=sensors)
+    else:
+        return redirect(url_for('users.login'))
 
 
 @main.route('/sensor/<int:sensor_id>')
