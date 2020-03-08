@@ -30,7 +30,7 @@ def sensor(sensor_id):
 
     sensors = Sensor.query.all()
     sensor = Sensor.query.filter_by(id=sensor_id).first_or_404()
-    events = Event.query.filter_by(sensor_id=sensor_id)\
+    events = Event.query.filter_by(sensor_code=sensor.code)\
             .order_by(Event.date_created.desc())\
             .limit(2*24*7).all()
 
