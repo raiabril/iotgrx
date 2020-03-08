@@ -143,7 +143,7 @@ class Event(db.Model):
         data = {
             'id': self.id,
             'date_created':self.date_created.strftime("%Y-%m-%d %H:%M:%S"),
-            'sensor_id':self.sensor_code,
+            'sensor_code':self.sensor_code,
             'value': self.value
             }
         return data
