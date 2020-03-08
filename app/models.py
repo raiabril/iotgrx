@@ -58,8 +58,6 @@ class User(db.Model, UserMixin):
             'id': self.id,
             'username': self.username
             }
-        if include_email:
-            data['email'] = self.email
         return data
 
     def from_dict(self, data, new_user=False):

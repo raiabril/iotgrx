@@ -10,11 +10,11 @@ from app.api.errors import bad_request
 @bp.route('/sensors', methods=['GET'])
 @token_auth.login_required
 def get_sensors():
-    data = [x.to_dict() for x in Sensor.query.filter_by(user_id=g.current_user.id).all()]
+    data = [x.to_dict() for x in Sensor.query.all()]
     return jsonify(data)
 
 
 @bp.route('/sensors/<int:sensor_id>', methods=['GET'])
 @token_auth.login_required
 def get_sensor_id(sensor_id):
-    return jsonify(Sensor.query.filter_by(user_id=g.current_user.id,id=sensor_id).first_or_404().to_dict())
+    return jsonify(Sensor.query.filter_by(id=sensor_id).first_or_404().to_dict())
