@@ -29,6 +29,7 @@ class User(db.Model, UserMixin):
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration = db.Column(db.DateTime)
     admin = db.Column(db.Boolean, nullable=False, default=False)
+    active = db.Column(db.Boolean, nullable=False, default=False)
     
     def __repr__(self):
         return f"User('{self.username}','{self.email}','{self.image_file}')"
