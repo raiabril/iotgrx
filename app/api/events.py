@@ -23,7 +23,8 @@ def post_events():
     for event in request_json["data"]:
         event_created = Event(
                             value=event['value'],
-                            sensor_id = event['sensor_id'],
+                            sensor_code = event['id'],
+                            device_code = request_json['device']['id'],
                             boot = request_json['device']['boot'],
                             user_id = 1)
         db.session.add(event_created)

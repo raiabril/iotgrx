@@ -91,6 +91,7 @@ class Device(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     name = db.Column(db.String(100), nullable=False)
+    code = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
 
     def __repr__(self):
@@ -109,7 +110,7 @@ class Sensor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     name = db.Column(db.String(100), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
+    code = db.Column(db.String(100), nullable=False)
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
     device = db.relationship('Device', lazy=True)
 
@@ -131,8 +132,9 @@ class Event(db.Model):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     value = db.Column(db.Float, nullable=False)
     boot = db.Column(db.Integer, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
-    sensor_id = db.Column(db.Integer, db.ForeignKey('sensor.id'), nullable=False, index=True)
+    user_id = db.Column(db.String(100), db.ForeignKey('user.id'), nullable=False, index=True)
+    sensor_code = db.Column(db.String(100), db.ForeignKey('sensor.code'), nullable=False, index=True)
+    device_code = db.Column(db.String(100), db.ForeignKey('device.code'), nullable=False, index=True)
     sensor = db.relationship('Sensor', lazy=True)
 
     def __repr__(self):
@@ -142,7 +144,7 @@ class Event(db.Model):
         data = {
             'id': self.id,
             'date_created':self.date_created.strftime("%Y-%m-%d %H:%M:%S"),
-            'sensor_id':self.sensor_id,
+            'sensor_id':self.sensor_code,
             'value': self.value
             }
         return data
