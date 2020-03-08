@@ -100,7 +100,8 @@ class Device(db.Model):
         data = {
             'id': self.id,
             'date_created':self.date_created.strftime("%Y-%m-%d %H:%M:%S"),
-            'name': self.name
+            'name': self.name,
+            'code': self.code
             }
         return data
 
@@ -121,7 +122,8 @@ class Sensor(db.Model):
             'id': self.id,
             'date_created':self.date_created.strftime("%Y-%m-%d %H:%M:%S"),
             'name': self.name,
-            'device_id': self.device_id
+            'code': self.code,
+            'device_id': self.device.name
             }
         return data
 
