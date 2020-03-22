@@ -9,10 +9,10 @@ main = Blueprint('main', __name__)
 @main.route("/")
 def home():
     if current_user.is_authenticated:
-        sensors = Sensor.query.all()
+        devices = Device.query.filter_by(active=1).all()
         return render_template('index.html', 
                             title='iotHome', 
-                            sensors=sensors)
+                            devices=devices)
     else:
         return redirect(url_for('users.login'))
 
@@ -28,7 +28,7 @@ def sensor(sensor_id):
     redFill = "rgba(234,121,106,0.3)"
     redLine = "rgba(210,50,28,1)"
 
-    sensors = Sensor.query.all()
+    devices = Device.query.filter_by(active=1).all()
     sensor = Sensor.query.filter_by(id=sensor_id).first_or_404()
     events = Event.query.filter_by(sensor_code=sensor.code)\
             .order_by(Event.date_created.desc())\
@@ -66,7 +66,7 @@ def sensor(sensor_id):
             colorLine=redLine
 
     return render_template('chart.html', 
-                            sensors=sensors,
+                            devices=devices,
                             title=sensor.name,
                             labels=labels,
                             values=values,

@@ -11,3 +11,6 @@ credentials.py
 *.db
 *.json
 *.json
+*.json
+*.db
+app/db/iotHome.db

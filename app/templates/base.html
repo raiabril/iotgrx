@@ -35,23 +35,23 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="navbar-collapse collapse" id="collapsingNavbar">
-          {%if current_user.is_authenticated%}
             <ul class="navbar-nav">
+              {% for device in devices %}
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Sensors
+                  {{device.name}}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1">
-                  {% for sensor in sensors %}
+                  {% for sensor in device.sensors %}
                   <a class="dropdown-item" href="/sensor/{{ sensor.id }}">{{ sensor.name }}</a>
                   {% endfor %}
                 </div>
               </li>
-              <li class="nav-item">
+              <!--li class="nav-item">
                 <a class="nav-item nav-link text-dark" href="{{url_for('water.check')}}">Watering</a>
-              </li>
+              </li-->
             </ul>
-            {%endif%}
+            {% endfor %}
             <ul class="navbar-nav ml-auto">
               {%if current_user.is_authenticated%}
                 <li class="nav-item">
