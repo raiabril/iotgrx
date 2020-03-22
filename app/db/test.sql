@@ -1,9 +1,9 @@
 --- Generator for SQL test DB
 INSERT INTO "user" (id, date_created, username, email, image_file, password, token, token_expiration, admin, active) VALUES(1, '2020-03-08 18:49:58.639010', 'raiabril', 'rai@ingmechs.com', 'default.jpg', '$2b$12$4rr0Y1.mYveGJuAtBgLTFOB.nRzrZcpYALYB4dBLwASW.l2Woi4L2', 'jdOKcZ370cH/XMGJhnGPPKA9mgkSUj6I', '2020-03-08 19:50:10.827777', 0, 0);
 
-INSERT INTO device (id, date_created, name, code, user_id) VALUES(1, '2020-03-08 00:00:00', 'Macetas', 'ESP-32', 1);
-INSERT INTO device (id, date_created, name, code, user_id) VALUES(2, '2020-03-10 00:00:00', 'Weather Station', 'weatherStation', 1);
-INSERT INTO device (id, date_created, name, code, user_id) VALUES(3, '2020-03-22 19:20:00', 'Fucar18', 'fucar18', 1);
+INSERT INTO device (id, date_created, name, code, user_id, active) VALUES(1, '2020-03-08 00:00:00', 'Macetas', 'ESP-32', 1, 0);
+INSERT INTO device (id, date_created, name, code, user_id, active) VALUES(2, '2020-03-10 00:00:00', 'Weather Station', 'weatherStation', 1, 0);
+INSERT INTO device (id, date_created, name, code, user_id, active) VALUES(3, '2020-03-22 19:20:00', 'Fucar18', 'fucar18', 1, 1);
 
 
 INSERT INTO sensor (id, date_created, name, code, device_id) VALUES(1, '2020-03-08 00:00:00', 'R - Moisture 1 ( )', 'MOIS_1', 1);
@@ -29,7 +29,7 @@ INSERT INTO sensor (id, date_created, name, code, device_id) VALUES(20, '2020-03
 INSERT INTO sensor (id, date_created, name, code, device_id) VALUES(21, '2020-03-22 19:20:00', 'Est. Altitude (m)', 'fALTI', 3);
 INSERT INTO sensor (id, date_created, name, code, device_id) VALUES(22, '2020-03-22 19:20:00', 'Pressure (hPa)', 'fPRES', 3);
 INSERT INTO sensor (id, date_created, name, code, device_id) VALUES(23, '2020-03-22 19:20:00', 'Humidity (%)', 'fHUMI', 3);
-INSERT INTO sensor (id, date_created, name, code, device_id) VALUES(24, '2020-03-22 19:20:00', 'Temperatue (C)', 'fTEMP', 3);
+INSERT INTO sensor (id, date_created, name, code, device_id) VALUES(24, '2020-03-22 19:20:00', 'Temperature (C)', 'fTEMP', 3);
 
 INSERT INTO event (id, date_created, value, boot, user_id, sensor_code, device_code) VALUES(8467, '2020-03-22 18:19:32.142997', 0.24225, 1, '1', 'fVOLT', 'fucar18');
 INSERT INTO event (id, date_created, value, boot, user_id, sensor_code, device_code) VALUES(8466, '2020-03-22 18:19:32.091966', -22.86229, 1, '1', 'fCURRENT', 'fucar18');
