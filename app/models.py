@@ -113,6 +113,8 @@ class Sensor(db.Model):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     name = db.Column(db.String(100), nullable=False)
     code = db.Column(db.String(100), nullable=False)
+    a0 = db.Column(db.Float, nullable=False, default = 0)
+    a1 = db.Column(db.Float, nullable=False, default = 0)
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
     device = db.relationship('Device', lazy=True)
 

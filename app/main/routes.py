@@ -48,7 +48,7 @@ def sensor(sensor_id):
 
         for event in events:
             labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
-            values.append(event.value)
+            values.append(event.value*sensor.a1 + sensor.a0)
             
         # Filter values
         values = filter_values(values)
