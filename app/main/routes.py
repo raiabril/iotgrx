@@ -48,7 +48,7 @@ def sensor(sensor_id):
 
         for event in events:
             labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
-            values.append(event.value*sensor.a1 + sensor.a0)
+            values.append(event.value)
             
         # Filter values
         values = filter_values(values)
@@ -64,6 +64,10 @@ def sensor(sensor_id):
         else:
             colorFill=redFill
             colorLine=redLine
+
+        updated_value = "{:10.2f}".format(updated_value*sensor.a1 + sensor.a0)
+        values = [x*sensor.a1 + sensor.a0 for x in values]
+        values = ["{:10.2f}".format(x) for x in values]
 
     return render_template('chart.html', 
                             devices=devices,
