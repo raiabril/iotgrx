@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5">
       <div class="content-section">
         <h2>{{device.name}}</h2>
         <p>Last status update: {{moment(event.date_created).format('l')}} {{moment(event.date_created).format('LT')}}</p>
@@ -17,7 +17,7 @@
           <tr>
             <td>{{device.id}}</td>
             <td>{{device.code}}</td>
-            <td>{{moment(device.date_created).format('l')}} {{moment(device.date_created).format('LT')}}</td>
+            <td>{{moment(device.date_created).format('l')}}</td>
             <td>{{device.automatic_watering}}</td>
           </tr>
         </table>
@@ -45,7 +45,7 @@
         </form>
       </div>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-7">
       <div class="content-section">
         <h2>Active requests</h2>
         {% if requests.__len__() == 0%}
@@ -53,14 +53,12 @@
         {% else %}
         <table>
           <tr>
-            <th>ID</th>
-            <th>Date</th>
+            <th>Created</th>
             <th>Duration</th>
             <th>Creator</th>
           </tr>
           {% for request in requests %}
           <tr>
-            <td>{{request.id}}</td>
             <td>{{moment(request.date_created).format('l')}} {{moment(request.date_created).format('LT')}}</td>
             <td>{{request.duration}}</td>
             <td>{{request.creator}}</td>
@@ -68,7 +66,8 @@
           {% endfor %}
         </table>
         {% endif %}
-        <hr>
+      </div>
+      <div class="content-section">
         <h2>Last water logs</h2>
         {% if logs.__len__() == 0%}
             <p>No se han recuperado requests para el usuario.</p>
