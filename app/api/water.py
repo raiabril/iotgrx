@@ -30,7 +30,7 @@ def get_water_log(device_code):
 def post_log():
     request_headers = request.headers.environ
     request_json = json.loads(request.data)
-    
+
     try:
         log = WaterLog(duration=request_json['duration'],device_code=request_json['device_code'])
         db.session.add(log)

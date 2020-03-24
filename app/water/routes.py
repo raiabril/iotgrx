@@ -13,7 +13,7 @@ def check(device_code):
     device = Device.query.filter_by(code=device_code).first()
     devices = Device.query.filter_by(active=1).all()
     requests = WaterRequest.query.filter_by(pending=True).order_by(WaterRequest.date_created.desc()).all()
-    logs = WaterLog.query.order_by(WaterLog.date_created.desc()).limit(5).all()
+    logs = WaterLog.query.filter_by(device_code=device.code).order_by(WaterLog.date_created.desc()).limit(10).all()
     form = WaterForm()
 
     if form.validate_on_submit():
