@@ -55,7 +55,7 @@ def logout():
 @users.route("/account", methods=['GET','POST'])
 @login_required
 def account():
-    sensors = Sensor.query.all()
+    devices = Device.query.filter_by(active=1).all()
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
@@ -72,7 +72,7 @@ def account():
     image_file = url_for('static', filename='profile_pics/'+current_user.image_file)
     return render_template('account.html', title='Account', 
                            image_file=image_file, form=form,
-                           sensors=sensors)
+                           devices=devices)
 
 
 @users.route("/user/<string:username>")

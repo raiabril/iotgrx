@@ -81,4 +81,4 @@ def sensor(sensor_id):
                             updated_value=updated_value,
                             colorFill=colorFill,
                             colorLine=colorLine,
-                            title=sensor.name)
+                            title=device.name + "-" + sensor.name)
