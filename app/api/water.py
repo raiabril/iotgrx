@@ -18,21 +18,21 @@ def get_water_request(device_code):
     return jsonify(request.duration),200
 
 
-@bp.route('/water/log/<int:device_id>', methods=['GET'])
+@bp.route('/water/log/<string:device_code>', methods=['GET'])
 @token_auth.login_required
-def get_water_log(device_id):
-    request = [x.to_dict() for x in WaterLog.query.filter_by(device_id=device_id).order_by(WaterLog.date_created.desc()).limit(10)]
-    
+def get_water_log(device_code):
+    request = [x.to_dict() for x in WaterLog.query.filter_by(device_code=device_code).order_by(WaterLog.date_created.desc()).limit(10)]
     return jsonify(request),200
 
 
 @bp.route('/water/log', methods=['POST'])
-@token_auth.login_required
+#@token_auth.login_required
 def post_log():
     request_headers = request.headers.environ
     request_json = json.loads(request.data)
+    
     try:
-        log = WaterLog(duration=request_json['duration'],device_id=request_json['device_id'])
+        log = WaterLog(duration=request_json['duration'],device_code=request_json['device_code'])
         db.session.add(log)
         db.session.commit()
     except:
@@ -47,7 +47,7 @@ def post_request():
     request_headers = request.headers.environ
     request_json = json.loads(request.data)
     try:
-        log = WaterRequest(duration=request_json['duration'],device_id=request_json['device_id'],pending=True)
+        log = WaterRequest(duration=request_json['duration'],device_code=request_json['device_code'],pending=True)
         db.session.add(log)
         db.session.commit()
     except:
