@@ -2,7 +2,7 @@
 
 {% block content %}
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-9">
       <div class="chart-container content-section">
         {% if values.__len__() > 0%}
         <canvas id="myChart" height="350px" width="100%"></canvas>
@@ -10,9 +10,24 @@
         <p>No data for sensor retrieved.</p>
         {% endif %}
       </div>
-      {% if values.__len__() > 0%}
-      <p class="text-right">{{updated_value}} at <span id="last_update_time">{{updated_time}}</span></p>
-      {% endif %}
+    </div>
+    <div class="col-md-3">
+      <div class="content-section">
+        <h2>{{sensor.name}}</h2>
+        <h6>Device: {{device.name}}</h6>
+        <hr>
+        <h4>Last update</h4>
+        {% if values.__len__() > 0%}
+        <p>{{updated_value}} at <span id="last_update_time">{{updated_time}}</span></p>
+        {% endif %}
+        <hr>
+        <h4>Calibration</h4>
+        <p>y = {{sensor.a0}} + x {{sensor.a1}}</p>
+        {% if device.watering %}
+        <hr>
+        <a href="{{url_for('water.check', device_code=device.code)}}">Watering system</a>
+        {% endif %}
+      </div>
     </div>
   </div>
 
@@ -32,7 +47,7 @@
         {% endfor %}
       ],
             datasets: [{
-                label: "{{title}}",
+                label: "{{sensor.name}}",
                 data: [
           {% for item in values %}
             {{ item }},

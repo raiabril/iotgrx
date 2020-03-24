@@ -29,6 +29,8 @@ def sensor(sensor_id):
     redLine = "rgba(210,50,28,1)"
 
     devices = Device.query.filter_by(active=1).all()
+    sensor = Sensor.query.get(sensor_id)
+    device = Device.query.get(sensor.device_id)
     sensor = Sensor.query.filter_by(id=sensor_id).first_or_404()
     events = Event.query.filter_by(sensor_code=sensor.code)\
             .order_by(Event.date_created.desc())\
@@ -71,7 +73,8 @@ def sensor(sensor_id):
 
     return render_template('chart.html', 
                             devices=devices,
-                            title=sensor.name,
+                            sensor=sensor,
+                            device=device,
                             labels=labels,
                             values=values,
                             updated_time=updated_time,
