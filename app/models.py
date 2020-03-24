@@ -117,6 +117,8 @@ class Sensor(db.Model):
     code = db.Column(db.String(100), nullable=False)
     a0 = db.Column(db.Float, nullable=False, default = 0)
     a1 = db.Column(db.Float, nullable=False, default = 0)
+    units = db.Column(db.String(100))
+    sensor_type = db.Column(db.String(100))
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
     device = db.relationship('Device', lazy=True)
 
@@ -139,6 +141,7 @@ class Event(db.Model):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     value = db.Column(db.Float, nullable=False)
     boot = db.Column(db.Integer, nullable=False)
+    real_value = db.Column(db.Float)
     user_id = db.Column(db.String(100), db.ForeignKey('user.id'), nullable=False, index=True)
     sensor_code = db.Column(db.String(100), db.ForeignKey('sensor.code'), nullable=False, index=True)
     device_code = db.Column(db.String(100), db.ForeignKey('device.code'), nullable=False, index=True)

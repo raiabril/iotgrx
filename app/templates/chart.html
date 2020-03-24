@@ -10,21 +10,22 @@
         <p>No data for sensor retrieved.</p>
         {% endif %}
       </div>
+      {% if values.__len__() > 0%}
+      <p class="text-right">{{updated_value}} at <span id="last_update_time">{{updated_time}}</span></p>
+      {% endif %}
     </div>
     <div class="col-md-3">
       <div class="content-section">
-        <h2>{{sensor.name}}</h2>
-        <h6>Device: {{device.name}}</h6>
+        <h3>{{sensor.name}}</h3>
+        <p>Device: {{device.name}}</p>
+        <p>Units: {{sensor.units}}</p>
+        <p>Type: {{sensor.sensor_type}}</p>
         <hr>
-        <h4>Last update</h4>
-        {% if values.__len__() > 0%}
-        <p>{{updated_value}} at <span id="last_update_time">{{updated_time}}</span></p>
-        {% endif %}
-        <hr>
-        <h4>Calibration</h4>
+        <h5>Calibration</h4>
         <p>y = {{sensor.a0}} + x {{sensor.a1}}</p>
         {% if device.watering %}
         <hr>
+        <h6>Watering system</h6>
         <a href="{{url_for('water.check', device_code=device.code)}}">Watering system</a>
         {% endif %}
       </div>
