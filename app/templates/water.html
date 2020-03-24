@@ -6,16 +6,19 @@
     <div class="col-md-4">
       <div class="content-section">
         <h2>{{device.name}}</h2>
+        <p>Last status update: {{moment(event.date_created).format('l')}} {{moment(event.date_created).format('LT')}}</p>
         <table>
           <tr>
-              <th>DeviceID</th>
-              <th>Name</th>
+              <th>ID</th>
+              <th>Code</th>
               <th>Created</th>
+              <th>Auto</th>
           </tr>
           <tr>
             <td>{{device.id}}</td>
-            <td>{{device.name}}</td>
-            <td>{{device.date_created}}</td>
+            <td>{{device.code}}</td>
+            <td>{{moment(device.date_created).format('l')}} {{moment(device.date_created).format('LT')}}</td>
+            <td>{{device.automatic_watering}}</td>
           </tr>
         </table>
       </div>
@@ -50,12 +53,14 @@
         {% else %}
         <table>
           <tr>
+            <th>ID</th>
             <th>Date</th>
             <th>Duration</th>
             <th>Creator</th>
           </tr>
           {% for request in requests %}
           <tr>
+            <td>{{request.id}}</td>
             <td>{{moment(request.date_created).format('l')}} {{moment(request.date_created).format('LT')}}</td>
             <td>{{request.duration}}</td>
             <td>{{request.creator}}</td>
