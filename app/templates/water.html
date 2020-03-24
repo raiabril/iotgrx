@@ -22,7 +22,7 @@
       <div class="content-section">
         <form method="POST" action="">
           {{form.hidden_tag()}}
-          <h2>Water system</h2>
+          <h2>Request water</h2>
           <div class="form-group">
             {{form.duration.label(class="form-control-label")}}
             {%if form.duration.errors%}
@@ -44,7 +44,7 @@
     </div>
     <div class="col-md-8">
       <div class="content-section">
-        <h2>Active requests</h2>
+        <h2>Current pending active requests</h2>
         {% if requests.__len__() == 0%}
             <p>No se han recuperado requests para el usuario.</p>
         {% else %}
