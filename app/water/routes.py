@@ -7,7 +7,7 @@ from app import db
 
 water = Blueprint('water', __name__)
 
-@water.route("/check/<string:device_code>",methods=['GET','POST'])
+@water.route("/check/<string:device_code>", methods=['GET','POST'])
 @login_required
 def check(device_code):
     device = Device.query.filter_by(code=device_code).first()

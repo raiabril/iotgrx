@@ -94,6 +94,7 @@ class Device(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
     active = db.Column(db.Boolean, nullable=False, default=False)
     watering = db.Column(db.Boolean, nullable=False, default=False)
+    automatic_watering = db.Column(db.Boolean, nullable=False, default=False)
     sensors = db.relationship('Sensor', lazy=True)
 
     def __repr__(self):
