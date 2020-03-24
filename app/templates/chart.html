@@ -6,7 +6,7 @@
       <div class="content-section">
         <h3>{{sensor.name}}</h3>
         {% if values.__len__() > 0%}
-        <p>{{updated_value}} at <span id="last_update_time">{{updated_time}}</span></p>
+        <p>{{updated_value}}{{sensor.units}} at <span id="last_update_time">{{updated_time}}</span></p>
         {% endif %}
         <div class="chart-container">
           {% if values.__len__() > 0%}
