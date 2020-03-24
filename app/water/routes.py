@@ -7,28 +7,27 @@ from app import db
 
 water = Blueprint('water', __name__)
 
-@water.route("/check",methods=['GET','POST'])
+@water.route("/check/<string:device_code>",methods=['GET','POST'])
 @login_required
-def check():
-    sensors = Sensor.query.all()
-    requests = WaterRequest.query.filter_by(status=True).order_by(WaterRequest.date_created.desc()).all()
-    devices = Device.query.filter_by(user_id=current_user.id).all()
-    events = Event.query.order_by(Event.date_created.desc()).limit(25).all()
+def check(device_code):
+    device = Device.query.filter_by(code=device_code).first()
+    devices = Device.query.filter_by(active=1).all()
+    requests = WaterRequest.query.filter_by(pending=True).order_by(WaterRequest.date_created.desc()).all()
     logs = WaterLog.query.order_by(WaterLog.date_created.desc()).limit(5).all()
     form = WaterForm()
 
     if form.validate_on_submit():
-        request = WaterRequest(duration=1000,device_id=1,status=True)
+        duration = form.duration.data
+        request = WaterRequest(device_code=device.code, pending=True, duration=duration)
         db.session.add(request)
         db.session.commit()
         flash('Watering requested!','success')
-        return redirect(url_for('water.check'))
+        return redirect(url_for('water.check', device_code=device.code))
 
     return render_template('water.html', 
                             title='iotHome', 
                             requests=requests,
                             logs=logs,
                             form=form,
-                            devices=devices,
-                            sensors=sensors,
-                            events=events)
+                            device=device,
+                            devices=devices)

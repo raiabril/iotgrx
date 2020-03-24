@@ -90,9 +90,10 @@ class Device(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     name = db.Column(db.String(100), nullable=False)
-    code = db.Column(db.String(100), nullable=False)
+    code = db.Column(db.String(100), nullable=False, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
     active = db.Column(db.Boolean, nullable=False, default=False)
+    watering = db.Column(db.Boolean, nullable=False, default=False)
     sensors = db.relationship('Sensor', lazy=True)
 
     def __repr__(self):
@@ -158,16 +159,17 @@ class Event(db.Model):
 class WaterRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    status = db.Column(db.Boolean, nullable=False)
+    pending = db.Column(db.Boolean, nullable=False)
     duration = db.Column(db.Integer, nullable=False)
-    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
+    device_code = db.Column(db.Integer, db.ForeignKey('device.code'), nullable=False, index=True)
     device = db.relationship('Device', lazy=True)
+
 
 class WaterLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     duration = db.Column(db.Integer, nullable=False)
-    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
+    device_code = db.Column(db.Integer, db.ForeignKey('device.code'), nullable=False, index=True)
     device = db.relationship('Device', lazy=True)
     
     def to_dict(self):
@@ -175,7 +177,7 @@ class WaterLog(db.Model):
             'id': self.id,
             'date_created':self.date_created.strftime("%Y-%m-%d %H:%M:%S"),
             'duration':self.duration,
-            'device_id': self.device_id
+            'device_code': self.device_code
             }
         return data
     

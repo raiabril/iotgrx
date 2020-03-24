@@ -4,37 +4,46 @@
 
 <div class="row">
     <div class="col-md-4">
-      <div class="chart-container content-section">
-        <h2>My devices</h2>
-        {% if devices.__len__() == 0%}
-            <p>No se han recuperado devices para el usuario.</p>
-        {% else %}
+      <div class="content-section">
+        <h2>{{device.name}}</h2>
         <table>
           <tr>
               <th>DeviceID</th>
               <th>Name</th>
+              <th>Created</th>
           </tr>
-          {% for device in devices %}
           <tr>
             <td>{{device.id}}</td>
             <td>{{device.name}}</td>
-            <td>
-              <form method="POST" action="">
-                {{ form.hidden_tag() }}
-                <div class="form-group">
-                    {{form.submit(class="btn btn-outline-info")}}
-                </div>
-              </form>
-            </td>
+            <td>{{device.date_created}}</td>
           </tr>
-          {% endfor %}
         </table>
-        {% endif %}
-        
+      </div>
+      <div class="content-section">
+        <form method="POST" action="">
+          {{form.hidden_tag()}}
+          <h2>Water system</h2>
+          <div class="form-group">
+            {{form.duration.label(class="form-control-label")}}
+            {%if form.duration.errors%}
+                {{form.duration(class="form-control form-control-lg is-invalid")}}
+                <div class="invalid-feedback">
+                    {%for error in form.duration.errors%}
+                        <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+            {%else%}
+                {{form.duration(class="form-control form-control-lg")}}    
+            {%endif%}
+          </div>
+          <div class="form-group">
+              {{form.submit(class="btn btn-outline-info")}}
+          </div>
+        </form>
       </div>
     </div>
     <div class="col-md-8">
-      <div class="chart-container content-section">
+      <div class="content-section">
         <h2>Active requests</h2>
         {% if requests.__len__() == 0%}
             <p>No se han recuperado requests para el usuario.</p>
@@ -75,25 +84,7 @@
           {% endfor %}
         </table>
         {% endif %}
-        <hr>
-        <h2>Last events</h2>
-        {% if events.__len__() == 0%}
-            <p>No recent data.</p>
-        {% else %}
-        <table>
-          <tr>
-              <th>Date</th>
-              <th>Value</th>
-          </tr>
-          {% for event in events %}
-          <tr>
-            <td>{{moment(event.date_created).format('l')}} {{moment(event.date_created).format('LT')}}</td>
-            <td>{{event.boot}}_{{event.sensor.device.name}}:{{event.sensor.name}}:{{event.value}}</td>
-          </tr>
-          {% endfor %}
-        </table>
-        {% endif %}
       </div>
-    </div>
+    </div-->
   </div>
 {% endblock %}
