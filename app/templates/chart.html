@@ -17,15 +17,16 @@
     <div class="col-md-3">
       <div class="content-section">
         <h3>{{sensor.name}}</h3>
-        <p>Device: {{device.name}}</p>
-        <p>Units: {{sensor.units}}</p>
-        <p>Type: {{sensor.sensor_type}}</p>
+        <p>
+          Device: {{device.name}}<br>
+          Units: {{sensor.units}}<br>
+          Type: {{sensor.sensor_type}}
+        </p>
         <hr>
         <h5>Calibration</h4>
         <p>y = {{sensor.a0}} + x {{sensor.a1}}</p>
         {% if device.watering %}
         <hr>
-        <h6>Watering system</h6>
         <a href="{{url_for('water.check', device_code=device.code)}}">Watering system</a>
         {% endif %}
       </div>
