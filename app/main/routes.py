@@ -80,4 +80,5 @@ def sensor(sensor_id):
                             updated_time=updated_time,
                             updated_value=updated_value,
                             colorFill=colorFill,
-                            colorLine=colorLine)
+                            colorLine=colorLine,
+                            title=sensor.name)
