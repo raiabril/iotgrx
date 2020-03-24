@@ -65,7 +65,7 @@ def sensor(sensor_id):
             colorFill=redFill
             colorLine=redLine
 
-        updated_value = "{:10.3f}".format(updated_value*sensor.a1 + sensor.a0)
+        updated_value = "{:10.3f} ({})".format(updated_value*sensor.a1 + sensor.a0, updated_value)
         values = [x*sensor.a1 + sensor.a0 for x in values]
         values = ["{:10.3f}".format(x) for x in values]
 
