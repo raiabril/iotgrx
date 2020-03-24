@@ -3,22 +3,28 @@
 {% block content %}
   <div class="row">
     <div class="col-md-9">
-      <div class="chart-container content-section">
+      <div class="content-section">
+        <h3>{{sensor.name}}</h3>
         {% if values.__len__() > 0%}
-        <canvas id="myChart" height="350px" width="100%"></canvas>
-        {% else %}
-        <p>No data for sensor retrieved.</p>
+        <p>{{updated_value}} at <span id="last_update_time">{{updated_time}}</span></p>
         {% endif %}
+        <div class="chart-container">
+          {% if values.__len__() > 0%}
+          <canvas id="myChart" height="350px" width="100%"></canvas>
+          {% else %}
+          <p>No data for sensor retrieved.</p>
+          {% endif %}
+        </div>
       </div>
-      {% if values.__len__() > 0%}
-      <p class="text-right">{{updated_value}} at <span id="last_update_time">{{updated_time}}</span></p>
-      {% endif %}
     </div>
     <div class="col-md-3">
       <div class="content-section">
-        <h3>{{sensor.name}}</h3>
+        <h5>Device data</h5>
         <p>
-          Device: {{device.name}}<br>
+          Device: {{device.name}}
+        </p>
+        <h5>Sensor data</h5>
+        <p>
           Units: {{sensor.units}}<br>
           Type: {{sensor.sensor_type}}
         </p>
