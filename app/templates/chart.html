@@ -29,8 +29,16 @@
           Type: {{sensor.sensor_type}}
         </p>
         <hr>
+        <h5>Last measure</h5>
+        <p>
+          Data of the last values
+        </p>
         <h5>Calibration</h4>
-        <p>y = {{sensor.a0}} + x {{sensor.a1}}</p>
+        <p>
+          y = a0 + x*a1<br>
+          a0 = {{sensor.a0}}
+          a1 = {{sensor.a1}}
+        </p>
         {% if device.watering %}
         <hr>
         <a href="{{url_for('water.check', device_code=device.code)}}">Watering system</a>

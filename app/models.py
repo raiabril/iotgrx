@@ -120,7 +120,6 @@ class Sensor(db.Model):
     units = db.Column(db.String(100))
     sensor_type = db.Column(db.String(100))
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
-    device = db.relationship('Device', lazy=True)
 
     def __repr__(self):
         return f"Sensor('{self.id}','{self.name}')"
