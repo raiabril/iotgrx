@@ -47,7 +47,10 @@ def post_request():
     request_headers = request.headers.environ
     request_json = json.loads(request.data)
     try:
-        log = WaterRequest(duration=request_json['duration'],device_code=request_json['device_code'],pending=True)
+        log = WaterRequest(duration=request_json['duration'],
+                            device_code=request_json['device_code'],
+                            pending=True, 
+                            creator = 'API')
         db.session.add(log)
         db.session.commit()
     except:

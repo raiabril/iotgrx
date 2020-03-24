@@ -44,27 +44,27 @@
     </div>
     <div class="col-md-8">
       <div class="content-section">
-        <h2>Current pending active requests</h2>
+        <h2>Active requests</h2>
         {% if requests.__len__() == 0%}
             <p>No se han recuperado requests para el usuario.</p>
         {% else %}
         <table>
           <tr>
             <th>Date</th>
-            <th>Device</th>
-            <th>Millis</th>
+            <th>Duration</th>
+            <th>Creator</th>
           </tr>
           {% for request in requests %}
           <tr>
             <td>{{moment(request.date_created).format('l')}} {{moment(request.date_created).format('LT')}}</td>
-            <td>{{request.device.name}}</td>
             <td>{{request.duration}}</td>
+            <td>{{request.creator}}</td>
           </tr>
           {% endfor %}
         </table>
         {% endif %}
         <hr>
-        <h2>Water logs from device</h2>
+        <h2>Last water logs</h2>
         {% if logs.__len__() == 0%}
             <p>No se han recuperado requests para el usuario.</p>
         {% else %}
@@ -72,13 +72,11 @@
         <table>
           <tr>
             <th>Date</th>
-            <th>Device</th>  
-            <th>Millis</th>
+            <th>Duration</th>
           </tr>
           {% for log in logs %}
           <tr>
             <td>{{moment(log.date_created).format('l')}} {{moment(log.date_created).format('LT')}}</td>
-            <td>{{log.device.name}}</td>
             <td>{{log.duration}}</td>
           </tr>
           {% endfor %}

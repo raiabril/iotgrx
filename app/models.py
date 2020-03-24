@@ -163,6 +163,7 @@ class WaterRequest(db.Model):
     pending = db.Column(db.Boolean, nullable=False)
     duration = db.Column(db.Integer, nullable=False)
     device_code = db.Column(db.Integer, db.ForeignKey('device.code'), nullable=False, index=True)
+    creator = db.Column(db.String, nullable=False)
     device = db.relationship('Device', lazy=True)
 
 

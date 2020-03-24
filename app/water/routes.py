@@ -18,7 +18,7 @@ def check(device_code):
 
     if form.validate_on_submit():
         duration = form.duration.data
-        request = WaterRequest(device_code=device.code, pending=True, duration=duration)
+        request = WaterRequest(device_code=device.code, pending=True, duration=duration, creator='Web')
         db.session.add(request)
         db.session.commit()
         flash('Watering requested!','success')
