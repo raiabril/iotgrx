@@ -11,7 +11,7 @@ def home():
     if current_user.is_authenticated:
         devices = Device.query.filter_by(active=1).all()
         return render_template('index.html', 
-                            title='iotHome', 
+                            title='iotGRX', 
                             devices=devices)
     else:
         return redirect(url_for('users.login'))
