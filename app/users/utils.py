@@ -19,7 +19,7 @@ def save_picture(form_picture):
 def send_reset_email(user):
     token = user.get_reset_token()
     msg = Message('Password reset request',
-                  sender=('iotHome','raiabril.grx6@gmail.com'), 
+                  sender=('iotGRX','raiabril.grx6@gmail.com'), 
                   recipients=[user.email])
     msg.html = render_template('email/reset-password.html', 
                                 reset_password_url=url_for('users.reset_token',token=token,_external=True))
@@ -29,8 +29,8 @@ def send_reset_email(user):
 
 
 def send_welcome_email(user):
-    msg = Message('Welcome to iotHome',
-                  sender=('iotHome','raiablp@gmail.com'), 
+    msg = Message('Welcome to iotGRX',
+                  sender=('iotGRX','raiablp@gmail.com'), 
                   recipients=[user.email])
     msg.html = render_template('email/welcome.html')
     msg.body = render_template('email/welcome.txt')
@@ -39,7 +39,7 @@ def send_welcome_email(user):
 
 def send_notification_email(user, resource):
     msg = Message('Notification',
-                  sender=('iotHome','raiabril.grx6@gmail.com'), 
+                  sender=('iotGRX','raiabril.grx6@gmail.com'), 
                   recipients=[user.email])
     msg.html = render_template('email/notification.html')
     msg.body = render_template('email/notification.txt')

@@ -26,7 +26,7 @@ def check(device_code):
         return redirect(url_for('water.check', device_code=device.code))
 
     return render_template('water.html', 
-                            title='iotHome', 
+                            title=device.name + " - water system", 
                             requests=requests,
                             logs=logs,
                             form=form,
