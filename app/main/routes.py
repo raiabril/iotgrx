@@ -47,15 +47,19 @@ def sensor(sensor_id):
     else:
         labels=[]
         values=[]
+        real_value = []
 
         for event in events:
             labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
             values.append(event.value)
+            real_value.append(event.real_value)
             
         # Filter values
         values = filter_values(values)
         updated_time = labels[0]
         updated_value = values[0]
+        updated_value_raw = values[0]
+        updated_real_value = real_value[0]
 
         if updated_value < 2800:
             colorFill=greenFill
@@ -79,6 +83,8 @@ def sensor(sensor_id):
                             values=values,
                             updated_time=updated_time,
                             updated_value=updated_value,
+                            updated_real_value=updated_real_value,
+                            updated_value_raw=updated_value_raw,
                             colorFill=colorFill,
                             colorLine=colorLine,
                             title=device.name + " - " + sensor.name)

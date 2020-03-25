@@ -2,24 +2,24 @@
 
 {% block content %}
   <div class="row">
-    <div class="col-md-9">
-      <div class="content-section">
-        <h3>{{sensor.name}}</h3>
+    <div class="col-md-10">
+      <div class="content-section text-center">
+        <h3 class="text-center">{{sensor.name}}</h3>
         {% if values.__len__() > 0%}
-        <p>{{updated_value}}{{sensor.units}} at <span id="last_update_time">{{updated_time}}</span></p>
+        <p class="text-center">{{updated_value}}{{sensor.units}} at <span id="last_update_time">{{updated_time}}</span></p>
         {% endif %}
         <div class="chart-container">
           {% if values.__len__() > 0%}
-          <canvas id="myChart" height="350px" width="100%"></canvas>
+          <canvas id="myChart" height="340px" width="100%"></canvas>
           {% else %}
           <p>No data for sensor retrieved.</p>
           {% endif %}
         </div>
       </div>
     </div>
-    <div class="col-md-3">
-      <div class="content-section">
-        <h5>Device data</h5>
+    <div class="col-md-2">
+      <div class="content-section text-center">
+        <h5 >Device data</h5>
         <p>
           Device: {{device.name}}
         </p>
@@ -31,7 +31,9 @@
         <hr>
         <h5>Last measure</h5>
         <p>
-          Data of the last values
+          Real: {{updated_real_value}} V <br>
+          Calibrated: {{updated_value}} V <br>
+          Measure Raw: {{updated_value_raw}}
         </p>
         <h5>Calibration</h4>
         <p>
