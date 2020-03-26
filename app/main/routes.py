@@ -1,8 +1,10 @@
-from flask import render_template, request, Blueprint, redirect, url_for
+from flask import render_template, request, Blueprint, redirect, url_for, flash
 from flask_login import current_user, login_required
 from sqlalchemy import func
 from app.models import Sensor, Event, Device, User
 from app.main.utils import filter_values
+from app.main.forms import RealValueForm
+from app import db
 
 main = Blueprint('main', __name__)
 
@@ -17,9 +19,29 @@ def home():
         return redirect(url_for('users.login'))
 
 
-@main.route('/sensor/<int:sensor_id>')
+@main.route('/sensor/<int:sensor_id>', methods=['GET','POST'])
 @login_required
 def sensor(sensor_id):
+
+    form = RealValueForm()
+
+    if form.validate_on_submit():
+        event = Event.query.get(form.id.data)
+        event.real_value = form.real_value.data
+        db.session.commit()
+        flash('Real value updated and calibration regenerated!','success')
+        return redirect(url_for('main.sensor', sensor_id = sensor_id))
+
+    elif request.method == 'GET':
+        devices = Device.query.filter_by(active=1).all()
+        sensor = Sensor.query.get(sensor_id)
+        device = Device.query.get(sensor.device_id)
+        events = Event.query.filter_by(sensor_code=sensor.code)\
+            .order_by(Event.date_created.desc())\
+            .limit(2*24*7).all()
+
+        form.id.data = events[0].id
+        form.real_value.data = events[0].real_value
 
     greenFill = "rgba(151,220,150,0.3)"
     greenLine = "rgba(73,193,71,1)"
@@ -27,14 +49,6 @@ def sensor(sensor_id):
     yellowLine = "rgba(240,245,50,1)"
     redFill = "rgba(234,121,106,0.3)"
     redLine = "rgba(210,50,28,1)"
-
-    devices = Device.query.filter_by(active=1).all()
-    sensor = Sensor.query.get(sensor_id)
-    device = Device.query.get(sensor.device_id)
-    sensor = Sensor.query.filter_by(id=sensor_id).first_or_404()
-    events = Event.query.filter_by(sensor_code=sensor.code)\
-            .order_by(Event.date_created.desc())\
-            .limit(2*24*7).all()
 
     if events.__len__() <= 1:
         labels=[]
@@ -87,4 +101,5 @@ def sensor(sensor_id):
                             updated_value_raw=updated_value_raw,
                             colorFill=colorFill,
                             colorLine=colorLine,
-                            title=device.name + " - " + sensor.name)
+                            title=device.name + " - " + sensor.name,
+                            form=form)
