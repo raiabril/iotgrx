@@ -151,18 +151,9 @@
           legend: {
             display: false
           },
-          tooltips: {
-            callbacks: {
-                label: function(tooltipItem, data) {
-                    var dataset = data.datasets[tooltipItem.datasetIndex];
-                    var index = tooltipItem.index;
-                    return dataset.labels[index] + ': ' + dataset.data[index];
-                }
-            }
-          },
           elements: {
               point:{
-                radius: 0
+                radius: 1
               }
           },
           scales: {
