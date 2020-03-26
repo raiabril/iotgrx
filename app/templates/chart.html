@@ -25,13 +25,20 @@
         </p>
         <h5>Sensor data</h5>
         <p>
+          {% if sensor.units %}
           Units: {{sensor.units}}<br>
+          {% endif %}
           Type: {{sensor.sensor_type}}
         </p>
         <hr>
         <h5>Last measure</h5>
         <p>
-          Real: {{updated_real_value}} {{sensor.units}} <br>
+          {% if updated_real_value %}
+          Real: {{updated_real_value}}
+          {% if sensor.units %}
+          {{sensor.units}} <br>
+          {% endif %}
+          {% endif %}
           Calibrated: {{updated_value}} {{sensor.units}} <br>
           Measure Raw: {{updated_value_raw}}
         </p>
@@ -103,58 +110,90 @@
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: [
-        {% for label in labels %}
-          moment.utc("{{ label }}"),
-        {% endfor %}
-      ],
-            datasets: [{
-                label: "{{sensor.name}}",
-                data: [
-          {% for item in values %}
-            {{ item }},
-          {% endfor %}],
-                backgroundColor: "{{colorFill}}",
-                borderColor: "{{colorLine}}",
-                borderWidth: 2,
-
-            }]
+          labels: [
+            {% for label in labels %}
+            moment.utc("{{ label }}"),
+            {% endfor %}
+          ],
+          datasets: [
+            {
+              label: "Sensor reading",
+              data: [
+              {% for item in values %}
+              {{ item }},
+              {% endfor %}
+              ],
+              backgroundColor: "{{colorFill}}",
+              borderColor: "{{colorLine}}",
+              borderWidth: 2
+            },
+            {
+              type: "scatter",
+              label: "Manual measurement",
+              labels: [
+                {% for label in real_values_labels %}
+                moment.utc("{{ label }}"),
+                {% endfor %}
+              ],
+              data: [
+                {% for item in real_values %}
+                {{ item }},
+                {% endfor %}
+              ],
+              backgroundColor: "rgba(0,0,0,0.5)",
+              radius: {{real_radius}}
+            }
+          ]
         },
         options: {
-            responsive:true,
-            maintainAspectRatio:false,
-            legend: {
-                display: false
-            },
-            elements: {
-                point:{
-                    radius: 0
-                 }
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        steps:10,
-                        beginAtZero: false
-                    }
-                }],
-                xAxes: [{
-                    ticks: {
-                        display:true,
-                        maxTicksLimit: 8
-                    },
-                    distribution: 'linear',
-                    type: 'time',
-                    time: {
-                        unit: 'day',
-                        unitStepSize: 1,
-                        displayFormats: {
-                           'day': 'MMM DD'
-                        }
-                    }
-                }]
+          responsive:true,
+          maintainAspectRatio:false,
+          legend: {
+            display: false
+          },
+          tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    var dataset = data.datasets[tooltipItem.datasetIndex];
+                    var index = tooltipItem.index;
+                    return dataset.labels[index] + ': ' + dataset.data[index];
+                }
             }
+          },
+          elements: {
+              point:{
+                radius: 0
+              }
+          },
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                    steps:10,
+                    beginAtZero: false
+                }
+              }
+            ],
+            xAxes: [
+              {
+                ticks: {
+                    display:true,
+                    maxTicksLimit: 8
+                },
+                distribution: 'linear',
+                type: 'time',
+                time: {
+                    unit: 'day',
+                    unitStepSize: 1,
+                    displayFormats: {
+                        'day': 'MMM DD'
+                    }
+                }
+              }
+            ]
+          }
         }
-    });
+      }
+    );
     </script>
 {% endblock %}
