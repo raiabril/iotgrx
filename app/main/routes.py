@@ -92,6 +92,7 @@ def sensor(sensor_id):
         values = [x*sensor.a1 + sensor.a0 for x in values]
         values = ["{:10.3f}".format(x) for x in values]
         real_values = ["{:10.3f}".format(x) if x != None else "0.000" for x in real_values]
+        boot_count = event.boot
 
     return render_template('chart.html', 
                             devices=devices,
@@ -105,6 +106,7 @@ def sensor(sensor_id):
                             updated_value=updated_value,
                             updated_real_value=updated_real_value,
                             updated_value_raw=updated_value_raw,
+                            boot_count=boot_count,
                             colorFill=colorFill,
                             colorLine=colorLine,
                             real_radius=real_radius,
