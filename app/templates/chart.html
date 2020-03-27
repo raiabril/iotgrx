@@ -1,25 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-9">
-      <div class="content-section text-center">
-        <h4 class="text-center">{{sensor.name}}</h4>
-        {% if values.__len__() > 0%}
-        <p class="text-center">{{"{:10.2f}".format(last_event.value*sensor.a1 + sensor.a0)}} {{sensor.units}} at
-          <span>{{moment(last_event.date_created).format('l')}} {{moment(last_event.date_created).format('LT')}}</span></p>
-        {% endif %}
-        <div class="chart-container">
-          {% if values.__len__() > 0%}
-          <canvas id="myChart" height="340px" width="100%"></canvas>
-          {% else %}
-          <p>No data for sensor retrieved.</p>
-          {% endif %}
-        </div>
-      </div>
+<div class="container container-fluid">
+  <div class="content-section text-center">
+    <h4 class="text-center">{{sensor.name}}</h4>
+    {% if values.__len__() > 0%}
+    <p class="text-center">{{"{:10.2f}".format(last_event.value*sensor.a1 + sensor.a0)}} {{sensor.units}} at
+      <span>{{moment(last_event.date_created).format('l')}} {{moment(last_event.date_created).format('LT')}}</span></p>
+    {% endif %}
+    <div class="chart-container">
+      {% if values.__len__() > 0%}
+      <canvas id="myChart" height="340px" width="100%"></canvas>
+      {% else %}
+      <p>No data for sensor retrieved.</p>
+      {% endif %}
     </div>
-    <div class="col-md-3">
+  </div>
+  <div class="row">
+    <div class="col-md-4">
       <div class="content-section text-center">
         <span><h5>Device data</h5><a href="{{url_for('device.check', device_code=device.code)}}">Config</a></span>
         <p>
@@ -33,7 +31,11 @@
           {% endif %}
           Type: {{sensor.sensor_type}}
         </p>
-        <hr>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="content-section text-center">
         <h5>Last measure</h5>
         <p>
           {% if last_event.real_value %}
@@ -45,56 +47,14 @@
           Calibrated: {{"{:10.2f}".format(last_event.value*sensor.a1 + sensor.a0)}} {{sensor.units}} <br>
           Measure Raw: {{last_event.value}}
         </p>
-
-        <form method="POST" action="" enctype="multipart/form-data">
-          {{form.hidden_tag()}}
-            <fieldset class="form-group">
-              <div class="row">
-                <div class="container col-md-6">
-                  <div class="form-group">
-                    {{form.id.label(class="form-control-label")}}
-                    {%if form.id.errors%}
-                          {{form.id(class="form-control form-control-md is-invalid")}}
-                          <div class="invalid-feedback">
-                              {%for error in form.id.errors%}
-                                  <span>{{error}}</span>
-                              {%endfor%}
-                          </div>
-                      {%else%}
-                          {{form.id(class="form-control form-control-md text-center")}}    
-                      {%endif%}
-                  </div>
-                </div>
-                <div class="container col-md-6">
-                  <div class="form-group">
-                    {{form.real_value.label(class="form-control-label")}}
-                    {%if form.real_value.errors%}
-                        {{form.real_value(class="form-control form-control-md is-invalid")}}
-                        <div class="invalid-feedback">
-                            {%for error in form.real_value.errors%}
-                                <span>{{error}}</span>
-                            {%endfor%}
-                        </div>
-                    {%else%}
-                        {{form.real_value(class="form-control form-control-md text-center")}}    
-                    {%endif%}
-                  </div>
-                </div>
-              </div>
-              <div class="container" style="display: flex; align-items: center; justify-content: center;">
-                <div class="form-group">
-                  <br>
-                  {{form.submit(class="btn btn-outline-info")}}
-                </div>
-              </div>
-            </fieldset>
-        </form>
+        <hr>
         <h5>Calibration</h4>
         <p>
           y = a0 + a1*x<br>
           y = {{"{:10.5f}".format(sensor.a0)}} + ({{"{:10.5f}".format(sensor.a1)}})* x
         </p>
         {% if real_values.__len__() > 0 %}
+        <hr>
         <div class="container">
           <table style="width:100%">
             <tr>
@@ -112,6 +72,46 @@
           </table>
         </div>
         {% endif %}
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="content-section text-center">
+        <form method="POST" action="" enctype="multipart/form-data">
+          {{form.hidden_tag()}}
+          <h5>Manual adjustment</h5>
+          <fieldset class="form-group">
+            <div class="form-group">
+              {{form.id.label(class="form-control-label")}}
+              {%if form.id.errors%}
+                    {{form.id(class="form-control form-control-md is-invalid")}}
+                    <div class="invalid-feedback">
+                        {%for error in form.id.errors%}
+                            <span>{{error}}</span>
+                        {%endfor%}
+                    </div>
+                {%else%}
+                    {{form.id(class="form-control form-control-md text-center")}}    
+                {%endif%}
+            </div>
+            <div class="form-group">
+              {{form.real_value.label(class="form-control-label")}}
+              {%if form.real_value.errors%}
+                  {{form.real_value(class="form-control form-control-md is-invalid")}}
+                  <div class="invalid-feedback">
+                      {%for error in form.real_value.errors%}
+                          <span>{{error}}</span>
+                      {%endfor%}
+                  </div>
+              {%else%}
+                  {{form.real_value(class="form-control form-control-md text-center")}}    
+              {%endif%}
+            </div>
+            <div class="form-group">
+              <br>
+              {{form.submit(class="btn btn-outline-info")}}
+            </div>
+          </fieldset>
+        </form>
       </div>
     </div>
   </div>
