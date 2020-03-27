@@ -7,7 +7,8 @@
       <div class="content-section text-center">
         <h4 class="text-center">{{sensor.name}}</h4>
         {% if values.__len__() > 0%}
-        <p class="text-center">{{last_event.value}}{{sensor.units}} at <span id="last_update_time">{{last_event.date_created}}</span></p>
+        <p class="text-center">{{"{:10.2f}".format(last_event.value*sensor.a1 + sensor.a0)}} {{sensor.units}} at
+          <span>{{moment(last_event.date_created).format('l')}} {{moment(last_event.date_created).format('LT')}}</span></p>
         {% endif %}
         <div class="chart-container">
           {% if values.__len__() > 0%}
@@ -119,7 +120,6 @@
 
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
-document.getElementById('last_update_time').innerHTML = moment.utc("{{ updated_time }}")._d.toLocaleString();
 
 var myChart = new Chart(ctx, {
     type: 'line',
