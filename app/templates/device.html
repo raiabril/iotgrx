@@ -20,9 +20,7 @@
         <td>{{device.automatic_watering}}</td>
       </tr>
     </table>
-  </div>
-  
-  <div class="content-section">
+    <hr>
     <h2>Active requests</h2>
     {% if requests.__len__() == 0%}
         <p>No se han recuperado requests para el usuario.</p>
@@ -42,9 +40,7 @@
       {% endfor %}
     </table>
     {% endif %}
-  </div>
-
-  <div class="content-section">
+    <hr>
     <h2>Last water logs</h2>
     {% if logs.__len__() == 0%}
         <p>No se han recuperado requests para el usuario.</p>
@@ -62,9 +58,7 @@
       {% endfor %}
     </table>
     {% endif %}
-  </div>
-
-  <div class="content-section">
+    <hr>
     <form method="POST" action="">
       {{form.hidden_tag()}}
       <h2>Request water</h2>
