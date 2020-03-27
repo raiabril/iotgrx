@@ -12,7 +12,7 @@ device = Blueprint('device', __name__)
 def check(device_code):
     device = Device.query.filter_by(code=device_code).first()
     devices = Device.query.filter_by(active=1).all()
-    requests = WaterRequest.query.filter_by(pending=True).order_by(WaterRequest.date_created.asc()).all()
+    requests = WaterRequest.query.filter_by(device_code=device_code).filter_by(pending=True).order_by(WaterRequest.date_created.asc()).all()
     logs = WaterLog.query.filter_by(device_code=device.code).order_by(WaterLog.date_created.desc()).limit(10).all()
     form = WaterForm()
     event = Event.query.filter_by(device_code=device.code).order_by(Event.date_created.desc()).first()
