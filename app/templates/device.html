@@ -1,93 +1,91 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-5">
-      <div class="content-section">
-        <h2>{{device.name}}</h2>
-        <p>Last status update: {{moment(event.date_created).format('l')}} {{moment(event.date_created).format('LT')}}</p>
-        <table>
-          <tr>
-              <th>ID</th>
-              <th>Code</th>
-              <th>Created</th>
-              <th>Auto</th>
-          </tr>
-          <tr>
-            <td>{{device.id}}</td>
-            <td>{{device.code}}</td>
-            <td>{{moment(device.date_created).format('l')}}</td>
-            <td>{{device.automatic_watering}}</td>
-          </tr>
-        </table>
-      </div>
-      <div class="content-section">
-        <form method="POST" action="">
-          {{form.hidden_tag()}}
-          <h2>Request water</h2>
-          <div class="form-group">
-            {{form.duration.label(class="form-control-label")}}
-            {%if form.duration.errors%}
-                {{form.duration(class="form-control form-control-lg is-invalid")}}
-                <div class="invalid-feedback">
-                    {%for error in form.duration.errors%}
-                        <span>{{error}}</span>
-                    {%endfor%}
-                </div>
-            {%else%}
-                {{form.duration(class="form-control form-control-lg")}}    
-            {%endif%}
-          </div>
-          <div class="form-group">
-              {{form.submit(class="btn btn-outline-info")}}
-          </div>
-        </form>
-      </div>
-    </div>
-    <div class="col-md-7">
-      <div class="content-section">
-        <h2>Active requests</h2>
-        {% if requests.__len__() == 0%}
-            <p>No se han recuperado requests para el usuario.</p>
-        {% else %}
-        <table>
-          <tr>
-            <th>Created</th>
-            <th>Duration</th>
-            <th>Creator</th>
-          </tr>
-          {% for request in requests %}
-          <tr>
-            <td>{{moment(request.date_created).format('l')}} {{moment(request.date_created).format('LT')}}</td>
-            <td>{{request.duration}}</td>
-            <td>{{request.creator}}</td>
-          </tr>
-          {% endfor %}
-        </table>
-        {% endif %}
-      </div>
-      <div class="content-section">
-        <h2>Last water logs</h2>
-        {% if logs.__len__() == 0%}
-            <p>No se han recuperado requests para el usuario.</p>
-        {% else %}
+<div class="container container-fluid">
 
-        <table>
-          <tr>
-            <th>Date</th>
-            <th>Duration</th>
-          </tr>
-          {% for log in logs %}
-          <tr>
-            <td>{{moment(log.date_created).format('l')}} {{moment(log.date_created).format('LT')}}</td>
-            <td>{{log.duration}}</td>
-          </tr>
-          {% endfor %}
-        </table>
-        {% endif %}
-      </div>
-    </div-->
+  <div class="content-section">
+    <h2>{{device.name}}</h2>
+    <p>Last status update: {{moment(event.date_created).format('l')}} {{moment(event.date_created).format('LT')}}</p>
+    <table>
+      <tr>
+          <th>ID</th>
+          <th>Code</th>
+          <th>Created</th>
+          <th>Auto</th>
+      </tr>
+      <tr>
+        <td>{{device.id}}</td>
+        <td>{{device.code}}</td>
+        <td>{{moment(device.date_created).format('l')}}</td>
+        <td>{{device.automatic_watering}}</td>
+      </tr>
+    </table>
   </div>
+  
+  <div class="content-section">
+    <h2>Active requests</h2>
+    {% if requests.__len__() == 0%}
+        <p>No se han recuperado requests para el usuario.</p>
+    {% else %}
+    <table>
+      <tr>
+        <th>Created</th>
+        <th>Duration</th>
+        <th>Creator</th>
+      </tr>
+      {% for request in requests %}
+      <tr>
+        <td>{{moment(request.date_created).format('l')}} {{moment(request.date_created).format('LT')}}</td>
+        <td>{{request.duration}}</td>
+        <td>{{request.creator}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+  </div>
+
+  <div class="content-section">
+    <h2>Last water logs</h2>
+    {% if logs.__len__() == 0%}
+        <p>No se han recuperado requests para el usuario.</p>
+    {% else %}
+    <table style="width: 100%;">
+      <tr>
+        <th>Date</th>
+        <th>Duration</th>
+      </tr>
+      {% for log in logs %}
+      <tr>
+        <td>{{moment(log.date_created).format('l')}} {{moment(log.date_created).format('LT')}}</td>
+        <td>{{log.duration}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+  </div>
+
+  <div class="content-section">
+    <form method="POST" action="">
+      {{form.hidden_tag()}}
+      <h2>Request water</h2>
+      <div class="form-group">
+        {{form.duration.label(class="form-control-label")}}
+        {%if form.duration.errors%}
+            {{form.duration(class="form-control form-control-lg is-invalid")}}
+            <div class="invalid-feedback">
+                {%for error in form.duration.errors%}
+                    <span>{{error}}</span>
+                {%endfor%}
+            </div>
+        {%else%}
+            {{form.duration(class="form-control form-control-lg col-md-3")}}    
+        {%endif%}
+      </div>
+      <div class="form-group">
+          {{form.submit(class="btn btn-outline-info")}}
+      </div>
+    </form>
+  </div>
+
 </div>
 {% endblock %}
