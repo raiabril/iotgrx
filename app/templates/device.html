@@ -21,7 +21,7 @@
       </tr>
     </table>
     <hr>
-    <h2>Active requests</h2>
+    <h4>Active requests</h4>
     {% if requests.__len__() == 0%}
         <p>No se han recuperado requests para el usuario.</p>
     {% else %}
@@ -41,7 +41,7 @@
     </table>
     {% endif %}
     <hr>
-    <h2>Last water logs</h2>
+    <h4>Last water logs</h4>
     {% if logs.__len__() == 0%}
         <p>No se han recuperado requests para el usuario.</p>
     {% else %}
@@ -61,7 +61,7 @@
     <hr>
     <form method="POST" action="">
       {{form.hidden_tag()}}
-      <h2>Request water</h2>
+      <h4>Request water</h4>
       <div class="form-group">
         {{form.duration.label(class="form-control-label")}}
         {%if form.duration.errors%}
