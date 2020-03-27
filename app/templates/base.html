@@ -40,7 +40,7 @@
                   {% endfor %}
                   {% if device.watering %}
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="{{url_for('device.check', device_code=device.code)}}">Configuration</a>
+                  <a class="dropdown-item" href="{{url_for('device.check', device_code=device.code)}}">Device</a>
                   {% endif %}
                 </div>
               </li>

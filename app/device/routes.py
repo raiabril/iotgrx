@@ -26,7 +26,7 @@ def check(device_code):
         return redirect(url_for('device.check', device_code=device.code))
 
     return render_template('device.html', 
-                            title=device.name + " - water system", 
+                            title=device.name, 
                             requests=requests,
                             logs=logs,
                             form=form,
