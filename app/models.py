@@ -95,6 +95,7 @@ class Device(db.Model):
     active = db.Column(db.Boolean, nullable=False, default=False)
     watering = db.Column(db.Boolean, nullable=False, default=False)
     automatic_watering = db.Column(db.Boolean, nullable=False, default=False)
+    default_watering = db.Column(db.Integer, default=2000)
     sensors = db.relationship('Sensor', lazy=True)
 
     def __repr__(self):
@@ -119,6 +120,8 @@ class Sensor(db.Model):
     a1 = db.Column(db.Float, nullable=False, default = 0)
     units = db.Column(db.String(100))
     sensor_type = db.Column(db.String(100))
+    watering_trigger = db.Column(db.Boolean, default=0)
+    watering_level = db.Column(db.Integer, default=1500)
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False, index=True)
 
     def __repr__(self):
