@@ -45,54 +45,36 @@ def sensor(sensor_id):
 
     greenFill = "rgba(151,220,150,0.3)"
     greenLine = "rgba(73,193,71,1)"
-    yellowFill = "rgba(245,240,50,0.3)"
-    yellowLine = "rgba(240,245,50,1)"
-    redFill = "rgba(234,121,106,0.3)"
-    redLine = "rgba(210,50,28,1)"
-    real_radius = 2
+    #yellowFill = "rgba(245,240,50,0.3)"
+    #yellowLine = "rgba(240,245,50,1)"
+    #redFill = "rgba(234,121,106,0.3)"
+    #redLine = "rgba(210,50,28,1)"
+    #real_radius = 2
 
-    if events.__len__() <= 1:
-        labels=[]
-        values=[]
-        updated_time="";
-        updated_value="";
-        colorFill="";
-        colorLine="";
+    labels=[]
+    values=[]
+    real_values = []
 
-    else:
-        labels=[]
-        values=[]
-        real_values = []
-        real_values_labels = []
-
+    if events.__len__() > 1:
         for event in events:
             labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
             values.append(event.value)
 
             if event.real_value != None:
-                real_values.append(event.real_value)
-                real_values_labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
+                real_values.append(event)
             
-        # Filter values
-        values = filter_values(values)
-        updated_time = labels[0]
-        updated_value = values[0]
-        updated_value_raw = values[0]
+    # Filter values
+    values = filter_values(values)
+    last_event = events[0]
 
-        if real_values.__len__() > 0:
-            updated_real_value = real_values[0]
-        else:
-            updated_real_value = None
-            real_radius = 0
+    colorFill = greenFill
+    colorLine = greenLine
 
-        colorFill=greenFill
-        colorLine=greenLine
+    # Format with calibration
+    values = ["{:10.3f}".format(x*sensor.a1 + sensor.a0) for x in values]
 
-        updated_value = "{:10.2f}".format(updated_value*sensor.a1 + sensor.a0)
-        values = [x*sensor.a1 + sensor.a0 for x in values]
-        values = ["{:10.3f}".format(x) for x in values]
-        real_values = ["{:10.3f}".format(x) if x != None else "0.000" for x in real_values]
-        boot_count = events[0].boot
+    # updated_value = "{:10.2f}".format(updated_value*sensor.a1 + sensor.a0)
+    
 
     return render_template('chart.html', 
                             devices=devices,
@@ -101,14 +83,8 @@ def sensor(sensor_id):
                             labels=labels,
                             values=values,
                             real_values=real_values,
-                            real_values_labels=real_values_labels,
-                            updated_time=updated_time,
-                            updated_value=updated_value,
-                            updated_real_value=updated_real_value,
-                            updated_value_raw=updated_value_raw,
-                            boot_count=boot_count,
+                            last_event=last_event,
                             colorFill=colorFill,
                             colorLine=colorLine,
-                            real_radius=real_radius,
                             title=device.name + " - " + sensor.name,
                             form=form)

@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container-fluid">
   <div class="row">
     <div class="col-md-9">
       <div class="content-section text-center">
         <h4 class="text-center">{{sensor.name}}</h4>
         {% if values.__len__() > 0%}
-        <p class="text-center">{{updated_value}}{{sensor.units}} at <span id="last_update_time">{{updated_time}}</span></p>
+        <p class="text-center">{{last_event.value}}{{sensor.units}} at <span id="last_update_time">{{last_event.date_created}}</span></p>
         {% endif %}
         <div class="chart-container">
           {% if values.__len__() > 0%}
@@ -19,10 +20,10 @@
     </div>
     <div class="col-md-3">
       <div class="content-section text-center">
-        <h5>Device data</h5>
+        <span><h5>Device data</h5><a href="{{url_for('device.check', device_code=device.code)}}">Config</a></span>
         <p>
           Device: {{device.name}}<br>
-          Boot: {{boot_count}}
+          Boot: {{last_event.boot_count}}
         </p>
         <h5>Sensor data</h5>
         <p>
@@ -34,14 +35,14 @@
         <hr>
         <h5>Last measure</h5>
         <p>
-          {% if updated_real_value %}
-          Real: {{updated_real_value}}
+          {% if last_event.real_value %}
+          Real: {{last_event.real_value}}
           {% if sensor.units %}
           {{sensor.units}} <br>
           {% endif %}
           {% endif %}
-          Calibrated: {{updated_value}} {{sensor.units}} <br>
-          Measure Raw: {{updated_value_raw}}
+          Calibrated: {{"{:10.2f}".format(last_event.value*sensor.a1 + sensor.a0)}} {{sensor.units}} <br>
+          Measure Raw: {{last_event.value}}
         </p>
 
         <form method="POST" action="" enctype="multipart/form-data">
@@ -59,7 +60,7 @@
                               {%endfor%}
                           </div>
                       {%else%}
-                          {{form.id(class="form-control form-control-md")}}    
+                          {{form.id(class="form-control form-control-md text-center")}}    
                       {%endif%}
                   </div>
                 </div>
@@ -74,7 +75,7 @@
                             {%endfor%}
                         </div>
                     {%else%}
-                        {{form.real_value(class="form-control form-control-md")}}    
+                        {{form.real_value(class="form-control form-control-md text-center")}}    
                     {%endif%}
                   </div>
                 </div>
@@ -89,103 +90,105 @@
         </form>
         <h5>Calibration</h4>
         <p>
-          y = a0 + x*a1<br>
-          a0 = {{sensor.a0}}<br>
-          a1 = {{sensor.a1}}
+          y = a0 + a1*x<br>
+          y = {{"{:10.5f}".format(sensor.a0)}} + ({{"{:10.5f}".format(sensor.a1)}})* x
         </p>
-        {% if device.watering %}
-        <hr>
-        <a href="{{url_for('water.check', device_code=device.code)}}">Watering system</a>
+        {% if real_values.__len__() > 0 %}
+        <div class="container">
+          <table style="width:100%">
+            <tr>
+              <th>Raw</th>
+              <th>Cal</th>
+              <th>Real</th>
+            </tr>
+            {% for real_event in real_values %}
+            <tr>
+              <td>{{"{:10.2f}".format(real_event.value)}}</td>
+              <td>{{"{:10.2f}".format(real_event.value*sensor.a1 + sensor.a0)}}</td>
+              <td>{{"{:10.2f}".format(real_event.real_value)}}</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
         {% endif %}
       </div>
     </div>
   </div>
+</div>
 
 
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+document.getElementById('last_update_time').innerHTML = moment.utc("{{ updated_time }}")._d.toLocaleString();
 
-
-    <script>
-    var ctx = document.getElementById('myChart').getContext('2d');
-    document.getElementById('last_update_time').innerHTML = moment.utc("{{ updated_time }}")._d.toLocaleString();
-
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: [
-            {% for label in labels %}
-            moment.utc("{{ label }}"),
-            {% endfor %}
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [
+        {% for label in labels %}
+        moment.utc("{{ label }}"),
+        {% endfor %}
+      ],
+      datasets: [
+        {
+          label: "Sensor reading",
+          data: [
+          {% for item in values %}
+          {{ item }},
+          {% endfor %}
           ],
-          datasets: [
-            {
-              label: "Sensor reading",
-              data: [
-              {% for item in values %}
-              {{ item }},
-              {% endfor %}
-              ],
-              backgroundColor: "{{colorFill}}",
-              borderColor: "{{colorLine}}",
-              borderWidth: 2
-            },
-            {
-              type: "scatter",
-              label: "Manual measurement",
-              labels: [
-                {% for label in real_values_labels %}
-                moment.utc("{{ label }}"),
-                {% endfor %}
-              ],
-              data: [
-                {% for item in real_values %}
-                {{ item }},
-                {% endfor %}
-              ],
-              backgroundColor: "rgba(0,0,0,0.5)",
-              radius: {{real_radius}}
-            }
-          ]
-        },
-        options: {
-          responsive:true,
-          maintainAspectRatio:false,
-          legend: {
-            display: false
-          },
-          elements: {
-              point:{
-                radius: 0
-              }
-          },
-          scales: {
-            yAxes: [
-              {
-                ticks: {
-                    steps:10,
-                    beginAtZero: false
-                }
-              }
-            ],
-            xAxes: [
-              {
-                ticks: {
-                    display:true,
-                    maxTicksLimit: 8
-                },
-                distribution: 'linear',
-                type: 'time',
-                time: {
-                    unit: 'day',
-                    unitStepSize: 1,
-                    displayFormats: {
-                        'day': 'MMM DD'
-                    }
-                }
-              }
-            ]
-          }
+          backgroundColor: "{{colorFill}}",
+          borderColor: "{{colorLine}}",
+          borderWidth: 2
         }
+      ]
+    },
+    options: {
+      responsive:true,
+      maintainAspectRatio:false,
+      legend: {
+        display: false
+      },
+      elements: {
+          point:{
+            radius: 0
+          }
+      },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+                steps:10,
+                beginAtZero: false
+            }
+          }
+        ],
+        xAxes: [
+          {
+            ticks: {
+                display:true,
+                maxTicksLimit: 8
+            },
+            distribution: 'linear',
+            display: true,
+            stacked: true,
+            type: 'time',
+            scaleLabel: {
+              display: true,
+              labelString: 'Days'
+            },
+            time: {
+                unit: 'day',
+                unitStepSize: 1,
+                displayFormats: {
+                    'day': 'MMM DD'
+                }
+            }
+          }
+        ]
       }
-    );
-    </script>
+    }
+  }
+);
+</script>
 {% endblock %}

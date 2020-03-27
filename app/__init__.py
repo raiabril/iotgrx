@@ -31,8 +31,8 @@ def create_app(config_class = Config):
     from app.users.routes import users
     app.register_blueprint(users)
 
-    from app.water.routes import water
-    app.register_blueprint(water)
+    from app.device.routes import device
+    app.register_blueprint(device)
 
     from app.errors.handlers import errors
     app.register_blueprint(errors)

@@ -2,12 +2,12 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import func
 from app.models import WaterLog, WaterRequest, Device, Sensor, Event
-from app.water.forms import WaterForm
+from app.device.forms import WaterForm
 from app import db
 
-water = Blueprint('water', __name__)
+device = Blueprint('device', __name__)
 
-@water.route("/check/<string:device_code>", methods=['GET','POST'])
+@device.route("/<string:device_code>", methods=['GET','POST'])
 @login_required
 def check(device_code):
     device = Device.query.filter_by(code=device_code).first()
@@ -23,9 +23,9 @@ def check(device_code):
         db.session.add(request)
         db.session.commit()
         flash('Watering requested!','success')
-        return redirect(url_for('water.check', device_code=device.code))
+        return redirect(url_for('device.check', device_code=device.code))
 
-    return render_template('water.html', 
+    return render_template('device.html', 
                             title=device.name + " - water system", 
                             requests=requests,
                             logs=logs,
