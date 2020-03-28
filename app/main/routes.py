@@ -42,6 +42,7 @@ def sensor(sensor_id):
 
         form.id.data = events[0].id
         form.real_value.data = events[0].real_value
+        form.calibrated.data = "{:.2f}".format(events[0].value*sensor.a1 + sensor.a0)
 
     greenFill = "rgba(151,220,150,0.3)"
     greenLine = "rgba(73,193,71,1)"
