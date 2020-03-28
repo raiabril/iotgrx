@@ -36,7 +36,7 @@
 
     <div class="col-md-4">
       <div class="content-section text-center">
-        <h5>Last measure</h5>
+        <h5>Calibration</h5>
         <p>
           {% if last_event.real_value %}
           Real: {{last_event.real_value}}
@@ -48,7 +48,6 @@
           Measure Raw: {{last_event.value}}
         </p>
         <hr>
-        <h5>Calibration</h4>
         <p>
           y = a0 + a1*x<br>
           y = {{"{:10.5f}".format(sensor.a0)}} + ({{"{:10.5f}".format(sensor.a1)}})* x
