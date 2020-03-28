@@ -30,6 +30,9 @@ def sensor(sensor_id):
         sensor = Sensor.query.get(watering_form.id.data)
         sensor.watering_level = (watering_form.level.data - sensor.a0)/sensor.a1
         sensor.watering_trigger = watering_form.trigger.data
+        sensor.a0 = watering_form.a0.data
+        sensor.a1 = watering_form.a1.data
+        
         db.session.commit()
         
         flash('Updated watering configuration','success')
@@ -37,7 +40,10 @@ def sensor(sensor_id):
 
     if form.validate_on_submit() and form.submit1.data:
         event = Event.query.get(form.id.data)
+        sensor = Sensor.query.get(sensor_id)
+
         event.real_value = form.real_value.data
+
         db.session.commit()
         flash('Real value updated and calibration regenerated!','success')
         return redirect(url_for('main.sensor', sensor_id = sensor_id))
@@ -54,8 +60,14 @@ def sensor(sensor_id):
         form.real_value.data = events[0].real_value
         form.calibrated.data = "{:.2f}".format(events[0].value*sensor.a1 + sensor.a0)
 
+        watering_form.a0.data = sensor.a0
+        watering_form.a1.data = sensor.a1
         watering_form.id.data = sensor.id
-        watering_form.level.data = sensor.watering_level*sensor.a1 + sensor.a0
+        if sensor.watering_level:
+            watering_form.level.data = sensor.watering_level*sensor.a1 + sensor.a0
+        else:
+            watering_form.level.data = ""
+
         watering_form.trigger.data = sensor.watering_trigger
 
     greenFill = "rgba(151,220,150,0.3)"

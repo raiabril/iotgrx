@@ -14,6 +14,8 @@ class RealValueForm(FlaskForm):
 
 class WateringForm(FlaskForm):
     id = IntegerField('Sensor id', render_kw={'readonly': True})
+    a0 = FloatField('a0')
+    a1 = FloatField('a1')
     trigger = BooleanField('Activate')
     level = IntegerField('Level')
     submit2 = SubmitField('Save')
