@@ -46,8 +46,8 @@ def sensor(sensor_id):
 
     greenFill = "rgba(151,220,150,0.3)"
     greenLine = "rgba(73,193,71,1)"
-    #yellowFill = "rgba(245,240,50,0.3)"
-    #yellowLine = "rgba(240,245,50,1)"
+    yellowFill = "rgba(245,240,50,0.3)"
+    yellowLine = "rgba(240,245,50,1)"
     #redFill = "rgba(234,121,106,0.3)"
     #redLine = "rgba(210,50,28,1)"
     #real_radius = 2
@@ -75,8 +75,12 @@ def sensor(sensor_id):
     last_event = events[0]
 
     # Color for main graph
-    colorFill = greenFill
-    colorLine = greenLine
+    if sensor.watering_trigger and sensor.watering_level < last_event.value:
+        colorFill = yellowFill
+        colorLine = yellowLine
+    else:
+        colorFill = greenFill
+        colorLine = greenLine
 
     # Real events and fit
     real_values = [x.real_value for x in real_events]

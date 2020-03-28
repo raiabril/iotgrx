@@ -154,6 +154,7 @@
             borderColor: "{{colorLine}}",
             borderWidth: 2
           },
+          {% if water_trigger.__len__() > 1 %}
           {
             label: "Level for watering",
             type: 'line',
@@ -169,6 +170,7 @@
               {% endfor %}
             ],
           }
+          {% endif %}
         ]
       },
       options: {
