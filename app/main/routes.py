@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from sqlalchemy import func
 from app.models import Sensor, Event, Device, User
 from app.main.utils import filter_values
-from app.main.forms import RealValueForm
+from app.main.forms import RealValueForm, WateringForm
 from app import db
 
 main = Blueprint('main', __name__)
@@ -24,8 +24,18 @@ def home():
 def sensor(sensor_id):
 
     form = RealValueForm()
+    watering_form = WateringForm()
 
-    if form.validate_on_submit():
+    if watering_form.validate_on_submit() and watering_form.submit2.data:
+        sensor = Sensor.query.get(watering_form.id.data)
+        sensor.watering_level = (watering_form.level.data - sensor.a0)/sensor.a1
+        sensor.watering_trigger = watering_form.trigger.data
+        db.session.commit()
+        
+        flash('Updated watering configuration','success')
+        return redirect(url_for('main.sensor', sensor_id = sensor_id))
+
+    if form.validate_on_submit() and form.submit1.data:
         event = Event.query.get(form.id.data)
         event.real_value = form.real_value.data
         db.session.commit()
@@ -43,6 +53,10 @@ def sensor(sensor_id):
         form.id.data = events[0].id
         form.real_value.data = events[0].real_value
         form.calibrated.data = "{:.2f}".format(events[0].value*sensor.a1 + sensor.a0)
+
+        watering_form.id.data = sensor.id
+        watering_form.level.data = sensor.watering_level*sensor.a1 + sensor.a0
+        watering_form.trigger.data = sensor.watering_trigger
 
     greenFill = "rgba(151,220,150,0.3)"
     greenLine = "rgba(73,193,71,1)"
@@ -117,4 +131,5 @@ def sensor(sensor_id):
                             colorFill=colorFill,
                             colorLine=colorLine,
                             title=device.name + " - " + sensor.name,
-                            form=form)
+                            form=form,
+                            watering_form=watering_form)

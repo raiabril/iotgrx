@@ -37,6 +37,51 @@
           {% endif %}
           Type: {{sensor.sensor_type}}
         </p>
+        <hr>
+        <form id="watering_form" method="POST" action="" enctype="multipart/form-data">
+          {{watering_form.hidden_tag()}}
+          <h5>Watering configuration</h5>
+          <fieldset class="form-group">
+  
+            <div class="form-group">
+              {{watering_form.id.label(class="form-control-label")}}
+              {%if watering_form.id.errors%}
+                    {{watering_form.id(class="form-control form-control-md is-invalid")}}
+                    <div class="invalid-feedback">
+                        {%for error in watering_form.id.errors%}
+                            <span>{{error}}</span>
+                        {%endfor%}
+                    </div>
+                {%else%}
+                    {{watering_form.id(class="form-control form-control-md")}}    
+                {%endif%}
+            </div>
+
+            <div class="form-group">
+              {{watering_form.level.label(class="form-control-label")}}
+              {%if watering_form.level.errors%}
+                    {{watering_form.level(class="form-control form-control-md is-invalid")}}
+                    <div class="invalid-feedback">
+                        {%for error in watering_form.level.errors%}
+                            <span>{{error}}</span>
+                        {%endfor%}
+                    </div>
+                {%else%}
+                    {{watering_form.level(class="form-control form-control-md")}}    
+                {%endif%}
+            </div>
+
+            <div class="form-check">
+              {{watering_form.trigger(class="form-check-input")}}
+              {{watering_form.trigger.label(class="form-check-input-label")}}
+            </div>
+
+            <div class="form-group">
+              {{watering_form.submit2(class="btn btn-outline-info")}}
+            </div>
+
+          </fieldset>
+        </form>
       </div>
     </div>
     <div class="col-md-8">
@@ -104,7 +149,7 @@
   
                   <div class="form-group">
                     <br>
-                    {{form.submit(class="btn btn-outline-info")}}
+                    {{form.submit1(class="btn btn-outline-info")}}
                   </div>
   
                 </fieldset>
