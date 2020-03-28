@@ -153,6 +153,21 @@
             backgroundColor: "{{colorFill}}",
             borderColor: "{{colorLine}}",
             borderWidth: 2
+          },
+          {
+            label: "Level for watering",
+            type: 'line',
+            fill: false,
+            borderColor: "rgba(250,0,0,0.5)",
+            pointRadius: 0,
+            data: [
+              {% for label, value in water_trigger %}
+              {
+                x: moment.utc("{{ label }}"),
+                y: {{ value }}
+              },
+              {% endfor %}
+            ],
           }
         ]
       },
@@ -160,7 +175,7 @@
         responsive:true,
         maintainAspectRatio:false,
         legend: {
-          display: false
+          display: true
         },
         elements: {
             point:{

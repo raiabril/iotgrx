@@ -56,6 +56,7 @@ def sensor(sensor_id):
     values=[]
     real_events = []
 
+    # Events
     if events.__len__() > 1:
         for event in events:
             labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
@@ -66,8 +67,14 @@ def sensor(sensor_id):
             
     # Filter values
     values = filter_values(values)
+
+    # Apply calibration
+    values = ["{:10.3f}".format(x*sensor.a1 + sensor.a0) for x in values]
+
+    # Last event for display
     last_event = events[0]
 
+    # Color for main graph
     colorFill = greenFill
     colorLine = greenLine
 
@@ -86,10 +93,12 @@ def sensor(sensor_id):
     real_bubbles = list(zip(real_labels, real_values))
     real_fit = list(zip(real_labels_fit, real_values_fit))
 
-    # Format with calibration
-    values = ["{:10.3f}".format(x*sensor.a1 + sensor.a0) for x in values]
-    # updated_value = "{:10.2f}".format(updated_value*sensor.a1 + sensor.a0)
-    
+    if sensor.watering_trigger:
+        trigger_labels = [labels[0], labels[-1]]
+        trigger_values = [sensor.watering_level*sensor.a1 + sensor.a0, sensor.watering_level*sensor.a1 + sensor.a0]
+        water_trigger = list(zip(trigger_labels, trigger_values))
+    else:
+        water_trigger = []
 
     return render_template('chart.html', 
                             devices=devices,
@@ -99,6 +108,7 @@ def sensor(sensor_id):
                             values=values,
                             real_bubbles=real_bubbles,
                             real_fit = real_fit,
+                            water_trigger=water_trigger,
                             last_event=last_event,
                             colorFill=colorFill,
                             colorLine=colorLine,
