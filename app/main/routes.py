@@ -5,6 +5,7 @@ from app.models import Sensor, Event, Device, User
 from app.main.utils import filter_values
 from app.main.forms import RealValueForm, WateringForm
 from app import db
+import numpy as np
 
 main = Blueprint('main', __name__)
 
@@ -41,10 +42,18 @@ def sensor(sensor_id):
     if form.validate_on_submit() and form.submit1.data:
         event = Event.query.get(form.id.data)
         sensor = Sensor.query.get(sensor_id)
-
         event.real_value = form.real_value.data
+        real_events = Event.query.filter(Event.sensor_code==sensor.code).filter(Event.real_value!=None).all()
 
+        if len(real_events) > 5:
+            y = [event.real_value for event in real_events]
+            x = [event.value for event in real_events]
+            z = np.polyfit(x, y, 1)
+            sensor.a0 = z[1]
+            sensor.a1 = z[0]
+            
         db.session.commit()
+
         flash('Real value updated and calibration regenerated!','success')
         return redirect(url_for('main.sensor', sensor_id = sensor_id))
 
@@ -63,6 +72,7 @@ def sensor(sensor_id):
         watering_form.a0.data = sensor.a0
         watering_form.a1.data = sensor.a1
         watering_form.id.data = sensor.id
+
         if sensor.watering_level:
             watering_form.level.data = sensor.watering_level*sensor.a1 + sensor.a0
         else:
