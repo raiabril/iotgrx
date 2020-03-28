@@ -6,6 +6,7 @@ from app.main.utils import filter_values
 from app.main.forms import RealValueForm, WateringForm
 from app import db
 import numpy as np
+import datetime
 
 main = Blueprint('main', __name__)
 
@@ -51,17 +52,40 @@ def sensor(sensor_id):
             z = np.polyfit(x, y, 1)
             sensor.a0 = z[1]
             sensor.a1 = z[0]
-            
+
         db.session.commit()
 
         flash('Real value updated and calibration regenerated!','success')
         return redirect(url_for('main.sensor', sensor_id = sensor_id))
 
     elif request.method == 'GET':
+        time_frame = request.args.get('time', type=str)
         devices = Device.query.filter_by(active=1).all()
         sensor = Sensor.query.get(sensor_id)
         device = Device.query.get(sensor.device_id)
-        events = Event.query.filter_by(sensor_code=sensor.code)\
+
+        if time_frame == '1d':
+            events = Event.query.filter_by(sensor_code=sensor.code)\
+                .filter(Event.date_created>datetime.datetime.now()-datetime.timedelta(days=1))\
+                .order_by(Event.date_created.desc()).all()
+
+        elif time_frame == '1w':
+            events = Event.query.filter_by(sensor_code=sensor.code)\
+                .filter(Event.date_created>datetime.datetime.now()-datetime.timedelta(days=7))\
+                .order_by(Event.date_created.desc()).all()
+
+        elif time_frame == '1m':
+            events = Event.query.filter_by(sensor_code=sensor.code)\
+                    .filter(Event.date_created>datetime.datetime.now()-datetime.timedelta(weeks=4))\
+                    .order_by(Event.date_created.desc()).all()
+
+        elif time_frame == '1y':
+            events = Event.query.filter_by(sensor_code=sensor.code)\
+                .filter(Event.date_created>datetime.datetime.now()-datetime.timedelta(weeks=52))\
+                .order_by(Event.date_created.desc()).all()
+        
+        else:
+            events = Event.query.filter_by(sensor_code=sensor.code)\
             .order_by(Event.date_created.desc())\
             .limit(2*24*7).all()
 
