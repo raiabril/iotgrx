@@ -74,10 +74,17 @@ def sensor(sensor_id):
     # Real events and fit
     real_values = [x.real_value for x in real_events]
     real_labels = [x.value for x in real_events]
-    real_values_fit = [x.value*sensor.a1 + sensor.a0 for x in real_events]
+    
+    if len(real_values) <= 1:
+        real_labels_fit = [-2000, 0, 2000]
+        real_values_fit = [x*sensor.a1 + sensor.a0 for x in real_labels_fit]
+    
+    else:
+        real_values_fit = [x.value*sensor.a1 + sensor.a0 for x in real_events]
+        real_labels_fit = real_labels
 
     real_bubbles = list(zip(real_labels, real_values))
-    real_fit = list(zip(real_labels, real_values_fit))
+    real_fit = list(zip(real_labels_fit, real_values_fit))
 
     # Format with calibration
     values = ["{:10.3f}".format(x*sensor.a1 + sensor.a0) for x in values]
