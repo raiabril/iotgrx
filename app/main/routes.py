@@ -54,7 +54,7 @@ def sensor(sensor_id):
 
     labels=[]
     values=[]
-    real_values = []
+    real_events = []
 
     if events.__len__() > 1:
         for event in events:
@@ -62,7 +62,7 @@ def sensor(sensor_id):
             values.append(event.value)
 
             if event.real_value != None:
-                real_values.append(event)
+                real_events.append(event)
             
     # Filter values
     values = filter_values(values)
@@ -71,9 +71,16 @@ def sensor(sensor_id):
     colorFill = greenFill
     colorLine = greenLine
 
+    # Real events and fit
+    real_values = [x.real_value for x in real_events]
+    real_labels = [x.value for x in real_events]
+    real_values_fit = [x.value*sensor.a1 + sensor.a0 for x in real_events]
+
+    real_bubbles = list(zip(real_labels, real_values))
+    real_fit = list(zip(real_labels, real_values_fit))
+
     # Format with calibration
     values = ["{:10.3f}".format(x*sensor.a1 + sensor.a0) for x in values]
-
     # updated_value = "{:10.2f}".format(updated_value*sensor.a1 + sensor.a0)
     
 
@@ -83,7 +90,8 @@ def sensor(sensor_id):
                             device=device,
                             labels=labels,
                             values=values,
-                            real_values=real_values,
+                            real_bubbles=real_bubbles,
+                            real_fit = real_fit,
                             last_event=last_event,
                             colorFill=colorFill,
                             colorLine=colorLine,

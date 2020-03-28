@@ -3,9 +3,9 @@
 {% block content %}
 <div class="container container-fluid">
   <div class="content-section text-center">
-    <h4 class="text-center">{{sensor.name}}</h4>
+    <h2>{{sensor.name}}</h2>
     {% if values.__len__() > 0%}
-    <p class="text-center">{{"{:10.2f}".format(last_event.value*sensor.a1 + sensor.a0)}} {{sensor.units}} at
+    <p>{{"{:10.2f}".format(last_event.value*sensor.a1 + sensor.a0)}} {{sensor.units}} at
       <span>{{moment(last_event.date_created).format('l')}} {{moment(last_event.date_created).format('LT')}}</span></p>
     {% endif %}
     <div class="chart-container">
@@ -18,8 +18,8 @@
   </div>
   <div class="row">
     <div class="col-md-4">
-      <div class="content-section text-center">
-        <h5>Device data</h5>
+      <div class="content-section">
+        <h3>Device data</h3>
         <a href="{{url_for('device.check', device_code=device.code)}}">Config</a>
         <p>
           Device: {{device.name}}<br>
@@ -35,56 +35,54 @@
       </div>
     </div>
     <div class="col-md-8">
-      <div class="content-section text-center">
+      <div class="content-section">
+        <h3>Calibration</h3>
         <div class="row">
-          <div class="col-md-6">
-            <div class="container">
-              <h5>Calibration</h5>
-              <p>
-                y = a0 + a1*x<br>
-                y = {{"{:10.5f}".format(sensor.a0)}} + ({{"{:10.5f}".format(sensor.a1)}})* x
-              </p>
+          
+          <div class="col-md-9">
+            <div class="chart-container">
+              <canvas id="myChart2" height="340px" width="100%"></canvas>
             </div>
+            <p class="text-center">
+              y = {{"{:10.5f}".format(sensor.a0)}} + ({{"{:10.5f}".format(sensor.a1)}})* x
+            </p>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-3">
             <div class="container">
               <form method="POST" action="" enctype="multipart/form-data">
                 {{form.hidden_tag()}}
-                <h5>Manual adjustment</h5>
+                <h5>Manual Fit</h5>
                 <fieldset class="form-group">
-                  <div class="row">
-                    <div class="col-md-6" style="padding-right: 5px; padding-left: 5px;">
-                      <div class="form-group">
-                        {{form.id.label(class="form-control-label")}}
-                        {%if form.id.errors%}
-                              {{form.id(class="form-control form-control-md is-invalid")}}
-                              <div class="invalid-feedback">
-                                  {%for error in form.id.errors%}
-                                      <span>{{error}}</span>
-                                  {%endfor%}
-                              </div>
-                          {%else%}
-                              {{form.id(class="form-control form-control-md text-center")}}    
-                          {%endif%}
-                      </div>
-                    </div>
-                    <div class="col-md-6" style="padding-right: 5px; padding-left: 5px;">
-                      <div class="form-group">
-                        {{form.calibrated.label(class="form-control-label")}}
-                        {%if form.calibrated.errors%}
-                              {{form.calibrated(class="form-control form-control-md is-invalid")}}
-                              <div class="invalid-feedback">
-                                  {%for error in form.calibrated.errors%}
-                                      <span>{{error}}</span>
-                                  {%endfor%}
-                              </div>
-                          {%else%}
-                              {{form.calibrated(class="form-control form-control-md text-center")}}    
-                          {%endif%}
-                      </div>
-                    </div>
+
+                  <div class="form-group">
+                    {{form.id.label(class="form-control-label")}}
+                    {%if form.id.errors%}
+                          {{form.id(class="form-control form-control-md is-invalid")}}
+                          <div class="invalid-feedback">
+                              {%for error in form.id.errors%}
+                                  <span>{{error}}</span>
+                              {%endfor%}
+                          </div>
+                      {%else%}
+                          {{form.id(class="form-control form-control-md")}}    
+                      {%endif%}
                   </div>
-                  
+
+                  <div class="form-group">
+                    {{form.calibrated.label(class="form-control-label")}}
+                    {%if form.calibrated.errors%}
+                          {{form.calibrated(class="form-control form-control-md is-invalid")}}
+                          <div class="invalid-feedback">
+                              {%for error in form.calibrated.errors%}
+                                  <span>{{error}}</span>
+                              {%endfor%}
+                          </div>
+                      {%else%}
+                          {{form.calibrated(class="form-control form-control-md")}}    
+                      {%endif%}
+                  </div>
+
+
                   <div class="form-group">
                     {{form.real_value.label(class="form-control-label")}}
                     {%if form.real_value.errors%}
@@ -95,32 +93,34 @@
                             {%endfor%}
                         </div>
                     {%else%}
-                        {{form.real_value(class="form-control form-control-md text-center")}}    
+                        {{form.real_value(class="form-control form-control-md")}}    
                     {%endif%}
-                  </div>
+
+
                   <div class="form-group">
                     <br>
                     {{form.submit(class="btn btn-outline-info")}}
                   </div>
+
                 </fieldset>
               </form>
             </div>
           </div>
         </div>
-        {% if real_values.__len__() > 0 %}
+        {% if real_events.__len__() > 0 %}
         <hr>
-        <div class="container" style="padding-left: 0px; padding-right: 0px;">
+        <div class="container text-center" style="padding-left: 0px; padding-right: 0px;">
           <table style="width:100%; table-layout: fixed; justify-content: center;">
             <tr>
-              <th style="padding-left: 5px; padding-right: 5px; font-size: medium;">Raw</th>
-              <th style="padding-left: 5px; padding-right: 5px; font-size: medium;">Cal</th>
-              <th style="padding-left: 5px; padding-right: 5px; font-size: medium;">Real</th>
+              <th>Raw</th>
+              <th>Cal</th>
+              <th>Real</th>
             </tr>
-            {% for real_event in real_values %}
+            {% for real_event in real_events %}
             <tr>
-              <td style="padding-left: 5px; padding-right: 5px; font-size: medium;">{{"{:10.2f}".format(real_event.value)}}</td>
-              <td style="padding-left: 5px; padding-right: 5px; font-size: medium;">{{"{:10.2f}".format(real_event.value*sensor.a1 + sensor.a0)}}</td>
-              <td style="padding-left: 5px; padding-right: 5px; font-size: medium;">{{"{:10.2f}".format(real_event.real_value)}}</td>
+              <td>{{"{:10.2f}".format(real_event.value)}}</td>
+              <td>{{"{:10.2f}".format(real_event.value*sensor.a1 + sensor.a0)}}</td>
+              <td>{{"{:10.2f}".format(real_event.real_value)}}</td>
             </tr>
             {% endfor %}
           </table>
@@ -133,76 +133,134 @@
 
 
 <script>
-var ctx = document.getElementById('myChart').getContext('2d');
-
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [
-        {% for label in labels %}
-        moment.utc("{{ label }}"),
-        {% endfor %}
-      ],
-      datasets: [
-        {
-          label: "Sensor reading",
-          data: [
-          {% for item in values %}
-          {{ item }},
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for label in labels %}
+          moment.utc("{{ label }}"),
           {% endfor %}
-          ],
-          backgroundColor: "{{colorFill}}",
-          borderColor: "{{colorLine}}",
-          borderWidth: 2
-        }
-      ]
-    },
-    options: {
-      responsive:true,
-      maintainAspectRatio:false,
-      legend: {
-        display: false
-      },
-      elements: {
-          point:{
-            radius: 0
-          }
-      },
-      scales: {
-        yAxes: [
-          {
-            ticks: {
-                steps:10,
-                beginAtZero: false
-            }
-          }
         ],
-        xAxes: [
+        datasets: [
           {
-            ticks: {
-                display:true,
-                maxTicksLimit: 8
-            },
-            distribution: 'linear',
-            display: true,
-            stacked: true,
-            type: 'time',
-            scaleLabel: {
-              display: true,
-              labelString: 'Days'
-            },
-            time: {
-                unit: 'day',
-                unitStepSize: 1,
-                displayFormats: {
-                    'day': 'MMM DD'
-                }
-            }
+            label: "Sensor reading",
+            data: [
+            {% for item in values %}
+            {{ item }},
+            {% endfor %}
+            ],
+            backgroundColor: "{{colorFill}}",
+            borderColor: "{{colorLine}}",
+            borderWidth: 2
           }
+        ]
+      },
+      options: {
+        responsive:true,
+        maintainAspectRatio:false,
+        legend: {
+          display: false
+        },
+        elements: {
+            point:{
+              radius: 0
+            }
+        },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                  steps:10,
+                  beginAtZero: false
+              }
+            }
+          ],
+          xAxes: [
+            {
+              ticks: {
+                  display:true,
+                  maxTicksLimit: 8
+              },
+              distribution: 'linear',
+              display: true,
+              stacked: true,
+              type: 'time',
+              scaleLabel: {
+                display: true,
+                labelString: 'Days'
+              },
+              time: {
+                  unit: 'day',
+                  unitStepSize: 1,
+                  displayFormats: {
+                      'day': 'MMM DD'
+                  }
+              }
+            }
+          ]
+        }
+      }
+    }
+  );
+  var ctx2 = document.getElementById('myChart2').getContext('2d');
+  var myChart2 = new Chart(ctx2, {
+      type: 'bubble',
+      data: {
+        datasets: [
+          {
+            label: "Real values",
+            backgroundColor: "rgba(0,0,0,0.2)",
+            pointRadius: 100,
+            data: [
+              {% for label, real_value in real_bubbles %}
+              {
+                x: {{ label }},
+                y: {{ real_value }}
+              },
+              {% endfor %}
+            ],
+          },
+          {
+            label: "Fit",
+            type: 'line',
+            borderColor: "rgba(250,0,0,0.5)",
+            pointRadius: 0,
+            data: [
+              {% for label, real_value in real_fit %}
+              {
+                x: {{ label }},
+                y: {{ real_value }}
+              },
+              {% endfor %}
+            ],
+          }
+        ]
+      },
+      options: {
+        responsive:true,
+        maintainAspectRatio:false,
+        elements: {
+          point: {
+            radius: 10,
+          },
+        },
+        legend: {
+          display: true
+        },
+        xAxes: [
+            {
+              ticks: {
+                  display:true,
+                  maxTicksLimit: 8
+              },
+              distribution: 'linear',
+              display: true,
+              stacked: true
+            }
         ]
       }
     }
-  }
-);
+  );
 </script>
 {% endblock %}
