@@ -24,13 +24,8 @@
   <div class="row">
     <div class="col-md-4">
       <div class="content-section">
-        <h3>Device data</h3>
-        <a href="{{url_for('device.check', device_code=device.code)}}">Config</a>
-        <p>
-          Device: {{device.name}}<br>
-          Boot: {{last_event.boot}}
-        </p>
-        <h6>Sensor data</h6>
+        <h3>Sensor configuration</h3>
+        <a href="{{url_for('device.check', device_code=device.code)}}">{{device.name}} - boot: {{last_event.boot}}</a>
         <p>
           {% if sensor.units %}
           Units: {{sensor.units}}<br>
@@ -40,8 +35,22 @@
         <hr>
         <form id="watering_form" method="POST" action="" enctype="multipart/form-data">
           {{watering_form.hidden_tag()}}
-          <h5>Watering configuration</h5>
+
           <fieldset class="form-group">
+
+            <div class="form-group">
+              {{watering_form.id.label(class="form-control-label")}}
+              {%if watering_form.id.errors%}
+                    {{watering_form.id(class="form-control form-control-md is-invalid")}}
+                    <div class="invalid-feedback">
+                        {%for error in watering_form.id.errors%}
+                            <span>{{error}}</span>
+                        {%endfor%}
+                    </div>
+                {%else%}
+                    {{watering_form.id(class="form-control form-control-md")}}    
+                {%endif%}
+            </div>
 
             <div class="form-group">
               {{watering_form.a0.label(class="form-control-label")}}
@@ -68,20 +77,6 @@
                     </div>
                 {%else%}
                     {{watering_form.a1(class="form-control form-control-md")}}    
-                {%endif%}
-            </div>
-  
-            <div class="form-group">
-              {{watering_form.id.label(class="form-control-label")}}
-              {%if watering_form.id.errors%}
-                    {{watering_form.id(class="form-control form-control-md is-invalid")}}
-                    <div class="invalid-feedback">
-                        {%for error in watering_form.id.errors%}
-                            <span>{{error}}</span>
-                        {%endfor%}
-                    </div>
-                {%else%}
-                    {{watering_form.id(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
 
