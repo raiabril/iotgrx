@@ -2,20 +2,25 @@
 
 {% block content %}
 <div class="container">
-  <div class="content-section text-center">
-    <h2>{{sensor.name}}</h2>
-    {% if values.__len__() > 0%}
-    <p>{{"{:10.2f}".format(last_event.value*sensor.a1 + sensor.a0)}} {{sensor.units}} at
-      <span>{{moment(last_event.date_created).format('l')}} {{moment(last_event.date_created).format('LT')}}</span></p>
-    {% endif %}
-    <div class="chart-container">
-      {% if values.__len__() > 0%}
-      <canvas id="myChart" height="340px" width="100%"></canvas>
-      {% else %}
-      <p>No data for sensor retrieved.</p>
-      {% endif %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="content-section text-center">
+        <h2>{{sensor.name}}</h2>
+        {% if values.__len__() > 0%}
+        <p>{{"{:10.2f}".format(last_event.value*sensor.a1 + sensor.a0)}} {{sensor.units}} at
+          <span>{{moment(last_event.date_created).format('l')}} {{moment(last_event.date_created).format('LT')}}</span></p>
+        {% endif %}
+        <div class="chart-container">
+          {% if values.__len__() > 0%}
+          <canvas id="myChart" height="340px" width="100%"></canvas>
+          {% else %}
+          <p>No data for sensor retrieved.</p>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
+  
   <div class="row">
     <div class="col-md-4">
       <div class="content-section">
