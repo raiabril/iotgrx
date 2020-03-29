@@ -8,7 +8,8 @@
         <a href="{{url_for('main.sensor', sensor_id = sensor.id, time = '1d')}}">Day</a>
         <a href="{{url_for('main.sensor', sensor_id = sensor.id, time = '1w')}}">Week</a>
         <a href="{{url_for('main.sensor', sensor_id = sensor.id, time = '1m')}}">Month</a>
-        <a href="{{url_for('main.sensor', sensor_id = sensor.id, time = '1y')}}">Year</a>
+        <a href="{{url_for('main.sensor', sensor_id = sensor.id, time = '1y')}}">Year</a> - 
+        <a href="{{url_for('device.check', device_code=device.code)}}">{{device.name}}</a>
         <h2>{{sensor.name}}</h2>
         {% if values.__len__() > 0%}
         <p>{{"{:10.2f}".format(last_event.value*sensor.a1 + sensor.a0)}} {{sensor.units}} at
@@ -28,15 +29,8 @@
   <div class="row">
     <div class="col-md-4">
       <div class="content-section">
-        <h3>Sensor configuration</h3>
-        <a href="{{url_for('device.check', device_code=device.code)}}">{{device.name}} - boot: {{last_event.boot}}</a>
-        <p>
-          {% if sensor.units %}
-          Units: {{sensor.units}}<br>
-          {% endif %}
-          Type: {{sensor.sensor_type}}
-        </p>
-        <hr>
+        <h3>Configuration</h3>
+        <br>
         <form id="watering_form" method="POST" action="">
           {{watering_form.hidden_tag()}}
 
