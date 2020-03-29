@@ -26,28 +26,28 @@ def home():
 def sensor(sensor_id):
 
     form = RealValueForm()
-    watering_form = WateringForm()
+    sensor_form = WateringForm()
 
-    if watering_form.is_submitted() and watering_form.submit2.data:
+    if sensor_form.is_submitted() and sensor_form.submit2.data:
 
-        sensor = Sensor.query.get(watering_form.id.data)
-        sensor.watering_trigger = watering_form.trigger.data
+        sensor = Sensor.query.get(sensor_form.id.data)
+        sensor.watering_trigger = sensor_form.trigger.data
 
-        if watering_form.level.data:
-            sensor.watering_level = (watering_form.level.data - sensor.a0)/sensor.a1
+        if sensor_form.level.data:
+            sensor.watering_level = (sensor_form.level.data - sensor.a0)/sensor.a1
         else:
             sensor.watering_level = None
 
-        sensor.name = watering_form.name.data
-        sensor.a0 = watering_form.a0.data
-        sensor.a1 = watering_form.a1.data
-        sensor.units = watering_form.units.data
-        sensor.sensor_type = watering_form.sensor_type.data
-        sensor.fit_type = watering_form.fit_type.data
+        sensor.name = sensor_form.name.data
+        sensor.a0 = sensor_form.a0.data
+        sensor.a1 = sensor_form.a1.data
+        sensor.units = sensor_form.units.data
+        sensor.sensor_type = sensor_form.sensor_type.data
+        sensor.fit_type = sensor_form.fit_type.data
         
         db.session.commit()
         
-        flash('Updated watering configuration','success')
+        flash('Updated sensor configuration','success')
         return redirect(url_for('main.sensor', sensor_id = sensor_id))
 
     if form.is_submitted() and form.submit1.data:
@@ -103,22 +103,23 @@ def sensor(sensor_id):
 
             form.id.data = events[0].id
             form.real_value.data = events[0].real_value
+            form.value.data = events[0].value
             form.calibrated.data = "{:.2f}".format(events[0].value*sensor.a1 + sensor.a0)
         
-        watering_form.name.data = sensor.name
-        watering_form.a0.data = sensor.a0
-        watering_form.a1.data = sensor.a1
-        watering_form.id.data = sensor.id
-        watering_form.fit_type.data = sensor.fit_type
-        watering_form.sensor_type.data = sensor.sensor_type
-        watering_form.units.data = sensor.units
+        sensor_form.name.data = sensor.name
+        sensor_form.a0.data = sensor.a0
+        sensor_form.a1.data = sensor.a1
+        sensor_form.id.data = sensor.id
+        sensor_form.fit_type.data = sensor.fit_type
+        sensor_form.sensor_type.data = sensor.sensor_type
+        sensor_form.units.data = sensor.units
 
         if sensor.watering_level:
-            watering_form.level.data = sensor.watering_level*sensor.a1 + sensor.a0
+            sensor_form.level.data = sensor.watering_level*sensor.a1 + sensor.a0
         else:
-            watering_form.level.data = ""
+            sensor_form.level.data = ""
 
-        watering_form.trigger.data = sensor.watering_trigger
+        sensor_form.trigger.data = sensor.watering_trigger
 
     greenFill = "rgba(151,220,150,0.3)"
     greenLine = "rgba(73,193,71,1)"
@@ -196,4 +197,4 @@ def sensor(sensor_id):
                             colorLine=colorLine,
                             title=device.name + " - " + sensor.name,
                             form=form,
-                            watering_form=watering_form)
+                            sensor_form=sensor_form)

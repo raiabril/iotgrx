@@ -7,6 +7,7 @@ from app.models import Event
 
 class RealValueForm(FlaskForm):
     id = IntegerField('Id', render_kw={'readonly': True})
+    value = FloatField('Raw',render_kw={'readonly': True})
     calibrated = FloatField('Calibrated', render_kw={'readonly': True})
     real_value = FloatField('Manual', validators=[DataRequired()])
     submit1 = SubmitField('Save')

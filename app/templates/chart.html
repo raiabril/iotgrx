@@ -31,130 +31,130 @@
       <div class="content-section">
         <h3>Configuration</h3>
         <br>
-        <form id="watering_form" method="POST" action="">
-          {{watering_form.hidden_tag()}}
+        <form id="sensor_form" method="POST" action="">
+          {{sensor_form.hidden_tag()}}
 
           <fieldset class="form-group">
 
             <div class="form-group">
-              {{watering_form.id.label(class="form-control-label")}}
-              {%if watering_form.id.errors%}
-                    {{watering_form.id(class="form-control form-control-md is-invalid")}}
+              {{sensor_form.id.label(class="form-control-label")}}
+              {%if sensor_form.id.errors%}
+                    {{sensor_form.id(class="form-control form-control-md is-invalid")}}
                     <div class="invalid-feedback">
-                        {%for error in watering_form.id.errors%}
+                        {%for error in sensor_form.id.errors%}
                             <span>{{error}}</span>
                         {%endfor%}
                     </div>
                 {%else%}
-                    {{watering_form.id(class="form-control form-control-md")}}    
+                    {{sensor_form.id(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
 
             <div class="form-group">
-              {{watering_form.name.label(class="form-control-label")}}
-              {%if watering_form.name.errors%}
-                    {{watering_form.name(class="form-control form-control-md is-invalid")}}
+              {{sensor_form.name.label(class="form-control-label")}}
+              {%if sensor_form.name.errors%}
+                    {{sensor_form.name(class="form-control form-control-md is-invalid")}}
                     <div class="invalid-feedback">
-                        {%for error in watering_form.name.errors%}
+                        {%for error in sensor_form.name.errors%}
                             <span>{{error}}</span>
                         {%endfor%}
                     </div>
                 {%else%}
-                    {{watering_form.name(class="form-control form-control-md")}}    
+                    {{sensor_form.name(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
 
             <div class="form-group">
-              {{watering_form.units.label(class="form-control-label")}}
-              {%if watering_form.units.errors%}
-                    {{watering_form.units(class="form-control form-control-md is-invalid")}}
+              {{sensor_form.units.label(class="form-control-label")}}
+              {%if sensor_form.units.errors%}
+                    {{sensor_form.units(class="form-control form-control-md is-invalid")}}
                     <div class="invalid-feedback">
-                        {%for error in watering_form.units.errors%}
+                        {%for error in sensor_form.units.errors%}
                             <span>{{error}}</span>
                         {%endfor%}
                     </div>
                 {%else%}
-                    {{watering_form.units(class="form-control form-control-md")}}    
+                    {{sensor_form.units(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
 
             <div class="form-group">
-              {{watering_form.sensor_type.label(class="form-control-label")}}
-              {%if watering_form.sensor_type.errors%}
-                    {{watering_form.sensor_type(class="form-control form-control-md is-invalid")}}
+              {{sensor_form.sensor_type.label(class="form-control-label")}}
+              {%if sensor_form.sensor_type.errors%}
+                    {{sensor_form.sensor_type(class="form-control form-control-md is-invalid")}}
                     <div class="invalid-feedback">
-                        {%for error in watering_form.sensor_type.errors%}
+                        {%for error in sensor_form.sensor_type.errors%}
                             <span>{{error}}</span>
                         {%endfor%}
                     </div>
                 {%else%}
-                    {{watering_form.sensor_type(class="form-control form-control-md")}}    
+                    {{sensor_form.sensor_type(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
 
             <div class="form-group">
-              {{watering_form.a0.label(class="form-control-label")}}
-              {%if watering_form.a0.errors%}
-                    {{watering_form.a0(class="form-control form-control-md is-invalid")}}
+              {{sensor_form.a0.label(class="form-control-label")}}
+              {%if sensor_form.a0.errors%}
+                    {{sensor_form.a0(class="form-control form-control-md is-invalid")}}
                     <div class="invalid-feedback">
-                        {%for error in watering_form.a0.errors%}
+                        {%for error in sensor_form.a0.errors%}
                             <span>{{error}}</span>
                         {%endfor%}
                     </div>
                 {%else%}
-                    {{watering_form.a0(class="form-control form-control-md")}}    
+                    {{sensor_form.a0(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
 
             <div class="form-group">
-              {{watering_form.a1.label(class="form-control-label")}}
-              {%if watering_form.a1.errors%}
-                    {{watering_form.a1(class="form-control form-control-md is-invalid")}}
+              {{sensor_form.a1.label(class="form-control-label")}}
+              {%if sensor_form.a1.errors%}
+                    {{sensor_form.a1(class="form-control form-control-md is-invalid")}}
                     <div class="invalid-feedback">
-                        {%for error in watering_form.a1.errors%}
+                        {%for error in sensor_form.a1.errors%}
                             <span>{{error}}</span>
                         {%endfor%}
                     </div>
                 {%else%}
-                    {{watering_form.a1(class="form-control form-control-md")}}    
+                    {{sensor_form.a1(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
 
             <div class="form-group">
-              {{watering_form.fit_type.label(class="form-control-label")}}
-              {%if watering_form.fit_type.errors%}
-                    {{watering_form.fit_type(class="form-control form-control-md is-invalid")}}
+              {{sensor_form.fit_type.label(class="form-control-label")}}
+              {%if sensor_form.fit_type.errors%}
+                    {{sensor_form.fit_type(class="form-control form-control-md is-invalid")}}
                     <div class="invalid-feedback">
-                        {%for error in watering_form.fit_type.errors%}
+                        {%for error in sensor_form.fit_type.errors%}
                             <span>{{error}}</span>
                         {%endfor%}
                     </div>
                 {%else%}
-                    {{watering_form.fit_type(class="form-control form-control-md")}}    
+                    {{sensor_form.fit_type(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
 
             <div class="form-group">
-              {{watering_form.level.label(class="form-control-label")}}
-              {%if watering_form.level.errors%}
-                    {{watering_form.level(class="form-control form-control-md is-invalid")}}
+              {{sensor_form.level.label(class="form-control-label")}}
+              {%if sensor_form.level.errors%}
+                    {{sensor_form.level(class="form-control form-control-md is-invalid")}}
                     <div class="invalid-feedback">
-                        {%for error in watering_form.level.errors%}
+                        {%for error in sensor_form.level.errors%}
                             <span>{{error}}</span>
                         {%endfor%}
                     </div>
                 {%else%}
-                    {{watering_form.level(class="form-control form-control-md")}}    
+                    {{sensor_form.level(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
 
             <div class="form-check">
-              {{watering_form.trigger(class="form-check-input")}}
-              {{watering_form.trigger.label(class="form-check-input-label")}}
+              {{sensor_form.trigger(class="form-check-input")}}
+              {{sensor_form.trigger.label(class="form-check-input-label")}}
             </div>
 
             <div class="form-group">
-              {{watering_form.submit2(class="btn btn-outline-info")}}
+              {{sensor_form.submit2(class="btn btn-outline-info")}}
             </div>
 
           </fieldset>
@@ -192,6 +192,20 @@
                           </div>
                       {%else%}
                           {{form.id(class="form-control form-control-md")}}    
+                      {%endif%}
+                  </div>
+
+                  <div class="form-group">
+                    {{form.value.label(class="form-control-label")}}
+                    {%if form.value.errors%}
+                          {{form.value(class="form-control form-control-md is-invalid")}}
+                          <div class="invalid-feedback">
+                              {%for error in form.value.errors%}
+                                  <span>{{error}}</span>
+                              {%endfor%}
+                          </div>
+                      {%else%}
+                          {{form.value(class="form-control form-control-md")}}    
                       {%endif%}
                   </div>
   
