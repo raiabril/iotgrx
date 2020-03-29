@@ -28,19 +28,29 @@ def sensor(sensor_id):
     form = RealValueForm()
     watering_form = WateringForm()
 
-    if watering_form.validate_on_submit() and watering_form.submit2.data:
+    if watering_form.is_submitted() and watering_form.submit2.data:
+
         sensor = Sensor.query.get(watering_form.id.data)
-        sensor.watering_level = (watering_form.level.data - sensor.a0)/sensor.a1
         sensor.watering_trigger = watering_form.trigger.data
+
+        if watering_form.level.data:
+            sensor.watering_level = (watering_form.level.data - sensor.a0)/sensor.a1
+        else:
+            sensor.watering_level = None
+
+        sensor.name = watering_form.name.data
         sensor.a0 = watering_form.a0.data
         sensor.a1 = watering_form.a1.data
+        sensor.units = watering_form.units.data
+        sensor.sensor_type = watering_form.sensor_type.data
+        sensor.fit_type = watering_form.fit_type.data
         
         db.session.commit()
         
         flash('Updated watering configuration','success')
         return redirect(url_for('main.sensor', sensor_id = sensor_id))
 
-    if form.validate_on_submit() and form.submit1.data:
+    if form.is_submitted() and form.submit1.data:
         event = Event.query.get(form.id.data)
         sensor = Sensor.query.get(sensor_id)
         event.real_value = form.real_value.data
@@ -89,13 +99,19 @@ def sensor(sensor_id):
             .order_by(Event.date_created.desc())\
             .limit(2*24*7).all()
 
-        form.id.data = events[0].id
-        form.real_value.data = events[0].real_value
-        form.calibrated.data = "{:.2f}".format(events[0].value*sensor.a1 + sensor.a0)
+        if len(events):
 
+            form.id.data = events[0].id
+            form.real_value.data = events[0].real_value
+            form.calibrated.data = "{:.2f}".format(events[0].value*sensor.a1 + sensor.a0)
+        
+        watering_form.name.data = sensor.name
         watering_form.a0.data = sensor.a0
         watering_form.a1.data = sensor.a1
         watering_form.id.data = sensor.id
+        watering_form.fit_type.data = sensor.fit_type
+        watering_form.sensor_type.data = sensor.sensor_type
+        watering_form.units.data = sensor.units
 
         if sensor.watering_level:
             watering_form.level.data = sensor.watering_level*sensor.a1 + sensor.a0
@@ -115,6 +131,7 @@ def sensor(sensor_id):
     labels=[]
     values=[]
     real_events = []
+    last_event = []
 
     # Events
     if events.__len__() > 1:
@@ -132,10 +149,11 @@ def sensor(sensor_id):
     values = ["{:10.3f}".format(x*sensor.a1 + sensor.a0) for x in values]
 
     # Last event for display
-    last_event = events[0]
+    if len(events):
+        last_event = events[0]
 
     # Color for main graph
-    if sensor.watering_trigger and sensor.watering_level < last_event.value:
+    if sensor.watering_trigger and sensor.watering_level and sensor.watering_level < last_event.value:
         colorFill = yellowFill
         colorLine = yellowLine
     else:
@@ -157,7 +175,7 @@ def sensor(sensor_id):
     real_bubbles = list(zip(real_labels, real_values))
     real_fit = list(zip(real_labels_fit, real_values_fit))
 
-    if sensor.watering_trigger:
+    if sensor.watering_trigger and sensor.watering_level:
         trigger_labels = [labels[0], labels[-1]]
         trigger_values = [sensor.watering_level*sensor.a1 + sensor.a0, sensor.watering_level*sensor.a1 + sensor.a0]
         water_trigger = list(zip(trigger_labels, trigger_values))

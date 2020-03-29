@@ -118,6 +118,7 @@ class Sensor(db.Model):
     code = db.Column(db.String(100), nullable=False)
     a0 = db.Column(db.Float, nullable=False, default = 0)
     a1 = db.Column(db.Float, nullable=False, default = 0)
+    fit_type = db.Column(db.String(50), nullable=False, default='linear')
     units = db.Column(db.String(100))
     sensor_type = db.Column(db.String(100))
     watering_trigger = db.Column(db.Boolean, default=0)
