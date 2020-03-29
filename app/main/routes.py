@@ -2,7 +2,7 @@ from flask import render_template, request, Blueprint, redirect, url_for, flash
 from flask_login import current_user, login_required
 from sqlalchemy import func
 from app.models import Sensor, Event, Device, User
-from app.main.utils import filter_values
+from app.main.utils import filter_values, calibrate_raw, fit_curve
 from app.main.forms import RealValueForm, WateringForm
 from app import db
 import numpy as np
@@ -35,6 +35,7 @@ def sensor(sensor_id):
 
         if sensor_form.level.data:
             sensor.watering_level = (sensor_form.level.data - sensor.a0)/sensor.a1
+
         else:
             sensor.watering_level = None
 
@@ -57,11 +58,10 @@ def sensor(sensor_id):
         real_events = Event.query.filter(Event.sensor_code==sensor.code).filter(Event.real_value!=None).all()
 
         if len(real_events) > 5:
+
             y = [event.real_value for event in real_events]
             x = [event.value for event in real_events]
-            z = np.polyfit(x, y, 1)
-            sensor.a0 = z[1]
-            sensor.a1 = z[0]
+            sensor.a0, sensor.a1 = fit_curve(x, y, sensor.fit_type)
 
         db.session.commit()
 
@@ -104,7 +104,7 @@ def sensor(sensor_id):
             form.id.data = events[0].id
             form.real_value.data = events[0].real_value
             form.value.data = events[0].value
-            form.calibrated.data = "{:.2f}".format(events[0].value*sensor.a1 + sensor.a0)
+            form.calibrated.data = "{:.2f}".format(calibrate_raw(events[0].value, sensor.a0, sensor.a1, sensor.fit_type))
         
         sensor_form.name.data = sensor.name
         sensor_form.a0.data = sensor.a0
@@ -147,7 +147,7 @@ def sensor(sensor_id):
     values = filter_values(values)
 
     # Apply calibration
-    values = ["{:10.3f}".format(x*sensor.a1 + sensor.a0) for x in values]
+    values = calibrate_raw(values, sensor.a0, sensor.a1, sensor.fit_type)
 
     # Last event for display
     if len(events):
@@ -166,19 +166,19 @@ def sensor(sensor_id):
     real_labels = [x.value for x in real_events]
     
     if len(real_values) <= 1:
-        real_labels_fit = [-2000, 0, 2000]
-        real_values_fit = [x*sensor.a1 + sensor.a0 for x in real_labels_fit]
+        real_labels_fit = [-2000, 2000]
     
     else:
-        real_values_fit = [x.value*sensor.a1 + sensor.a0 for x in real_events]
-        real_labels_fit = real_labels
+        real_labels_fit = np.sort(np.append(max(real_labels), np.append(min(real_labels), np.random.randint(min(real_labels),max(real_labels),100))))
+        #real_labels_fit = real_labels
 
+    real_values_fit = calibrate_raw(real_labels_fit, sensor.a0, sensor.a1, sensor.fit_type)
     real_bubbles = list(zip(real_labels, real_values))
     real_fit = list(zip(real_labels_fit, real_values_fit))
 
     if sensor.watering_trigger and sensor.watering_level:
         trigger_labels = [labels[0], labels[-1]]
-        trigger_values = [sensor.watering_level*sensor.a1 + sensor.a0, sensor.watering_level*sensor.a1 + sensor.a0]
+        trigger_values = calibrate_raw([sensor.watering_level, sensor.watering_level], sensor.a0, sensor.a1, sensor.fit_type)
         water_trigger = list(zip(trigger_labels, trigger_values))
     else:
         water_trigger = []
