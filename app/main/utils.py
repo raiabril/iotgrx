@@ -11,6 +11,7 @@ def filter_values(values):
             values[i] = (values[i - 1] + values[i] + values[i + 1]) / 3
     return values
 
+
 def calibrate_raw(array, a0, a1, fit_type):
     x = np.array(array, dtype=np.float64)
     calibrated_array = []
@@ -19,7 +20,7 @@ def calibrate_raw(array, a0, a1, fit_type):
         calibrated_array = x*a1 + a0
 
     elif fit_type == 'log':
-        calibrated_array = a0 + np.exp(x*a1)
+        calibrated_array = a0*np.exp(x*a1)
 
     return calibrated_array.tolist()
 
