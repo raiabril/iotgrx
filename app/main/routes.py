@@ -73,6 +73,7 @@ def sensor(sensor_id):
         devices = Device.query.filter_by(active=1).all()
         sensor = Sensor.query.get(sensor_id)
         device = Device.query.get(sensor.device_id)
+        test_display = 200
 
         if time_frame == '1d':
             events = Event.query.filter_by(sensor_code=sensor.code)\
@@ -93,11 +94,17 @@ def sensor(sensor_id):
             events = Event.query.filter_by(sensor_code=sensor.code)\
                 .filter(Event.date_created>datetime.datetime.now()-datetime.timedelta(weeks=52))\
                 .order_by(Event.date_created.desc()).all()
-        
+
         else:
             events = Event.query.filter_by(sensor_code=sensor.code)\
             .order_by(Event.date_created.desc())\
-            .limit(2*24*7).all()
+            .limit(test_display).all()
+
+        test_factor = int(round(events.__len__()/test_display))
+
+        if test_factor > 0:
+                events = events[::test_factor]
+
 
         if len(events):
 
