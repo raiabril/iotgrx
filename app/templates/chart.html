@@ -12,7 +12,7 @@
         <a href="{{url_for('device.check', device_code=device.code)}}">{{device.name}}</a>
         <h2>{{sensor.name}}</h2>
         {% if values.__len__() > 0%}
-        <p>{{"{:10.2f}".format(last_event.value*sensor.a1 + sensor.a0)}} {{sensor.units}} at
+        <p>{{last_event.real_value}} {{sensor.units}} at
           <span>{{moment(last_event.date_created).format('l')}} {{moment(last_event.date_created).format('LT')}}</span></p>
         {% endif %}
         <div class="chart-container">

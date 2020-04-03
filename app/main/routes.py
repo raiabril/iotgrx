@@ -177,9 +177,12 @@ def sensor(sensor_id):
     
     else:
         real_labels_fit = np.sort(np.append(max(real_labels), np.append(min(real_labels), np.random.randint(min(real_labels),max(real_labels),100))))
-        #real_labels_fit = real_labels
 
     real_values_fit = calibrate_raw(real_labels_fit, sensor.a0, sensor.a1, sensor.fit_type)
+
+    if not last_event.real_value:
+        last_event.real_value = "{:.2f}".format(calibrate_raw(events[0].value, sensor.a0, sensor.a1, sensor.fit_type))
+
     real_bubbles = list(zip(real_labels, real_values))
     real_fit = list(zip(real_labels_fit, real_values_fit))
 
