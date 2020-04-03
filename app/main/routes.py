@@ -73,6 +73,7 @@ def sensor(sensor_id):
         devices = Device.query.filter_by(active=1).all()
         sensor = Sensor.query.get(sensor_id)
         device = Device.query.get(sensor.device_id)
+        real_events = Event.query.filter(Event.sensor_code==sensor.code).filter(Event.real_value!=None).all()
         test_display = 200
 
         if time_frame == '1d':
@@ -138,7 +139,6 @@ def sensor(sensor_id):
 
     labels=[]
     values=[]
-    real_events = []
     last_event = []
 
     # Events
@@ -146,9 +146,6 @@ def sensor(sensor_id):
         for event in events:
             labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
             values.append(event.value)
-
-            if event.real_value != None:
-                real_events.append(event)
             
     # Filter values
     values = filter_values(values)
