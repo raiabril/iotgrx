@@ -78,7 +78,7 @@ def sensor(sensor_id):
 
         if time_frame == '1d':
             events = Event.query.filter_by(sensor_code=sensor.code)\
-                .filter(Event.date_created>datetime.datetime.now()-datetime.timedelta(days=1))\
+                .filter(Event.date_created>datetime.datetime.now()-datetime.timedelta(days=1, hours=1))\
                 .order_by(Event.date_created.desc()).all()
 
         elif time_frame == '1w':
@@ -143,6 +143,7 @@ def sensor(sensor_id):
 
     # Events
     if events.__len__() > 1:
+
         for event in events:
             labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
             values.append(event.value)
@@ -177,8 +178,9 @@ def sensor(sensor_id):
 
     real_values_fit = calibrate_raw(real_labels_fit, sensor.a0, sensor.a1, sensor.fit_type)
 
-    if not last_event.real_value:
-        last_event.real_value = "{:.2f}".format(calibrate_raw(events[0].value, sensor.a0, sensor.a1, sensor.fit_type))
+    if last_event:
+        if not last_event.real_value:
+            last_event.real_value = "{:.2f}".format(calibrate_raw(events[0].value, sensor.a0, sensor.a1, sensor.fit_type))
 
     real_bubbles = list(zip(real_labels, real_values))
     real_fit = list(zip(real_labels_fit, real_values_fit))
