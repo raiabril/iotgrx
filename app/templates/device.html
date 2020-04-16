@@ -12,12 +12,14 @@
           <th>Code</th>
           <th>Created</th>
           <th>Auto</th>
+          <th>Default watering</th>
       </tr>
       <tr>
         <td>{{device.id}}</td>
         <td>{{device.code}}</td>
         <td>{{moment(device.date_created).format('l')}}</td>
         <td>{{device.automatic_watering}}</td>
+        <td>{{device.default_watering}}</td>
       </tr>
     </table>
     <hr>
