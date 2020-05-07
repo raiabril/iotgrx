@@ -11,3 +11,4 @@ flask_httpauth
 flask_moment
 datetime
 Pillow
+numpy
