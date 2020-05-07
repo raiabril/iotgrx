@@ -13,3 +13,4 @@ datetime
 Pillow
 numpy
 email_validator
+pandas

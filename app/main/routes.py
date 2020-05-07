@@ -6,6 +6,7 @@ from app.main.utils import filter_values, calibrate_raw, fit_curve
 from app.main.forms import RealValueForm, WateringForm
 from app import db
 import numpy as np
+import pandas as pd
 import datetime
 
 main = Blueprint('main', __name__)
@@ -148,6 +149,20 @@ def sensor(sensor_id):
             labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
             values.append(event.value)
             
+
+    # Pivot values
+    if time_frame == '1m' or time_frame == '1y':
+        dataframe = []
+        for i in range(len(values)):
+            dataframe.append([labels[i],values[i]])
+
+        df = pd.DataFrame(dataframe)
+        df.columns = ['date','value']
+        df.date = [x[:10] for x in df.date]
+        pivot = df.pivot_table(index='date', values='value', aggfunc='mean')
+        values = list(pivot.value)
+        labels = list(pivot.index)
+
     # Filter values
     values = filter_values(values)
 
