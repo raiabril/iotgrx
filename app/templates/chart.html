@@ -288,15 +288,16 @@
         ],
         datasets: [
           {
-            label: "Average",
+            label: "Value",
             data: [
-            {% for item in values_avg %}
+            {% for item in values %}
             {{ item }},
             {% endfor %}
             ],
             borderColor: "black",
             backgroundColor: "transparent",
-            borderWidth: 2
+            borderWidth: 2,
+            spanGaps: true,
           },
           {
             label: "Max",
@@ -306,7 +307,8 @@
             {% endfor %}
             ],
             borderColor: "{{colorLine}}",
-            borderWidth: 2
+            borderWidth: 2,
+            spanGaps: true,
           },
           {
             label: "Min",
@@ -317,7 +319,8 @@
             ],
             backgroundColor: "{{colorFill}}",
             borderColor: "{{colorLine}}",
-            borderWidth: 2
+            borderWidth: 2,
+            spanGaps: true,
           },
           {% if water_trigger.__len__() > 1 %}
           {

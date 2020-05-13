@@ -169,15 +169,26 @@ def sensor(sensor_id):
 
         df = pd.DataFrame(dataframe)
         df.columns = ['date','value']
-        df.date = [x[:10] for x in df.date]
-        pivot = df.pivot_table(index='date', values='value', aggfunc=[max, min, np.mean])
-        labels_avg = list(pivot.index)
-        values_avg = list(pivot['mean'].value)
-        values_max = list(pivot['max'].value)
-        values_min = list(pivot['min'].value)
+        df.date = pd.to_datetime(df.date)
+        df.set_index('date', inplace=True)
+
+        df_max = df.loc[df.groupby(pd.Grouper(freq='D')).idxmax().iloc[:, 0]]
+        df_max.columns = ['value_max']
+
+        df_min = df.loc[df.groupby(pd.Grouper(freq='D')).idxmin().iloc[:, 0]]
+        df_min.columns = ['value_min']
+
+        concat = pd.concat([df, df_max, df_min], axis=1).sort_index()
+        concat.fillna("null", inplace=True)
+
+        labels_avg = list(concat.index)
+        #values_avg = []
+        values_max = list(concat.value_max)
+        values_min = list(concat.value_min)
+        values = list(concat.value)
 
         # Filter values
-        values = filter_values(values)
+        #values = filter_values(values)
 
         # Last event for display
         if len(events):
