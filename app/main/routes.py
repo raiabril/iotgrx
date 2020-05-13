@@ -75,7 +75,7 @@ def sensor(sensor_id):
         sensor = Sensor.query.get(sensor_id)
         device = Device.query.get(sensor.device_id)
         real_events = Event.query.filter(Event.sensor_code==sensor.code).filter(Event.real_value!=None).all()
-        test_display = 200
+        test_display = 365*12
 
         if time_frame == '1d':
             events = Event.query.filter_by(sensor_code=sensor.code)\
@@ -100,7 +100,7 @@ def sensor(sensor_id):
         else:
             events = Event.query.filter_by(sensor_code=sensor.code)\
             .order_by(Event.date_created.desc())\
-            .limit(test_display).all()
+            .limit(4*24*2).all()
 
         test_factor = int(round(events.__len__()/test_display))
 
@@ -140,72 +140,83 @@ def sensor(sensor_id):
 
     labels=[]
     values=[]
+    values_avg = []
+    values_max = []
+    values_min = []
+    labels_avg = []
     last_event = []
+    real_bubbles = []
+    real_fit = []
+    water_trigger = []
+
+    colorFill = yellowFill
+    colorLine = yellowLine
 
     # Events
     if events.__len__() > 1:
-
         for event in events:
             labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
             values.append(event.value)
             
-
-    # Pivot values
-    if time_frame == '1m' or time_frame == '1y':
+        # Pivot values
         dataframe = []
+
+        # Apply calibration
+        values = calibrate_raw(values, sensor.a0, sensor.a1, sensor.fit_type)
+
         for i in range(len(values)):
+            print([labels[i],values[i]])
             dataframe.append([labels[i],values[i]])
 
         df = pd.DataFrame(dataframe)
         df.columns = ['date','value']
         df.date = [x[:10] for x in df.date]
-        pivot = df.pivot_table(index='date', values='value', aggfunc='mean')
-        values = list(pivot.value)
-        labels = list(pivot.index)
+        pivot = df.pivot_table(index='date', values='value', aggfunc=[max, min, np.mean])
+        print(pivot)
+        labels_avg = list(pivot.index)
+        values_avg = list(pivot['mean'].value)
+        values_max = list(pivot['max'].value)
+        values_min = list(pivot['min'].value)
 
-    # Filter values
-    values = filter_values(values)
+        # Filter values
+        values = filter_values(values)
 
-    # Apply calibration
-    values = calibrate_raw(values, sensor.a0, sensor.a1, sensor.fit_type)
+        # Last event for display
+        if len(events):
+            last_event = events[0]
 
-    # Last event for display
-    if len(events):
-        last_event = events[0]
+        # Color for main graph
+        if sensor.watering_trigger and sensor.watering_level and sensor.watering_level < last_event.value:
+            colorFill = yellowFill
+            colorLine = yellowLine
+        else:
+            colorFill = greenFill
+            colorLine = greenLine
 
-    # Color for main graph
-    if sensor.watering_trigger and sensor.watering_level and sensor.watering_level < last_event.value:
-        colorFill = yellowFill
-        colorLine = yellowLine
-    else:
-        colorFill = greenFill
-        colorLine = greenLine
+        # Real events and fit
+        real_values = [x.real_value for x in real_events]
+        real_labels = [x.value for x in real_events]
+        
+        if len(real_values) <= 1:
+            real_labels_fit = [-2000, 2000]
+        
+        else:
+            real_labels_fit = np.sort(np.append(max(real_labels), np.append(min(real_labels), np.random.randint(min(real_labels),max(real_labels),100))))
 
-    # Real events and fit
-    real_values = [x.real_value for x in real_events]
-    real_labels = [x.value for x in real_events]
-    
-    if len(real_values) <= 1:
-        real_labels_fit = [-2000, 2000]
-    
-    else:
-        real_labels_fit = np.sort(np.append(max(real_labels), np.append(min(real_labels), np.random.randint(min(real_labels),max(real_labels),100))))
+        real_values_fit = calibrate_raw(real_labels_fit, sensor.a0, sensor.a1, sensor.fit_type)
 
-    real_values_fit = calibrate_raw(real_labels_fit, sensor.a0, sensor.a1, sensor.fit_type)
+        if last_event:
+            if not last_event.real_value:
+                last_event.real_value = "{:.2f}".format(calibrate_raw(events[0].value, sensor.a0, sensor.a1, sensor.fit_type))
 
-    if last_event:
-        if not last_event.real_value:
-            last_event.real_value = "{:.2f}".format(calibrate_raw(events[0].value, sensor.a0, sensor.a1, sensor.fit_type))
+        real_bubbles = list(zip(real_labels, real_values))
+        real_fit = list(zip(real_labels_fit, real_values_fit))
 
-    real_bubbles = list(zip(real_labels, real_values))
-    real_fit = list(zip(real_labels_fit, real_values_fit))
+        if sensor.watering_trigger and sensor.watering_level:
+            trigger_labels = [labels_avg[0], labels_avg[-1]]
+            trigger_values = calibrate_raw([sensor.watering_level, sensor.watering_level], sensor.a0, sensor.a1, sensor.fit_type)
+            water_trigger = list(zip(trigger_labels, trigger_values))
 
-    if sensor.watering_trigger and sensor.watering_level:
-        trigger_labels = [labels[0], labels[-1]]
-        trigger_values = calibrate_raw([sensor.watering_level, sensor.watering_level], sensor.a0, sensor.a1, sensor.fit_type)
-        water_trigger = list(zip(trigger_labels, trigger_values))
-    else:
-        water_trigger = []
 
     return render_template('chart.html', 
                             devices=devices,
@@ -213,6 +224,10 @@ def sensor(sensor_id):
                             device=device,
                             labels=labels,
                             values=values,
+                            labels_avg = labels_avg,
+                            values_avg = values_avg,
+                            values_min = values_min,
+                            values_max = values_max,
                             real_bubbles=real_bubbles,
                             real_fit = real_fit,
                             water_trigger=water_trigger,

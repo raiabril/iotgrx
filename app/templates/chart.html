@@ -282,15 +282,36 @@
       xAxisID: "xAxis",
       data: {
         labels: [
-          {% for label in labels %}
+          {% for label in labels_avg %}
           moment.utc("{{ label }}"),
           {% endfor %}
         ],
         datasets: [
           {
-            label: "Sensor reading",
+            label: "Average",
             data: [
-            {% for item in values %}
+            {% for item in values_avg %}
+            {{ item }},
+            {% endfor %}
+            ],
+            borderColor: "black",
+            backgroundColor: "transparent",
+            borderWidth: 2
+          },
+          {
+            label: "Max",
+            data: [
+            {% for item in values_max %}
+            {{ item }},
+            {% endfor %}
+            ],
+            borderColor: "{{colorLine}}",
+            borderWidth: 2
+          },
+          {
+            label: "Min",
+            data: [
+            {% for item in values_min %}
             {{ item }},
             {% endfor %}
             ],
