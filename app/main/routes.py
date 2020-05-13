@@ -165,14 +165,12 @@ def sensor(sensor_id):
         values = calibrate_raw(values, sensor.a0, sensor.a1, sensor.fit_type)
 
         for i in range(len(values)):
-            print([labels[i],values[i]])
             dataframe.append([labels[i],values[i]])
 
         df = pd.DataFrame(dataframe)
         df.columns = ['date','value']
         df.date = [x[:10] for x in df.date]
         pivot = df.pivot_table(index='date', values='value', aggfunc=[max, min, np.mean])
-        print(pivot)
         labels_avg = list(pivot.index)
         values_avg = list(pivot['mean'].value)
         values_max = list(pivot['max'].value)
