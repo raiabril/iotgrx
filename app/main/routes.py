@@ -168,25 +168,31 @@ def sensor(sensor_id):
             df.columns = ['date','value']
             df.date = pd.to_datetime(df.date)
             df.set_index('date', inplace=True)
-            df.sort_index(inplace=True)
-
-            df_max = df.loc[df.groupby(pd.Grouper(freq='D')).idxmax().iloc[:, 0]]
-            df_max.columns = ['value_max']
-
-            df_min = df.loc[df.groupby(pd.Grouper(freq='D')).idxmin().iloc[:, 0]]
-            df_min.columns = ['value_min']
+            df.sort_index(inplace=True)            
 
 
-            if time_frame == '1y' or time_frame == '1m':
+            if time_frame == '1y':
+                df_mean = df.groupby(pd.Grouper(freq='4D')).mean()
+                df_max = df.loc[df.groupby(pd.Grouper(freq='4D')).idxmax().iloc[:, 0]]
+                df_min = df.loc[df.groupby(pd.Grouper(freq='4D')).idxmin().iloc[:, 0]]
+                df_rolling = df.rolling(24*2*4).mean()
+
+            elif time_frame == '1m':
                 df_mean = df.groupby(pd.Grouper(freq='D')).mean()
-                df_rolling = df.rolling(48).mean()
+                df_max = df.loc[df.groupby(pd.Grouper(freq='D')).idxmax().iloc[:, 0]]
+                df_min = df.loc[df.groupby(pd.Grouper(freq='D')).idxmin().iloc[:, 0]]
+                df_rolling = df.rolling(24*2).mean()
 
             else:
                 df_mean = df.groupby(pd.Grouper(freq='4h')).mean()
+                df_max = df.loc[df.groupby(pd.Grouper(freq='4h')).idxmax().iloc[:, 0]]
+                df_min = df.loc[df.groupby(pd.Grouper(freq='4h')).idxmin().iloc[:, 0]]
                 df_rolling = df.rolling(8).mean()
 
             df_mean.columns = ['avg_mean']
             df_rolling.columns = ['rolling_mean']
+            df_min.columns = ['value_min']
+            df_max.columns = ['value_max']
 
             concat = pd.concat([df, df_max, df_min, df_mean, df_rolling], axis=1).sort_index()
             concat.fillna("null", inplace=True)
