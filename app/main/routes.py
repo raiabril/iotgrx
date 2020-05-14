@@ -179,12 +179,13 @@ def sensor(sensor_id):
 
             if time_frame == '1y' or time_frame == '1m':
                 df_mean = df.groupby(pd.Grouper(freq='D')).mean()
+                df_rolling = df.rolling(48).mean()
 
             else:
                 df_mean = df.groupby(pd.Grouper(freq='4h')).mean()
+                df_rolling = df.rolling(8).mean()
 
             df_mean.columns = ['avg_mean']
-            df_rolling = df.rolling(48).mean()
             df_rolling.columns = ['rolling_mean']
 
             concat = pd.concat([df, df_max, df_min, df_mean, df_rolling], axis=1).sort_index()
@@ -205,6 +206,8 @@ def sensor(sensor_id):
 
             else:
                 values_avg = []
+                values_max = []
+                values_min = []
 
             # Last event for display
             if len(events):
