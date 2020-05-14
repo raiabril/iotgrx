@@ -16,7 +16,7 @@
           <span>{{moment(last_event.date_created).format('l')}} {{moment(last_event.date_created).format('LT')}}</span></p>
         {% endif %}
         <div class="chart-container">
-          {% if values.__len__() > 0%}
+          {% if values.__len__() > 0 or values_avg.__len__() > 0 %}
           <canvas id="myChart" height="340px" width="100%"></canvas>
           {% else %}
           <p>No data for sensor retrieved.</p>
@@ -282,11 +282,12 @@
       xAxisID: "xAxis",
       data: {
         labels: [
-          {% for label in labels_avg %}
+          {% for label in labels %}
           moment.utc("{{ label }}"),
           {% endfor %}
         ],
         datasets: [
+          {% if values.__len__() > 0 %}
           {
             label: "Value",
             data: [
@@ -299,6 +300,8 @@
             borderWidth: 2,
             spanGaps: true,
           },
+          {% endif %}
+          {% if values_avg.__len__() > 0 %}
           {
             label: "Mean",
             data: [
@@ -311,6 +314,7 @@
             borderWidth: 2,
             spanGaps: true,
           },
+          {% endif %}
           {
             label: "Rolling",
             data: [

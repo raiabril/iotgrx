@@ -75,41 +75,38 @@ def sensor(sensor_id):
         sensor = Sensor.query.get(sensor_id)
         device = Device.query.get(sensor.device_id)
         real_events = Event.query.filter(Event.sensor_code==sensor.code).filter(Event.real_value!=None).all()
-        test_display = 365*12
 
         if time_frame == '1d':
             events = Event.query.filter_by(sensor_code=sensor.code)\
                 .filter(Event.date_created>datetime.datetime.now()-datetime.timedelta(days=1, hours=1))\
                 .order_by(Event.date_created.desc()).all()
 
+
         elif time_frame == '1w':
             events = Event.query.filter_by(sensor_code=sensor.code)\
                 .filter(Event.date_created>datetime.datetime.now()-datetime.timedelta(days=7))\
                 .order_by(Event.date_created.desc()).all()
+
 
         elif time_frame == '1m':
             events = Event.query.filter_by(sensor_code=sensor.code)\
                     .filter(Event.date_created>datetime.datetime.now()-datetime.timedelta(weeks=4))\
                     .order_by(Event.date_created.desc()).all()
 
+
         elif time_frame == '1y':
             events = Event.query.filter_by(sensor_code=sensor.code)\
                 .filter(Event.date_created>datetime.datetime.now()-datetime.timedelta(weeks=52))\
                 .order_by(Event.date_created.desc()).all()
+
 
         else:
             events = Event.query.filter_by(sensor_code=sensor.code)\
             .order_by(Event.date_created.desc())\
             .limit(4*24*2).all()
 
-        test_factor = int(round(events.__len__()/test_display))
-
-        if test_factor > 0:
-                events = events[::test_factor]
-
 
         if len(events):
-
             form.id.data = events[0].id
             form.real_value.data = events[0].real_value
             form.value.data = events[0].value
@@ -130,109 +127,123 @@ def sensor(sensor_id):
 
         sensor_form.trigger.data = sensor.watering_trigger
 
-    greenFill = "rgba(151,220,150,0.3)"
-    greenLine = "rgba(73,193,71,1)"
-    yellowFill = "rgba(245,240,50,0.3)"
-    yellowLine = "rgba(240,245,50,1)"
-    #redFill = "rgba(234,121,106,0.3)"
-    #redLine = "rgba(210,50,28,1)"
-    #real_radius = 2
+        greenFill = "rgba(151,220,150,0.3)"
+        greenLine = "rgba(73,193,71,1)"
+        yellowFill = "rgba(245,240,50,0.3)"
+        yellowLine = "rgba(240,245,50,1)"
+        #redFill = "rgba(234,121,106,0.3)"
+        #redLine = "rgba(210,50,28,1)"
+        #real_radius = 2
 
-    labels=[]
-    values=[]
-    values_avg = []
-    values_max = []
-    values_min = []
-    labels_avg = []
-    last_event = []
-    real_bubbles = []
-    real_fit = []
-    water_trigger = []
+        labels=[]
+        values=[]
+        values_avg = []
+        values_max = []
+        values_min = []
+        values_rolling = []
+        last_event = []
+        real_bubbles = []
+        real_fit = []
+        water_trigger = []
 
-    colorFill = yellowFill
-    colorLine = yellowLine
+        colorFill = yellowFill
+        colorLine = yellowLine
 
-    # Events
-    if events.__len__() > 1:
-        for event in events:
-            labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
-            values.append(event.value)
+        # Events
+        if events.__len__() > 1:
+            for event in events:
+                labels.append(event.date_created.strftime('%Y-%m-%d %H:%M:%S'))
+                values.append(event.value)
+                
+            # Pivot values
+            dataframe = []
+
+            # Apply calibration
+            values = calibrate_raw(values, sensor.a0, sensor.a1, sensor.fit_type)
+
+            for i in range(len(values)):
+                dataframe.append([labels[i],values[i]])
+
+            df = pd.DataFrame(dataframe)
+            df.columns = ['date','value']
+            df.date = pd.to_datetime(df.date)
+            df.set_index('date', inplace=True)
+            df.sort_index(inplace=True)
+
+            df_max = df.loc[df.groupby(pd.Grouper(freq='D')).idxmax().iloc[:, 0]]
+            df_max.columns = ['value_max']
+
+            df_min = df.loc[df.groupby(pd.Grouper(freq='D')).idxmin().iloc[:, 0]]
+            df_min.columns = ['value_min']
+
+
+            if time_frame == '1y' or time_frame == '1m':
+                df_mean = df.groupby(pd.Grouper(freq='D')).mean()
+
+            else:
+                df_mean = df.groupby(pd.Grouper(freq='4h')).mean()
+
+            df_mean.columns = ['avg_mean']
+            df_rolling = df.rolling(48).mean()
+            df_rolling.columns = ['rolling_mean']
+
+            concat = pd.concat([df, df_max, df_min, df_mean, df_rolling], axis=1).sort_index()
+            concat.fillna("null", inplace=True)
+
+            labels = list(concat.index)
+            values_avg = list(concat.avg_mean)
+            values_rolling = list(concat.rolling_mean)
+            values_max = list(concat.value_max)
+            values_min = list(concat.value_min)
+            values = list(concat.value)
+
+            # Filter values
+            #values = filter_values(values)
+            if time_frame == '1y' or time_frame == '1m':
+                values = []
+
+            else:
+                values_avg = []
+
+            # Last event for display
+            if len(events):
+                last_event = events[0]
+
+            # Color for main graph
+            if sensor.watering_trigger and sensor.watering_level and sensor.watering_level < last_event.value:
+                colorFill = yellowFill
+                colorLine = yellowLine
+            else:
+                colorFill = greenFill
+                colorLine = greenLine
+
+
+            # Real events and fit
+            real_values = [x.real_value for x in real_events]
+            real_labels = [x.value for x in real_events]
             
-        # Pivot values
-        dataframe = []
+            if len(real_values) <= 1:
+                real_labels_fit = [-2000, 2000]
+            
+            else:
+                real_labels_fit = np.sort(np.append(max(real_labels), np.append(min(real_labels), np.random.randint(min(real_labels),max(real_labels),100))))
 
-        # Apply calibration
-        values = calibrate_raw(values, sensor.a0, sensor.a1, sensor.fit_type)
+            real_values_fit = calibrate_raw(real_labels_fit, sensor.a0, sensor.a1, sensor.fit_type)
 
-        for i in range(len(values)):
-            dataframe.append([labels[i],values[i]])
+            if last_event:
+                if not last_event.real_value:
+                    last_event.real_value = "{:.2f}".format(calibrate_raw(events[0].value, sensor.a0, sensor.a1, sensor.fit_type))
 
-        df = pd.DataFrame(dataframe)
-        df.columns = ['date','value']
-        df.date = pd.to_datetime(df.date)
-        df.set_index('date', inplace=True)
-        df.sort_index(inplace=True)
+            real_bubbles = list(zip(real_labels, real_values))
+            real_fit = list(zip(real_labels_fit, real_values_fit))
 
-        df_max = df.loc[df.groupby(pd.Grouper(freq='D')).idxmax().iloc[:, 0]]
-        df_max.columns = ['value_max']
+            if sensor.watering_trigger and sensor.watering_level:
+                trigger_labels = [labels[0], labels[-1]]
+                trigger_values = calibrate_raw([sensor.watering_level, sensor.watering_level], sensor.a0, sensor.a1, sensor.fit_type)
+                water_trigger = list(zip(trigger_labels, trigger_values))
 
-        df_min = df.loc[df.groupby(pd.Grouper(freq='D')).idxmin().iloc[:, 0]]
-        df_min.columns = ['value_min']
-
-        df_mean = df.groupby(pd.Grouper(freq='D')).mean()
-        df_mean.columns = ['avg_mean']
-
-        df_rolling = df.rolling(48).mean()
-        df_rolling.columns = ['rolling_mean']
-
-        concat = pd.concat([df, df_max, df_min, df_mean, df_rolling], axis=1).sort_index()
-        concat.fillna("null", inplace=True)
-
-        labels_avg = list(concat.index)
-        values_avg = list(concat.avg_mean)
-        values_rolling = list(concat.rolling_mean)
-        values_max = list(concat.value_max)
-        values_min = list(concat.value_min)
-        values = list(concat.value)
-
-        # Filter values
-        #values = filter_values(values)
-
-        # Last event for display
-        if len(events):
-            last_event = events[0]
-
-        # Color for main graph
-        if sensor.watering_trigger and sensor.watering_level and sensor.watering_level < last_event.value:
-            colorFill = yellowFill
-            colorLine = yellowLine
-        else:
-            colorFill = greenFill
-            colorLine = greenLine
-
-        # Real events and fit
-        real_values = [x.real_value for x in real_events]
-        real_labels = [x.value for x in real_events]
         
-        if len(real_values) <= 1:
-            real_labels_fit = [-2000, 2000]
-        
-        else:
-            real_labels_fit = np.sort(np.append(max(real_labels), np.append(min(real_labels), np.random.randint(min(real_labels),max(real_labels),100))))
 
-        real_values_fit = calibrate_raw(real_labels_fit, sensor.a0, sensor.a1, sensor.fit_type)
-
-        if last_event:
-            if not last_event.real_value:
-                last_event.real_value = "{:.2f}".format(calibrate_raw(events[0].value, sensor.a0, sensor.a1, sensor.fit_type))
-
-        real_bubbles = list(zip(real_labels, real_values))
-        real_fit = list(zip(real_labels_fit, real_values_fit))
-
-        if sensor.watering_trigger and sensor.watering_level:
-            trigger_labels = [labels_avg[0], labels_avg[-1]]
-            trigger_values = calibrate_raw([sensor.watering_level, sensor.watering_level], sensor.a0, sensor.a1, sensor.fit_type)
-            water_trigger = list(zip(trigger_labels, trigger_values))
 
 
     return render_template('chart.html', 
@@ -241,7 +252,6 @@ def sensor(sensor_id):
                             device=device,
                             labels=labels,
                             values=values,
-                            labels_avg = labels_avg,
                             values_avg = values_avg,
                             values_min = values_min,
                             values_max = values_max,
