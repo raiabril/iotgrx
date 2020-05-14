@@ -201,6 +201,7 @@ def sensor(sensor_id):
             #values = filter_values(values)
             if time_frame == '1y' or time_frame == '1m':
                 values = []
+                values_rolling = []
 
             else:
                 values_avg = []
