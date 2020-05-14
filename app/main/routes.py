@@ -171,6 +171,7 @@ def sensor(sensor_id):
         df.columns = ['date','value']
         df.date = pd.to_datetime(df.date)
         df.set_index('date', inplace=True)
+        df.sort_index(inplace=True)
 
         df_max = df.loc[df.groupby(pd.Grouper(freq='D')).idxmax().iloc[:, 0]]
         df_max.columns = ['value_max']
@@ -178,11 +179,18 @@ def sensor(sensor_id):
         df_min = df.loc[df.groupby(pd.Grouper(freq='D')).idxmin().iloc[:, 0]]
         df_min.columns = ['value_min']
 
-        concat = pd.concat([df, df_max, df_min], axis=1).sort_index()
+        df_mean = df.groupby(pd.Grouper(freq='D')).mean()
+        df_mean.columns = ['avg_mean']
+
+        df_rolling = df.rolling(48).mean()
+        df_rolling.columns = ['rolling_mean']
+
+        concat = pd.concat([df, df_max, df_min, df_mean, df_rolling], axis=1).sort_index()
         concat.fillna("null", inplace=True)
 
         labels_avg = list(concat.index)
-        #values_avg = []
+        values_avg = list(concat.avg_mean)
+        values_rolling = list(concat.rolling_mean)
         values_max = list(concat.value_max)
         values_min = list(concat.value_min)
         values = list(concat.value)
@@ -237,6 +245,7 @@ def sensor(sensor_id):
                             values_avg = values_avg,
                             values_min = values_min,
                             values_max = values_max,
+                            values_rolling=values_rolling,
                             real_bubbles=real_bubbles,
                             real_fit = real_fit,
                             water_trigger=water_trigger,
