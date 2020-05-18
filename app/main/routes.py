@@ -173,14 +173,14 @@ def sensor(sensor_id):
 
             if time_frame == '1y':
                 df_mean = df.groupby(pd.Grouper(freq='4D')).mean()
-                df_max = df.loc[df.groupby(pd.Grouper(freq='4D')).idxmax().iloc[:, 0]]
-                df_min = df.loc[df.groupby(pd.Grouper(freq='4D')).idxmin().iloc[:, 0]]
+                df_max = df.groupby(pd.Grouper(freq='4D')).max()
+                df_min = df.groupby(pd.Grouper(freq='4D')).min()
                 df_rolling = df.rolling(24*2*4).mean()
 
             elif time_frame == '1m':
                 df_mean = df.groupby(pd.Grouper(freq='D')).mean()
-                df_max = df.loc[df.groupby(pd.Grouper(freq='D')).idxmax().iloc[:, 0]]
-                df_min = df.loc[df.groupby(pd.Grouper(freq='D')).idxmin().iloc[:, 0]]
+                df_max = df.groupby(pd.Grouper(freq='D')).max()
+                df_min = df.groupby(pd.Grouper(freq='D')).min()
                 df_rolling = df.rolling(24*2).mean()
 
             else:
