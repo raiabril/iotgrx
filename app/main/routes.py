@@ -175,19 +175,19 @@ def sensor(sensor_id):
                 df_mean = df.groupby(pd.Grouper(freq='4D')).mean()
                 df_max = df.groupby(pd.Grouper(freq='4D')).max()
                 df_min = df.groupby(pd.Grouper(freq='4D')).min()
-                df_rolling = df.rolling(24*2*4).mean()
+                df_rolling = df.rolling(24*2*4, center=True).mean()
 
             elif time_frame == '1m':
                 df_mean = df.groupby(pd.Grouper(freq='D')).mean()
                 df_max = df.groupby(pd.Grouper(freq='D')).max()
                 df_min = df.groupby(pd.Grouper(freq='D')).min()
-                df_rolling = df.rolling(24*2).mean()
+                df_rolling = df.rolling(24*2, center=True).mean()
 
             else:
                 df_mean = df.groupby(pd.Grouper(freq='4h')).mean()
                 df_max = df.loc[df.groupby(pd.Grouper(freq='4h')).idxmax().iloc[:, 0]]
                 df_min = df.loc[df.groupby(pd.Grouper(freq='4h')).idxmin().iloc[:, 0]]
-                df_rolling = df.rolling(8).mean()
+                df_rolling = df.rolling(8, center=True).mean()
 
             df_mean.columns = ['avg_mean']
             df_rolling.columns = ['rolling_mean']
