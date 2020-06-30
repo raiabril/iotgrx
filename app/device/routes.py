@@ -18,7 +18,7 @@ def check(device_code):
     event = Event.query.filter_by(device_code=device.code).order_by(Event.date_created.desc()).first()
 
     if form.validate_on_submit():
-        duration = form.duration.data
+        duration = form.duration.data*1000
         request = WaterRequest(device_code=device.code, pending=True, duration=duration, creator='Web')
         db.session.add(request)
         db.session.commit()

@@ -22,5 +22,5 @@ class WateringForm(FlaskForm):
     sensor_type = StringField('Sensor Type', validators=[DataRequired()])
     fit_type = SelectField('Fit type', choices=[('linear','y = a0 + a1*x'),('log','y = a0*e^a1')], validators=[DataRequired()])
     trigger = BooleanField('Watering trigger')
-    level = IntegerField('Water trigger level')
+    level = FloatField('Water trigger level')
     submit2 = SubmitField('Save')
