@@ -171,46 +171,45 @@ def sensor(sensor_id):
             df.sort_index(inplace=True)            
 
 
-            if time_frame == '1y':
-                df_mean = df.groupby(pd.Grouper(freq='4D')).mean()
-                df_max = df.groupby(pd.Grouper(freq='4D')).max()
-                df_min = df.groupby(pd.Grouper(freq='4D')).min()
+            if time_frame == '1y' or time_frame == '1m':
+                if time_frame == '1y':
+                    freq='4D'
+                else:
+                    freq='D'
+                
+                df_mean = df.groupby(pd.Grouper(freq=freq)).mean()
+                df_max = df.groupby(pd.Grouper(freq=freq)).max()
+                df_min = df.groupby(pd.Grouper(freq=freq)).min()
                 df_rolling = df.rolling(24*2*4, center=True).mean()
+                df_min.columns = ['value_min']
+                df_max.columns = ['value_max']
+                df_mean.columns = ['avg_mean']
+                df_rolling.columns = ['rolling_mean']
+                concat = pd.concat([df, df_max, df_min, df_mean, df_rolling], axis=1).sort_index()
+                concat.fillna("null", inplace=True)
 
-            elif time_frame == '1m':
-                df_mean = df.groupby(pd.Grouper(freq='D')).mean()
-                df_max = df.groupby(pd.Grouper(freq='D')).max()
-                df_min = df.groupby(pd.Grouper(freq='D')).min()
-                df_rolling = df.rolling(24*2, center=True).mean()
+                labels = list(concat.index)
+                values_avg = list(concat.avg_mean)
+                values_rolling = []
+                values_max = list(concat.value_max)
+                values_min = list(concat.value_min)
+                values = []
+
 
             else:
                 df_mean = df.groupby(pd.Grouper(freq='4h')).mean()
-                df_max = df.loc[df.groupby(pd.Grouper(freq='4h')).idxmax().iloc[:, 0]]
-                df_min = df.loc[df.groupby(pd.Grouper(freq='4h')).idxmin().iloc[:, 0]]
                 df_rolling = df.rolling(8, center=True).mean()
 
-            df_mean.columns = ['avg_mean']
-            df_rolling.columns = ['rolling_mean']
-            df_min.columns = ['value_min']
-            df_max.columns = ['value_max']
+                df_mean.columns = ['avg_mean']
+                df_rolling.columns = ['rolling_mean']
+                
+                concat = pd.concat([df, df_mean, df_rolling], axis=1).sort_index()
+                concat.fillna("null", inplace=True)
 
-            concat = pd.concat([df, df_max, df_min, df_mean, df_rolling], axis=1).sort_index()
-            concat.fillna("null", inplace=True)
-
-            labels = list(concat.index)
-            values_avg = list(concat.avg_mean)
-            values_rolling = list(concat.rolling_mean)
-            values_max = list(concat.value_max)
-            values_min = list(concat.value_min)
-            values = list(concat.value)
-
-            # Filter values
-            #values = filter_values(values)
-            if time_frame == '1y' or time_frame == '1m':
-                values = []
-                values_rolling = []
-
-            else:
+                labels = list(concat.index)
+                values_avg = list(concat.avg_mean)
+                values_rolling = list(concat.rolling_mean)
+                values = list(concat.value)
                 values_avg = []
                 values_max = []
                 values_min = []
