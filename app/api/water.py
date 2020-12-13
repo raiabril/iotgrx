@@ -65,17 +65,19 @@ def water_all():
     devices = Device.query.filter_by(automatic_watering=1).all()
 
     for device in devices:
+        water = False
         for sensor in device.sensors:
             if sensor.watering_trigger:
                 last_event = Event.query.filter_by(sensor_code=sensor.code)\
                 .order_by(Event.date_created.desc()).first()
 
-                if sensor.watering_level < last_event.value:
+                if sensor.watering_level < last_event.value and water is False:
                     request = WaterRequest(duration=device.default_watering,
                                 device_code=device.code,
                                 pending=True,
                                 creator = 'Auto')
                     db.session.add(request)
                     db.session.commit()
+                    water = True
 
     return "OK",200
