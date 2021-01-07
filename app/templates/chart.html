@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
+
+<div class="container col-12">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-12">
       <div class="content-section text-center">
         <a href="{{url_for('main.sensor', sensor_id = sensor.id, time = '1d')}}">Day</a>
         <a href="{{url_for('main.sensor', sensor_id = sensor.id, time = '1w')}}">Week</a>
@@ -25,7 +26,6 @@
       </div>
     </div>
   </div>
-  
   <div class="row">
     <div class="col-md-4">
       <div class="content-section">
@@ -33,9 +33,9 @@
         <br>
         <form id="sensor_form" method="POST" action="">
           {{sensor_form.hidden_tag()}}
-
+  
           <fieldset class="form-group">
-
+  
             <div class="form-group">
               {{sensor_form.id.label(class="form-control-label")}}
               {%if sensor_form.id.errors%}
@@ -49,7 +49,7 @@
                     {{sensor_form.id(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
-
+  
             <div class="form-group">
               {{sensor_form.name.label(class="form-control-label")}}
               {%if sensor_form.name.errors%}
@@ -63,7 +63,7 @@
                     {{sensor_form.name(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
-
+  
             <div class="form-group">
               {{sensor_form.units.label(class="form-control-label")}}
               {%if sensor_form.units.errors%}
@@ -77,7 +77,7 @@
                     {{sensor_form.units(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
-
+  
             <div class="form-group">
               {{sensor_form.sensor_type.label(class="form-control-label")}}
               {%if sensor_form.sensor_type.errors%}
@@ -91,7 +91,7 @@
                     {{sensor_form.sensor_type(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
-
+  
             <div class="form-group">
               {{sensor_form.a0.label(class="form-control-label")}}
               {%if sensor_form.a0.errors%}
@@ -105,7 +105,7 @@
                     {{sensor_form.a0(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
-
+  
             <div class="form-group">
               {{sensor_form.a1.label(class="form-control-label")}}
               {%if sensor_form.a1.errors%}
@@ -119,7 +119,7 @@
                     {{sensor_form.a1(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
-
+  
             <div class="form-group">
               {{sensor_form.fit_type.label(class="form-control-label")}}
               {%if sensor_form.fit_type.errors%}
@@ -133,7 +133,7 @@
                     {{sensor_form.fit_type(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
-
+  
             <div class="form-group">
               {{sensor_form.level.label(class="form-control-label")}}
               {%if sensor_form.level.errors%}
@@ -147,16 +147,16 @@
                     {{sensor_form.level(class="form-control form-control-md")}}    
                 {%endif%}
             </div>
-
+  
             <div class="form-check">
               {{sensor_form.trigger(class="form-check-input")}}
               {{sensor_form.trigger.label(class="form-check-input-label")}}
             </div>
-
+  
             <div class="form-group">
               {{sensor_form.submit2(class="btn btn-outline-info")}}
             </div>
-
+  
           </fieldset>
         </form>
       </div>
@@ -194,7 +194,7 @@
                           {{form.id(class="form-control form-control-md")}}    
                       {%endif%}
                   </div>
-
+  
                   <div class="form-group">
                     {{form.value.label(class="form-control-label")}}
                     {%if form.value.errors%}

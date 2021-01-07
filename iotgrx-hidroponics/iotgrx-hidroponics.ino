@@ -11,14 +11,15 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
 
-#define SEALEVELPRESSURE_HPA (1013.25)
+// #define SEALEVELPRESSURE_HPA (1013.25)
+#define SEALEVELPRESSURE_HPA (942.19) // Madrid
 #define I2C_SDA 21
 #define I2C_SCL 22
 #define uS_TO_S_FACTOR 1000000  //Conversion factor for micro seconds to seconds
 #define TIME_TO_SLEEP 30*60    //Time ESP32 will go to sleep (in seconds)
-#define SENSOR_TEST 30 //Times the sensor will be read
+#define SENSOR_TEST 20 //Times the sensor will be read
 #define SENSOR_WITHRAW 5
-#define TEST_DELAY 300
+#define TEST_DELAY 200
 
 // To save registry for the first time
 uint64_t reg_a;
@@ -38,7 +39,7 @@ String Url = "https://iotgrx.pythonanywhere.com/api/v1";
 const char* ssid = "MIWIFI_5778";
 const char* password =  "6KDXENH8";
 
-String GPIO_names[11] = {
+String GPIO_names[12] = {
   "hTEMP",
   "hHUMI",
   "hPRES",
@@ -49,10 +50,12 @@ String GPIO_names[11] = {
   "hCURRENT",
   "hVOLT",
   "hPOWE",
-  "hBATT"
+  "hBATT",
+  "hBATT12V"
   };
 
-float GPIO_values[11] = {
+float GPIO_values[12] = {
+  0.0,
   0.0,
   0.0,
   0.0,
@@ -77,6 +80,7 @@ float current = 0.0;
 float voltage = 0.0;
 float power = 0.0;
 float battery = 0.0;
+float battery_12v = 0.0;
 
 float bmeTempAverage = 0.0;
 float bmeHumiAverage = 0.0;
@@ -89,6 +93,7 @@ float voltageAverage = 0.0;
 float lightAverage = 0.0;
 float powerAverage = 0.0;
 float batteryAverage = 0.0;
+float batteryAverage_12v = 0.0;
 
 int err;
 int sensorCount = 0;
@@ -105,9 +110,13 @@ int lightPin = 33;
 int currentPin = 27;
 int voltagePin = 32;
 int batteryPin = 35;
+int battery12Pin = 34;
 
 RTC_DATA_ATTR int bootCount = 0;
 unsigned long delayTime;
+RTC_DATA_ATTR bool protection5v = 0;
+RTC_DATA_ATTR bool protection12v = 0;
+int batteryMin = 540;
 
 // Create object BME280
 Adafruit_BME280 bme; // I2C
@@ -119,13 +128,34 @@ WiFiMulti wifiMulti;
 void setup() {
   delay(1000);
   Serial.begin(115200);
+
+  //Set timer to x seconds
+  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+  delay(1000);
+
+  battery_12v = analogRead(battery12Pin);
+  battery = analogRead(batteryPin);
+  
+  if (battery_12v < batteryMin){
+    protection12v = 1;
+  }
+  else {
+    protection12v = 0;
+  }
+
+  if (battery < batteryMin){
+    Serial.println("Protection mode active. Forced sleeping");
+    protection5v = 1;
+    esp_deep_sleep_start();
+  }
+  else {
+    protection5v = 0;
+  }
+  
   pinMode(relay5V, OUTPUT);
   pinMode(relay12V, OUTPUT);
   digitalWrite(relay5V, HIGH);
   digitalWrite(relay12V, HIGH);
-  //Set timer to x seconds
-  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-  delay(1000);
   
   Serial.println("");
   Serial.println("");
@@ -155,11 +185,98 @@ void setup() {
   //Increment boot number and print it every reboot
   ++bootCount;
 
+  Serial.println("");
+  Serial.println("### Read Analog sensors ###");
+
+  if (!protection12v) {
+    digitalWrite(relay5V, LOW);
+    delay(2000);
+  }
+  else {
+    Serial.println("Protecting power battery");
+  }
+  
+  sensorCount = 0;
+  for(int i=0; i< SENSOR_TEST; i++){
+    moisture1 = analogRead(moisture1Pin);
+    moisture2 = analogRead(moisture2Pin);
+    current = analogRead(currentPin);
+    voltage = analogRead(voltagePin);
+    light = analogRead(lightPin);
+    battery = analogRead(batteryPin);
+    battery_12v = analogRead(battery12Pin);
+    
+    Serial.print("Analog - OK -  " + String(i) + "  ");
+    Serial.print(String(moisture1) + " ()  ");
+    Serial.print(String(moisture2) + " ()  ");
+    Serial.print(String(current) + " ()  ");
+    Serial.print(String(voltage) + " ()  ");
+    Serial.print(String(light) + " ()  ");
+    Serial.print(String(battery) + "() ");
+    Serial.println(String(battery_12v) + "()");
+    
+    moisture1Average = moisture1Average + moisture1;
+    moisture2Average = moisture2Average + moisture2;
+    currentAverage = currentAverage + current;
+    voltageAverage = voltageAverage + voltage;
+    lightAverage = lightAverage + light;
+    batteryAverage = batteryAverage + battery;
+    batteryAverage_12v = batteryAverage_12v + battery_12v;
+
+    sensorCount++;
+    delay(TEST_DELAY);
+  }
+
+  // Stop power in sensors
+  digitalWrite(relay5V, HIGH);
+  delay(200);
+  
+  moisture1Average = moisture1Average/sensorCount;
+  moisture2Average = moisture2Average/sensorCount;
+  currentAverage = currentAverage/sensorCount;
+  voltageAverage = voltageAverage/sensorCount;
+  lightAverage = lightAverage/sensorCount;
+  batteryAverage = batteryAverage/sensorCount;
+  batteryAverage_12v = batteryAverage_12v/sensorCount;
+
+  Serial.print("Analog - FINAL  ");
+  Serial.print(String(moisture1Average) + " ()  ");
+  Serial.print(String(moisture2Average) + " ()  ");
+  Serial.print(String(currentAverage) + " ()  ");
+  Serial.print(String(voltageAverage) + " ()  ");
+  Serial.print(String(lightAverage) + " ()  ");
+  Serial.print(String(batteryAverage) + "() ");
+  Serial.println(String(batteryAverage_12v) + "()");
+
+  GPIO_values[4]= moisture1Average;
+  GPIO_values[5]= moisture2Average;
+  GPIO_values[6] = lightAverage;
+  GPIO_values[7]= currentAverage;
+  GPIO_values[8]= voltageAverage;
+  GPIO_values[9] = voltageAverage*currentAverage;
+  GPIO_values[10] = batteryAverage;
+  GPIO_values[11] = batteryAverage_12v;
+
+  if (batteryAverage_12v < batteryMin){
+    protection12v = 1;
+    Serial.println("Protection 12v enabled");
+    GPIO_values[4]= 0;
+    GPIO_values[5]= 0;
+    GPIO_values[6] = 0;
+    GPIO_values[7]= 0;
+    GPIO_values[8]= voltageAverage;
+    GPIO_values[9] = 0;
+    GPIO_values[10] = batteryAverage;
+    GPIO_values[11] = batteryAverage_12v;
+   }
+   else {
+    protection12v = 0;
+    Serial.println("Protection 12v disabled");
+   }
+
   // I2C for bme
   Serial.println("");
   Serial.println("### Testing BME ###");
-  digitalWrite(relay5V, LOW);
-  delay(2000);
   I2CBME.begin(I2C_SDA, I2C_SCL, 100000);
  
   bool status;
@@ -227,60 +344,6 @@ void setup() {
   GPIO_values[3]=bmeAlti;
  
   delay(1000);
-
-  Serial.println("");
-  Serial.println("### Read Analog sensors ###");
-  
-  sensorCount = 0;
-  for(int i=0; i< SENSOR_TEST; i++){
-    moisture1 = analogRead(moisture1Pin);
-    moisture2 = analogRead(moisture2Pin);
-    current = analogRead(currentPin);
-    voltage = analogRead(voltagePin);
-    light = analogRead(lightPin);
-    battery = analogRead(batteryPin);
-    
-    Serial.print("Analog - OK -  " + String(i) + "  ");
-    Serial.print(String(moisture1) + " ()  ");
-    Serial.print(String(moisture2) + " ()  ");
-    Serial.print(String(current) + " ()  ");
-    Serial.print(String(voltage) + " ()  ");
-    Serial.print(String(light) + " ()  ");
-    Serial.println(String(battery) + "()");
-    
-    moisture1Average = moisture1Average + moisture1;
-    moisture2Average = moisture2Average + moisture2;
-    currentAverage = currentAverage + current;
-    voltageAverage = voltageAverage + voltage;
-    lightAverage = lightAverage + light;
-    batteryAverage = batteryAverage + battery;
-
-    sensorCount++;
-    delay(TEST_DELAY);
-  }
-
-  moisture1Average = moisture1Average/sensorCount;
-  moisture2Average = moisture2Average/sensorCount;
-  currentAverage = currentAverage/sensorCount;
-  voltageAverage = voltageAverage/sensorCount;
-  lightAverage = lightAverage/sensorCount;
-  batteryAverage = batteryAverage/sensorCount;
-
-  Serial.print("Analog - FINAL  ");
-  Serial.print(String(moisture1Average) + " ()  ");
-  Serial.print(String(moisture2Average) + " ()  ");
-  Serial.print(String(currentAverage) + " ()  ");
-  Serial.print(String(voltageAverage) + " ()  ");
-  Serial.print(String(lightAverage) + " ()  ");
-  Serial.println(String(batteryAverage) + "()");
-
-  GPIO_values[4]= moisture1Average;
-  GPIO_values[5]= moisture2Average;
-  GPIO_values[6] = lightAverage;
-  GPIO_values[7]= currentAverage;
-  GPIO_values[8]= voltageAverage;
-  GPIO_values[9] = voltageAverage*currentAverage;
-  GPIO_values[10] = batteryAverage;
   
   StaticJsonDocument<1024> event;
   StaticJsonDocument<128> sensor;
@@ -290,7 +353,7 @@ void setup() {
 
   JsonArray datos = event.createNestedArray("data");
  
-  for(int i=0; i< 11; i++){
+  for(int i=0; i< 12; i++){
     sensor["id"] = GPIO_names[i];
     sensor["value"] = GPIO_values[i];
     datos.add(sensor);
@@ -342,43 +405,67 @@ void setup() {
    http.end();  //Free resources
    
   }
+  else{
+    Serial.println("Not possible to send results, no wifi");
+    }
 
-  // Require watering
-  if(WiFi.status()== WL_CONNECTED){
-    HTTPClient httpWater;
-    httpWater.addHeader("Content-Type", "application/json");             //Specify content-type header
-    httpWater.addHeader("Authorization", token);
-    httpWater.begin(Url + "/water/" + device_name);  //Specify destination for HTTP request
-    Serial.println("Launching GET to water ...");
-    int httpResponseCode = httpWater.GET();   //Send the actual GET request
-    
-    if(httpResponseCode==200){
+  if (!protection12v) {
+    // Require watering
+    if(WiFi.status()== WL_CONNECTED){
+      HTTPClient httpWater;
+      httpWater.addHeader("Content-Type", "application/json");             //Specify content-type header
+      httpWater.addHeader("Authorization", token);
+      httpWater.begin(Url + "/water/" + device_name);  //Specify destination for HTTP request
+      Serial.println("Launching GET to water ...");
+      int httpResponseCode = httpWater.GET();   //Send the actual GET request
       
-      String response = httpWater.getString();                       //Get the response to the request
-      Serial.println("200 OK");
-      Serial.println(response);
-      duration = response.toInt();
-      Serial.println("Watering for: " + String(duration) + " ms");
-      digitalWrite(relay12V, LOW);
-      delay(duration);
-      digitalWrite(relay12V, HIGH);
-
+      if(httpResponseCode==200){
+        
+        String response = httpWater.getString();                       //Get the response to the request
+        Serial.println("200 OK");
+        Serial.println(response);
+        duration = response.toInt();
+      }
+     
+      else{
+        Serial.print("Error on sending watering GET: ");
+        String response = httpWater.getString();
+        Serial.println(httpResponseCode);
+        if(httpResponseCode==404){
+          duration=0;
+          }
+        //Serial.println(response);
+      }
+  
+      httpWater.end();  //Free resources for water
+    }
+    else{
+      Serial.println("Using standard watering, no wifi");
+      duration = 9000;
+    }
+    
+    Serial.println("Watering for: " + String(duration) + " ms");
+    digitalWrite(relay12V, LOW);
+    delay(duration);
+    digitalWrite(relay12V, HIGH);
+  
+    if(WiFi.status()== WL_CONNECTED && duration > 0){
       HTTPClient httpLog;
       httpLog.addHeader("Content-Type", "application/json");             //Specify content-type header
       httpLog.addHeader("Authorization", token);
       httpLog.begin(Url + "/water/log");  //Specify destination for HTTP request
-      
+        
       StaticJsonDocument<128> logEvent;
       logEvent["device_code"] = device_name;
       logEvent["duration"] = duration;
       serializeJson(logEvent, buffer);
       Serial.println("Sending log");
       Serial.println(buffer);
-      
+        
       Serial.println("");
       Serial.println("Launching POST to log watering event ...");
       int httpResponseCode = httpLog.POST(buffer);   //Send the actual POST request
-      
+        
       if(httpResponseCode==201){
         String response = httpLog.getString();                       //Get the response to the request
         Serial.println("201 Created");
@@ -390,21 +477,14 @@ void setup() {
         Serial.println(httpResponseCode);
         //Serial.println(response);
       }
-   
-      httpLog.end();  //Free resources
-   
+     
+      httpLog.end();  //Free resources for log
+     
     }
-   
     else{
-      Serial.print("Error on sending watering GET: ");
-      String response = httpWater.getString();
-      Serial.println(httpResponseCode);
-      //Serial.println(response);
+      Serial.println("Water log not sent");
     }
-   
-    httpWater.end();  //Free resources
-   
-  }
+    }
   
   Serial.println("");
   Serial.println("### Sleeping for " + String(TIME_TO_SLEEP) + " secs ###");
