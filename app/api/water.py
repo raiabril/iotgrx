@@ -71,7 +71,7 @@ def water_all():
                 last_event = Event.query.filter_by(sensor_code=sensor.code)\
                 .order_by(Event.date_created.desc()).first()
 
-                if sensor.watering_level < last_event.value and water is False:
+                if sensor.watering_level > last_event.value and water is False:
                     request = WaterRequest(duration=device.default_watering,
                                 device_code=device.code,
                                 pending=True,
