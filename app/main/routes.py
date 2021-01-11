@@ -180,7 +180,7 @@ def sensor(sensor_id):
                 df_mean = df.groupby(pd.Grouper(freq=freq)).mean()
                 df_max = df.groupby(pd.Grouper(freq=freq)).max()
                 df_min = df.groupby(pd.Grouper(freq=freq)).min()
-                df_rolling = df.rolling(24*2*4, center=True).mean()
+                df_rolling = df.rolling(24, center=True).mean()
                 df_min.columns = ['value_min']
                 df_max.columns = ['value_max']
                 df_mean.columns = ['avg_mean']
