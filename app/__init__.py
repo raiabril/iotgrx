@@ -8,6 +8,7 @@ from flask_migrate import Migrate
 from app.config import Config
 from flask_moment import Moment
 import logging
+from flask_restful import Api, Resource
 
 db = SQLAlchemy()
 migrate = Migrate()

@@ -15,3 +15,4 @@ numpy
 email_validator
 pandas
 flask_migrate
+flask_restful

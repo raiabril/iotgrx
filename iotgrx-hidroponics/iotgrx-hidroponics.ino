@@ -152,6 +152,7 @@ void setup() {
     protection5v = 0;
   }
   
+  
   pinMode(relay5V, OUTPUT);
   pinMode(relay12V, OUTPUT);
   digitalWrite(relay5V, HIGH);
