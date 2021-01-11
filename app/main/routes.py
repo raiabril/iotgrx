@@ -198,7 +198,7 @@ def sensor(sensor_id):
 
             else:
                 df_mean = df.groupby(pd.Grouper(freq='4h')).mean()
-                df_rolling = df.rolling(4, center=True).mean()
+                df_rolling = df.rolling(6, center=True).mean()
 
                 df_mean.columns = ['avg_mean']
                 df_rolling.columns = ['rolling_mean']
