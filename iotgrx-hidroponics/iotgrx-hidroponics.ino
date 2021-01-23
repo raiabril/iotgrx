@@ -486,6 +486,25 @@ void setup() {
       Serial.println("Water log not sent");
     }
     }
+    
+  if(WiFi.status()== WL_CONNECTED){
+      HTTPClient httpSleep;
+      httpSleep.begin(Url + "/sleep/" + device_name);  //Specify destination for HTTP request
+      Serial.println("Launching GET to water ...");
+      int httpResponseCode = httpSleep.GET();   //Send the actual GET request
+      
+      if(httpResponseCode==200){
+        
+        String response = httpSleep.getString();                       //Get the response to the request
+        Serial.println("200 OK");
+        Serial.println(response);
+        TIME_TO_SLEEP = response.toInt();
+        esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+        
+      }
+  
+      httpWater.end();  //Free resources for water
+  }
   
   Serial.println("");
   Serial.println("### Sleeping for " + String(TIME_TO_SLEEP) + " secs ###");

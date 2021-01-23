@@ -35,13 +35,15 @@ class DeviceResource(Resource):
 
         if 'default_watering' in request.json:
             device.default_watering = request.json['default_watering']
+        if 'default_sleep' in request.json:
+            device.default_watering = request.json['default_sleep']
 
         db.session.commit()
         return device_schema.dump(device)
 
     def delete(self, device_id):
         device = Device.query.get_or_404(device_id)
-        db.session.delete(post)
+        db.session.delete(device)
         db.session.commit()
         return '', 204
 

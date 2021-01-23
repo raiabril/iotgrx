@@ -96,6 +96,7 @@ class Device(db.Model):
     watering = db.Column(db.Boolean, nullable=False, default=False)
     automatic_watering = db.Column(db.Boolean, nullable=False, default=False)
     default_watering = db.Column(db.Integer, default=2000)
+    default_sleep = db.Column(db.Integer, default=2000)
     sensors = db.relationship('Sensor', lazy=True)
 
     def __repr__(self):
