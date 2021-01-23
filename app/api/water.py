@@ -9,13 +9,9 @@ import json
 @bp.route('/water/<string:device_code>', methods=['GET'])
 #@token_auth.login_required
 def get_water_request(device_code):
-    request = WaterRequest.query.filter_by(device_code=device_code, pending=1).first_or_404()
+    duration = Device.query.filter_by(code=device_code).first_or_404().default_watering
 
-    if request:
-        request.pending = False
-        db.session.commit()
-
-    return jsonify(request.duration),200
+    return jsonify(duration),200
 
 
 @bp.route('/water/log/<string:device_code>', methods=['GET'])

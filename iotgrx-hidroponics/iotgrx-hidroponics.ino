@@ -98,6 +98,7 @@ float batteryAverage_12v = 0.0;
 int err;
 int sensorCount = 0;
 int duration;
+int sleep_time;
 
 // Relay
 int relay12V = 15;
@@ -129,10 +130,6 @@ void setup() {
   delay(1000);
   Serial.begin(115200);
 
-  //Set timer to x seconds
-  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-  delay(1000);
-
   battery_12v = analogRead(battery12Pin);
   battery = analogRead(batteryPin);
   
@@ -146,6 +143,9 @@ void setup() {
   if (battery < batteryMin){
     Serial.println("Protection mode active. Forced sleeping");
     protection5v = 1;
+    //Set timer to x seconds
+    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+    delay(1000);
     esp_deep_sleep_start();
   }
   else {
@@ -442,7 +442,7 @@ void setup() {
     }
     else{
       Serial.println("Using standard watering, no wifi");
-      duration = 9000;
+      duration = 15000;
     }
     
     Serial.println("Watering for: " + String(duration) + " ms");
@@ -498,16 +498,21 @@ void setup() {
         String response = httpSleep.getString();                       //Get the response to the request
         Serial.println("200 OK");
         Serial.println(response);
-        TIME_TO_SLEEP = response.toInt();
-        esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+        sleep_time = response.toInt();
+        esp_sleep_enable_timer_wakeup(sleep_time * uS_TO_S_FACTOR);
+        Serial.println("### Sleeping for " + String(sleep_time) + " secs ###");
         
       }
   
-      httpWater.end();  //Free resources for water
+      httpSleep.end();  //Free resources for sleep
   }
+  else {
+    //Set timer to x seconds
+    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+    delay(1000);
+    Serial.println("### Sleeping for " + String(TIME_TO_SLEEP) + " secs ###");
+    }
   
-  Serial.println("");
-  Serial.println("### Sleeping for " + String(TIME_TO_SLEEP) + " secs ###");
 
   //Go to sleep now
   esp_deep_sleep_start();
