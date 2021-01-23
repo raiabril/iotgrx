@@ -36,7 +36,7 @@ class DeviceResource(Resource):
         if 'default_watering' in request.json:
             device.default_watering = request.json['default_watering']
         if 'default_sleep' in request.json:
-            device.default_watering = request.json['default_sleep']
+            device.default_sleep = request.json['default_sleep']
 
         db.session.commit()
         return device_schema.dump(device)
