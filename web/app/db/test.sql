@@ -1,11 +1,9 @@
 INSERT INTO "user" (id, date_created, username, email, image_file, password, token, token_expiration, admin, active) VALUES(1, '2020-03-08 18:49:58.639010', 'raiabril', 'rai@ingmechs.com', 'default.jpg', '$2b$12$4rr0Y1.mYveGJuAtBgLTFOB.nRzrZcpYALYB4dBLwASW.l2Woi4L2', 'RQmTD0lAZp9pebRWJlNGxVkedlOXcB5S', '2020-03-29 08:30:46.479430', 0, 0);
 
-
 INSERT INTO device (id, date_created, name, code, user_id, active, watering, automatic_watering, default_watering) VALUES(1, '2020-03-08 00:00:00', 'Macetas', 'ESP-32', 1, 0, 0, 0, NULL);
 INSERT INTO device (id, date_created, name, code, user_id, active, watering, automatic_watering, default_watering) VALUES(2, '2020-03-10 00:00:00', 'Weather Station', 'weatherStation', 1, 0, 0, 0, NULL);
 INSERT INTO device (id, date_created, name, code, user_id, active, watering, automatic_watering, default_watering) VALUES(3, '2020-03-22 19:20:00', 'Fucar18', 'fucar18', 1, 1, 1, 1, 2000);
 INSERT INTO device (id, date_created, name, code, user_id, active, watering, automatic_watering, default_watering) VALUES(4, '2020-03-25 00:00:00', 'Test', 'test', 1, 1, 1, 1, 2000);
-
 
 INSERT INTO sensor (id, date_created, name, code, a0, a1, units, sensor_type, watering_trigger, watering_level, device_id, fit_type) VALUES(1, '2020-03-08 00:00:00', 'R - Moisture 1 ( )', 'MOIS_1', 0, 1, NULL, 'Analog', 0, NULL, 1, 'linear');
 INSERT INTO sensor (id, date_created, name, code, a0, a1, units, sensor_type, watering_trigger, watering_level, device_id, fit_type) VALUES(2, '2020-03-08 00:00:00', 'R - Moisture 2 ( )', 'MOIS_2', 0, 1, NULL, 'Analog', 0, NULL, 1, 'linear');

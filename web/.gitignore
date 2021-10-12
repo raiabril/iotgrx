@@ -2,8 +2,10 @@
 *.pyc
 __pycache__/*
 
+
 # Visual Code
 .vscode/*
+
 
 # Mac .DS_Stores
 .DS_Store
