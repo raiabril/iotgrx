@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^533b73^u(!ioy2%vgaoe^mc6z#7%u_3#sl54s@&b=%+99dfe('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', False)
 
-ALLOWED_HOSTS = ['iotgrx.pythonanywhere.com']
+ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS", 'iotgrx.pythonanywhere.com')]
 
 
 # Application definition
