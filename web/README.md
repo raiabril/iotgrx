@@ -6,7 +6,7 @@ This is the server for the application.
 
 To manage the docker containers the commands are the following:
 
-    docker-compose -f docker-compose.yml --env-file .\.Docker\.test.env up -d --build
+    docker-compose -f docker-compose.yml --env-file ./.Docker/.test.env up -d --build
 
 django-admin startapp movies
 

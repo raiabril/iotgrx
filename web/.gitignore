@@ -136,3 +136,9 @@ uploads/
 
 # Visual code
 .vscode/
+
+# Docker
+.Docker/
+
+# PostgreSQL
+pgdata/

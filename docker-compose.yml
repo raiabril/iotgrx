@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres
+    hostname: db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+      
+  web:
+    build: ./web
+    command: >
+      bash -c "
+      python manage.py makemigrations
+      && python manage.py migrate 
+      && python manage.py runserver --insecure 0.0.0.0:8000
+      "
+    image: server
+    volumes:
+      - .:/server
+    ports:
+      - 8001:8000
+    environment: 
+      - SQL_ENGINE=${SQL_ENGINE}
+      - SQL_DATABASE=${POSTGRES_DB}
+      - SQL_USER=${POSTGRES_USER}
+      - SQL_PASSWORD=${POSTGRES_PASSWORD}
+      - SQL_HOST=${SQL_HOST}
+      - SQL_PORT=${SQL_PORT}
+      - DEBUG=${DEBUG}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
