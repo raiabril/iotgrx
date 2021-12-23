@@ -1,6 +1,6 @@
 # The first instruction is what image we want to base our container on
 # We Use an official Python runtime as a parent image
-FROM python:3.7.9 as production
+FROM python:3.7.9 as integration
 
 # The environment variable ensures that the python output is set straight
 # to the terminal without buffering it first
