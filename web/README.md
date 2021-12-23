@@ -1,22 +1,61 @@
-# iotGRX
-iotGRX is an application to monitor and water my plants at home.
-It is composed of an ESP-32 based station and a web application deployed in [pythonanywhere.com](https://www.pythonanywhere.com).
-The ESP32 is programmed based in Arduino (kind C++).
-The web application is Flask with python3.
+# iotGRX web application
 
-Basically, the setup is the following:
-1. Assemble the ESP32 station, include the necessary hardware: sensors, water pump.
-2. Start the web application that will expose the necessary APIs.
-3. Configure in the web application the device and the sensors.
-4. Configure the code with your credentials, upload the code to the device and start it.
+This is the server for the application.
 
-The device will start with the following flow:
-1. Measure the value of the list of sensors. (Will compute averages for some defined time).
-2. POST the value of the sensors.
-3. GET watering configuration for the device.
-4. Will water if it's required.
-5. POST a water log.
-6. If active it will continue to water in full auto mode.
-7. If not full auto, it will sleep for the time configured in the application.
+## Docker
 
-If you need more details, do not hesitate to contact. Works like a charm!
+To manage the docker containers the commands are the following:
+
+    docker-compose -f docker-compose.yml --env-file ./.Docker/.test.env up -d --build
+
+django-admin startapp movies
+
+## Django
+
+### Create migrations
+
+Update the changes in the DB to make the migrations
+
+    python3 manage.py makemigrations
+
+### Migrations
+
+Apply the current migrations to the current project.
+
+    python3 manage.py migrate
+
+### To apply changes in the DB
+
+We have to do again
+
+    python3 manage.py migrate
+
+### Create superuser
+
+Create a superuser to access the Django administration to administer the page.
+
+    python3 manage.py createsuperuser
+
+### Fields
+
+- null = False -> Puede ser falso.
+- blank = True -> Puede ser vacío.
+- unique = True -> Tiene que ser único.
+- default = "Ejemplo" -> Es un valor por defecto si no se provee.
+- choices = [] -> Set of values that will be accepted.
+
+### Field types
+
+- CharField -> Chars
+- TextField -> More chars
+- BigIntegerField -> If it's big.
+- DecimalField -> Has decimals. (decimal_places=2, max_digits=10)
+- IntegerField -> Normal integer.
+- FloatField -> The difference is in Python
+- DateField -> To store dates in the Database. (auto_now = True or only when add auto_now_add = True)
+- TimeField -> To store time in our DB.
+- DateTimeField -> Date and time in one field.
+- FileField(upload_to='covers/') -> Save the file
+- ImageField -> It is the same but only images.
+- EmailField -> Store emails.
+- BooleanField -> To store if it's True / False.
