@@ -19,7 +19,7 @@ class Sensor(Base):
     external_id = models.CharField(max_length=50, blank=False, primary_key=True)
 
     def __str__(self):
-        return self.title
+        return self.external_id
 
 
 class Event(Base):
@@ -29,4 +29,4 @@ class Event(Base):
     sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f' {self.value} {self.unit}'
+        return f'{self.sensor.external_id} - {self.value} {self.unit}'

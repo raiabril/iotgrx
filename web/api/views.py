@@ -20,8 +20,11 @@ class EventViewSet(viewsets.ModelViewSet):
           """ Filter by some fields. """
           queryset = Event.objects.all()
           sensor_id = self.request.query_params.get('sensor_id')
+          key = self.request.query_params.get('key')
           if sensor_id:
               queryset = queryset.filter(sensor_id=sensor_id)
+          if key:
+              queryset = queryset.filter(key=key)
           return queryset        
 
 
