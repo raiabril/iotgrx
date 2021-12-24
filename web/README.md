@@ -1,6 +1,6 @@
 # iotGRX web application
 
-This is the server for the application.
+This is the server for the application, it is developed using Django and REST FRAMEWORK.
 
 ## Docker
 

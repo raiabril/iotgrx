@@ -1,0 +1,10 @@
+# Virtual envs
+venv/
+
+# Configuration environment variables
+.env
+
+# vscode
+.vscode/
+
+*.db
