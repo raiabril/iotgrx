@@ -59,3 +59,14 @@ Create a superuser to access the Django administration to administer the page.
 - ImageField -> It is the same but only images.
 - EmailField -> Store emails.
 - BooleanField -> To store if it's True / False.
+
+## Testing
+
+To use the Django testing.
+
+    python3 manage.py test
+
+To use coverage
+
+    coverage run --source='.' manage.py test myapp
+    coverage report

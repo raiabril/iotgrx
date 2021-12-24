@@ -6,3 +6,4 @@ selenium
 django-cors-headers
 autopep8
 django-ninja
+coverage
