@@ -1,14 +1,27 @@
+"""
+API project Test cases
+
+In this code we have the unit test and also integration test cases.
+We are using the RequestsClient that uses python requests library.
+
+    python manage.py test
+
+""" 
 from django.contrib.auth.models import User
 from django.test import RequestFactory, TestCase
-from rest_framework.test import APIClient
+from rest_framework.test import RequestsClient
 
 from .models import Event, Sensor
 from .views import SensorViewSet
 
-# Create your tests here.
+AUTH_URL = 'http://testserver/auth/'
+API_URL = 'http://testserver/api'
 
 
 class SensorTestCase(TestCase):
+
+    token = ''
+
     def setUp(self):
         Sensor.objects.create(name='', description='', external_id="test")
         Sensor.objects.create(name='Name', description='', external_id="test2")
@@ -39,15 +52,44 @@ class SensorTestCase(TestCase):
         self.assertTrue(sensor_3.description == 'Description')
 
 
-class TestSensor(TestCase):
+class TestAPI(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username='jacob', email='jacob@hello.com', password='top_secret')
-        client = APIClient()
-        response = client.post('/auth/', {'username': 'jacob', 'password': 'top_secret'}, format='json')
-        self.token = response.json()['token']
-        Sensor.objects.create(name='', description='', external_id="test")
+        self.client = RequestsClient()
 
-    def test_get_sensors(self):
-        response = self.client.get('/api/sensors/', headers={'Authorization': f'Token {self.token}'})
-        self.assertEqual(response.status_code, 401) # TODO it should be a 200OK, not working Authorization
+    def test_auth(self):
+        response = self.client.post(
+            AUTH_URL, data={'username': 'jacob', 'password': 'top_secret'})
+        self.token = response.json()['token']
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_api_no_auth(self):
+        response = self.client.get(API_URL)
+        self.assertEqual(response.status_code, 401)
+
+    def test_api_auth(self):
+        response = self.client.post(
+            AUTH_URL, data={'username': 'jacob', 'password': 'top_secret'})
+        self.token = response.json()['token']
+        response = self.client.get(
+            API_URL, headers={"Authorization": f"Token {self.token}"})
+
+        self.assertEqual(response.status_code, 200)
+
+
+class TestApiSensor(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='jacob', email='jacob@hello.com', password='top_secret')
+        self.client = RequestsClient()
+        response = self.client.post(
+            AUTH_URL, data={'username': 'jacob', 'password': 'top_secret'})
+        self.token = response.json()['token']
+        self.headers = {'Authorization': f"Token {self.token}"}
+
+    def test_api_sensor_get_all(self):
+        response = self.client.get(API_URL + '/sensors/', headers=self.headers)
+
+        self.assertEqual(response.status_code, 200)
