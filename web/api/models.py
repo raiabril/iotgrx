@@ -16,7 +16,8 @@ class Base(models.Model):
 class Sensor(Base):
     name = models.CharField(max_length=50, blank=True)
     description = models.TextField(max_length=255, blank=True)
-    external_id = models.CharField(max_length=50, blank=False, primary_key=True)
+    external_id = models.CharField(
+        max_length=50, blank=False, primary_key=True)
 
     def __str__(self):
         return self.external_id

@@ -30,7 +30,8 @@ ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS", 'iotgrx.pythonanywhere.com')]
 CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = [
-    os.environ.get("CORS_ORIGIN_WHITELIST", 'https://iotgrx.pythonanywhere.com')
+    os.environ.get("CORS_ORIGIN_WHITELIST",
+                   'https://iotgrx.pythonanywhere.com')
 ]
 
 
@@ -146,3 +147,29 @@ MEDIA_ROOT = '/home/iotgrx/mysite/web/media'
 MEDIA_URL = '/media/'
 STATIC_ROOT = '/home/iotgrx/mysite/web/static'
 STATIC_URL = '/static/'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'debug.log',
+            'maxBytes': 1024*1024*5, # 5MB
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s.%(funcName)s:%(lineno)s- %(message)s'
+        },
+    },
+}

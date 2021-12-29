@@ -19,7 +19,8 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('name', models.CharField(blank=True, max_length=50)),
                 ('description', models.TextField(blank=True, max_length=255)),
-                ('external_id', models.CharField(max_length=50, primary_key=True, serialize=False)),
+                ('external_id', models.CharField(
+                    max_length=50, primary_key=True, serialize=False)),
             ],
             options={
                 'abstract': False,
@@ -28,13 +29,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Event',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('key', models.CharField(max_length=50)),
                 ('value', models.FloatField()),
                 ('unit', models.CharField(max_length=50)),
-                ('sensor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.sensor')),
+                ('sensor', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    to='api.sensor')),
             ],
             options={
                 'abstract': False,

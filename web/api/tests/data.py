@@ -1,7 +1,9 @@
 """
 Data class to represent the request body for the API.
 
-""" 
+"""
+
+
 class Data():
 
     # Sensor data

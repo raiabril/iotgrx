@@ -6,7 +6,7 @@ Model test cases
 """
 from django.test import TestCase
 
-from ..models import Event, Sensor
+from ..models import Sensor
 
 
 class SensorTestCase(TestCase):

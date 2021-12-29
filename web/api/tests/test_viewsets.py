@@ -15,7 +15,7 @@ from rest_framework.test import RequestsClient
 
 from .config import Config
 from .data import Data
-from ..models import Sensor, Event
+from ..models import Sensor
 
 
 class TestAPI(TestCase):

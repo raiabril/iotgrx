@@ -1,11 +1,13 @@
-from django.db.models import query
-from django.shortcuts import render
-from rest_framework import filters, permissions, viewsets, status
+import logging
+
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from api.models import Event, Sensor
 from api.serializers import EventSerializer, SensorSerializer
+
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 
@@ -17,16 +19,16 @@ class EventViewSet(viewsets.ModelViewSet):
     ordering_fields = ['created_at', 'updated_at']
 
     def get_queryset(self):
-          """ Filter by some fields. """
-          queryset = Event.objects.all()
-          sensor_id = self.request.query_params.get('sensor_id')
-          key = self.request.query_params.get('key')
-          if sensor_id:
-              queryset = queryset.filter(sensor_id=sensor_id)
-          if key:
-              queryset = queryset.filter(key=key)
-          return queryset        
-
+        """ Filter by some fields. """
+        queryset = Event.objects.all()
+        sensor_id = self.request.query_params.get('sensor_id')
+        key = self.request.query_params.get('key')
+        if sensor_id:
+            logger.warn('Received sensor_id')
+            queryset = queryset.filter(sensor_id=sensor_id)
+        if key:
+            queryset = queryset.filter(key=key)
+        return queryset
 
 
 class SensorViewSet(viewsets.ModelViewSet):
@@ -41,13 +43,16 @@ class SensorViewSet(viewsets.ModelViewSet):
             return Response(response, status.HTTP_400_BAD_REQUEST)
         else:
             try:
-                 # Let's retrive the sensor.
+                # Let's retrive the sensor.
                 sensor = Sensor.objects.get(external_id=pk)
-            except:
+            except Exception as e:
+                logger.info(
+                    f"{e} - Error getting Sensor, we will create sensor. ")
                 # If we don't have a sensor, we create
-                sensor = Sensor.objects.create(
-                    external_id=pk
-                )
+                sensor = Sensor.objects\
+                    .create(
+                        external_id=pk
+                    )
 
             if 'key' in request.data and 'value' in request.data and 'unit' in request.data:
                 event = Event.objects.create(

@@ -8,3 +8,4 @@ autopep8
 django-ninja
 coverage
 requests
+flake8
