@@ -36,23 +36,25 @@ class SensorViewSet(viewsets.ModelViewSet):
     serializer_class = SensorSerializer
 
     @action(detail=True, methods=['post'], url_path='')
-    def event(self, request, pk=None):
+    def event(self, request, pk):
+        """ Function to create the sensor if not existing and save the event in the database. """
         response = {}
-        if pk is None:
-            response["message"] = "Required pk."
-            return Response(response, status.HTTP_400_BAD_REQUEST)
-        else:
-            try:
-                # Let's retrive the sensor.
-                sensor = Sensor.objects.get(external_id=pk)
-            except Exception as e:
-                logger.info(
-                    f"{e} - Error getting Sensor, we will create sensor. ")
-                # If we don't have a sensor, we create
-                sensor = Sensor.objects\
-                    .create(
-                        external_id=pk
-                    )
+
+        # Let's try to retrive the sensor or create.
+        try:
+            sensor = Sensor.objects.get(external_id=pk)
+        
+        except Sensor.DoesNotExist as e:
+            logger.info(
+                f"{e} - Error getting Sensor, we will create sensor. ")
+
+            # If we don't have a sensor, we create
+            sensor = Sensor.objects\
+                .create(
+                    external_id=pk
+                )
+
+            # Now create the event
 
             if 'key' in request.data and 'value' in request.data and 'unit' in request.data:
                 event = Event.objects.create(

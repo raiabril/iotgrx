@@ -10,8 +10,8 @@ from .views import EventViewSet, SensorViewSet
 
 # Create the router
 router = routers.DefaultRouter()
-router.register('events', EventViewSet)
-router.register('sensors', SensorViewSet)
+router.register(r'events', EventViewSet)
+router.register(r'sensors', SensorViewSet)
 
 # ADD the routes to the viewsets.
 
