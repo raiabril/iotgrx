@@ -15,9 +15,9 @@ class TestNavigateLanding(unittest.TestCase):
             executable_path=self.config.WEBDRIVER_PATH,
             firefox_profile=firefox_profile)
 
-    def testLoadPage(self):
-        self.driver.get(self.config.FRONTEND_URL)
-        self.assertTrue(self.driver.find_element_by_tag_name('title'))
+    # def testLoadPage(self):
+    #     self.driver.get(self.config.FRONTEND_URL)
+    #     self.assertTrue(self.driver.find_element_by_tag_name('title'))
 
-    def tearDown(self):
-        self.driver.quit()
+    # def tearDown(self):
+    #     self.driver.quit()
