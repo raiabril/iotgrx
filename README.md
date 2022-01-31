@@ -1,3 +1,5 @@
+![example workflow](https://github.com/raiabril/iotgrx/actions/workflows/django.yml/badge.svg)
+
 # iotGRX
 
 Home assistant to manage several sensors and actions like room temperature or plants watering and humidity.
