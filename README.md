@@ -1,4 +1,5 @@
-![example workflow](https://github.com/raiabril/iotgrx/actions/workflows/django.yml/badge.svg)
+![Django](https://github.com/raiabril/iotgrx/actions/workflows/django.yml/badge.svg)
+![CodeQL](https://github.com/raiabril/iotgrx/actions/workflows/codeql-analysis.yml/badge.svg)
 
 # iotGRX
 
