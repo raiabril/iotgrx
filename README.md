@@ -1,3 +1,6 @@
+![Django](https://github.com/raiabril/iotgrx/actions/workflows/django.yml/badge.svg)
+![CodeQL](https://github.com/raiabril/iotgrx/actions/workflows/codeql-analysis.yml/badge.svg)
+
 # iotGRX
 
 Home assistant to manage several sensors and actions like room temperature or plants watering and humidity.
