@@ -7,8 +7,10 @@ This script use the Lywsd03mmcClient to connect to the sensor at home and retrie
 The values are sent to the server API.
 
 Requires:
-    TOKEN - Auth token for the server.
-    URL - The URL of the server in pythonanywhere or heroku.
+    :env TOKEN - Auth token for the server.
+    :env URL - The URL of the server in pythonanywhere or heroku.
+    :param MAC address of the sensor.
+    :sensor_name for the server
 
 Example usage:
 
@@ -22,8 +24,8 @@ from datetime import datetime
 
 import requests
 from bluepy.btle import BTLEDisconnectError
-from daemon.daemon import URL
 from lywsd03mmc import Lywsd03mmcClient
+from dotenv import load_dotenv
 
 
 # Try to connect to create client from args.
