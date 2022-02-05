@@ -6,7 +6,7 @@ iotGRX bot
 This is the bot to retrive the chat id of the users we want to notify.
 
 Requires:
-    TOKEN - Telegram Token to be passed as env variable.
+    :env TOKEN - Telegram Token to be passed as env variable.
 
 
 """
@@ -15,18 +15,25 @@ import logging
 import os
 import sqlite3
 from datetime import datetime
+from dotenv import load_dotenv
 
 from telegram import Update
 from telegram.ext import (CallbackContext,
                           CommandHandler, Filters, MessageHandler, Updater)
 
+# Enable the logger
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+# Load the environment variables
+load_dotenv()
+
+
 def insert_message(created_at, update_id, chat_id, username, text, first_name, last_name, link):
     """" Function to insert the message into the database."""
+
     con = sqlite3.connect('example.db')
     cursor = con.cursor()
     sql = "INSERT INTO messages (created_at, update_id, chat_id, username, text, first_name, last_name, link) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
@@ -40,27 +47,28 @@ def insert_message(created_at, update_id, chat_id, username, text, first_name, l
 
 def start(update: Update, context: CallbackContext):
     """ Function to update the user when the /start command is received. """
+
     context.bot.send_message(
         chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
 
 
 def message_handler(bot, update):
     """ Function to handle all the messages from the user. """
-    update_id = bot.update_id
-    chat_id = bot.effective_user.id
-    text = bot.effective_message.text
-    created_at = datetime.now()
-    last_name = bot.effective_user.last_name
-    first_name = bot.effective_user.first_name
-    username = bot.effective_user.username
-    link = bot.effective_user.link
 
-    insert_message(update_id=update_id, created_at=created_at, chat_id=chat_id, username=username,
-                   text=text, first_name=first_name, last_name=last_name, link=link)
+    insert_message(
+        update_id=bot.update_id, 
+        created_at=datetime.now(), 
+        text=bot.effective_message.text,
+        chat_id=bot.effective_user.id, 
+        username=bot.effective_user.username,
+        first_name=bot.effective_user.first_name, 
+        last_name=bot.effective_user.last_name, 
+        link=bot.effective_user.link)
 
 
 def error(bot, update, error):
     """ Function to manage errors. """
+
     # Log Errors caused by Updates.
     logger.warning('Error: "%s" caused error "%s"', update, error)
     logger.setLevel(logging.DEBUG)
