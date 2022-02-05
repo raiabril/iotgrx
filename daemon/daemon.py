@@ -1,17 +1,17 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+
 """
 Daemon
 
 This script will fetch the latest values for the sensor data and launch a request to the user in Telegram if the value is less than the value provided.
 
 Requires:
-    SERVER_TOKEN - Token from server as env variable.
-    BOT_TOKEN - Telegram Token to be passed as env variable.
-    CHAT_ID - Your Telegram chat ID.
-    URL - The URL of the server in PythonAnywhere or Heroku.
-    :limit - Limit value for the reading.
-    :sensor - Name of the sensor.
+    :env SERVER_TOKEN - Token from server as env variable.
+    :env BOT_TOKEN - Telegram Token to be passed as env variable.
+    :env CHAT_ID - Your Telegram chat ID.
+    :env URL - The URL of the server in PythonAnywhere or Heroku.
+    :param limit - Limit value for the reading.
+    :param sensor - Name of the sensor.
 
 Example:
 
@@ -23,8 +23,13 @@ Example:
 import os
 import sys
 from datetime import datetime
+from dotenv import load_dotenv
 
 import requests
+
+# Load environment variables
+load_dotenv()
+
 
 # Obtain the values from command arguments
 try:
