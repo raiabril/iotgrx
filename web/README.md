@@ -6,7 +6,7 @@ This is the server for the application, it is developed using Django and REST FR
 
 To manage the docker containers the commands are the following:
 
-    docker-compose -f docker-compose.yml --env-file ./.Docker/.test.env up -d --build
+    docker-compose -f docker-compose.yml --env-file ./.Docker/.integration.env up -d --build
 
 django-admin startapp movies
 
@@ -68,5 +68,6 @@ To use the Django testing.
 
 To use coverage
 
-    coverage run --source='.' manage.py test myapp
+    coverage run --source='.' manage.py test api
     coverage report
+    coverage html
