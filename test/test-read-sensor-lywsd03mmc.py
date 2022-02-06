@@ -30,12 +30,16 @@ from dotenv import load_dotenv
 
 # Try to connect to create client from args.
 try:
-    client = Lywsd03mmcClient(sys.argv[1])
+    sensor_mac_address = sys.argv[1]
     sensor = sys.argv[2]
+    client = Lywsd03mmcClient(sensor_mac_address)
+
 except IndexError:
     exit('Please provide command line arguments.\nUsage ./test-read-sensor-lywsd03mmc.py <client> <sensor_name>')
 
 # Get variables from environment variables.
+load_dotenv()
+
 TOKEN = os.environ.get('TOKEN')
 URL = os.environ.get('URL')
 
@@ -62,3 +66,9 @@ headers = {
 
 # Launch the request to the server.
 response = requests.request("POST", url, headers=headers, data=payload)
+
+if response.status_code == 201:
+    print(f"{datetime.now().__str__()} Data sent to server")
+
+else:
+    print(f"{datetime.now().__str__()} Error sending data to server")
