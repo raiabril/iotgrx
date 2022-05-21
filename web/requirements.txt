@@ -1,7 +1,7 @@
 django
 djangorestframework
 pillow
-psycopg2
+#psycopg2
 selenium
 django-cors-headers
 autopep8
