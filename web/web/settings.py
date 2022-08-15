@@ -25,13 +25,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default="unsafe-secret-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
 
-ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS", 'iotgrx.pythonanywhere.com')]
+ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS", '127.0.0.1')]
 
 CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = [
     os.environ.get("CORS_ORIGIN_WHITELIST",
-                   'https://iotgrx.pythonanywhere.com')
+                   'http://127.0.0.1')
 ]
 
 
@@ -55,7 +55,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication'
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        # Remove this comment to force authentication
+        #'rest_framework.permissions.IsAuthenticated', 
     ]
 
 }

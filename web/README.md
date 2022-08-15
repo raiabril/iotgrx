@@ -6,9 +6,7 @@ This is the server for the application, it is developed using Django and REST FR
 
 To manage the docker containers the commands are the following:
 
-    docker-compose -f docker-compose.yml --env-file ./.Docker/.integration.env up -d --build
-
-django-admin startapp movies
+    docker-compose -f docker-compose.yml --env-file ./env/.integration.env up -d --build
 
 ## Django
 
