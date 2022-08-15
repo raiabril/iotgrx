@@ -9,3 +9,4 @@ django-ninja
 coverage
 requests
 flake8
+drf-spectacular
