@@ -34,30 +34,6 @@ Create a superuser to access the Django administration to administer the page.
 
     python3 manage.py createsuperuser
 
-### Fields
-
-- null = False -> Puede ser falso.
-- blank = True -> Puede ser vacío.
-- unique = True -> Tiene que ser único.
-- default = "Ejemplo" -> Es un valor por defecto si no se provee.
-- choices = [] -> Set of values that will be accepted.
-
-### Field types
-
-- CharField -> Chars
-- TextField -> More chars
-- BigIntegerField -> If it's big.
-- DecimalField -> Has decimals. (decimal_places=2, max_digits=10)
-- IntegerField -> Normal integer.
-- FloatField -> The difference is in Python
-- DateField -> To store dates in the Database. (auto_now = True or only when add auto_now_add = True)
-- TimeField -> To store time in our DB.
-- DateTimeField -> Date and time in one field.
-- FileField(upload_to='covers/') -> Save the file
-- ImageField -> It is the same but only images.
-- EmailField -> Store emails.
-- BooleanField -> To store if it's True / False.
-
 ## Testing
 
 To use the Django testing.
@@ -69,3 +45,18 @@ To use coverage
     coverage run --source='.' manage.py test api
     coverage report
     coverage html
+
+
+## Automatic client generation
+
+Install the `npm` tool, source [here](https://www.saaspegasus.com/guides/modern-javascript-for-django-developers/apis/#an-automatically-created-openapi3-schema)
+
+    npm install @openapitools/openapi-generator-cli -g
+
+Launch the tool
+
+    openapi-generator-cli generate -i schema.yml -g typescript-fetch -o ./my-api-client/
+
+Or from the server
+
+    openapi-generator-cli generate -i http://localhost:8000/api/schema/ -g typescript-fetch -o ./my-api-client/
