@@ -40,3 +40,5 @@ class TestEventSerializer(TestCase):
             raise_exception=True), msg='Event serializer is not valid')
         self.assertEqual(self.serializer.validated_data,
                          self.data.event_serializer_data, msg='Event serializer data not equal')
+
+        print("\n[+] test_event_serializer PASSED")

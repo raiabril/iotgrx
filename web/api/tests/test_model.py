@@ -64,3 +64,5 @@ class EventTestCase(TestCase):
         self.assertEqual(event.unit, 'test')
         self.assertEqual(
             event.__str__(), f'{self.sensor.external_id} - 1.0 test')
+
+        print("\n[+] test_get_event PASSED")

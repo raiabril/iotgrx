@@ -145,3 +145,5 @@ class SensorViewsetTestCase(APITestCase):
         response = self.client\
             .get(reverse('sensor-detail', kwargs={'pk': 'test'}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        print("\n[+] test_delete_by_random PASSED")

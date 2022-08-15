@@ -39,6 +39,8 @@ class TestAPI(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+        print("\n[+] test_auth PASSED")
+
     def test_no_auth(self):
         """ Test that we are not able to login with invalid password."""
 
@@ -47,6 +49,8 @@ class TestAPI(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertNotIn('token', response.json())
+
+        print("\n[+] test_no_auth PASSED")
 
     def test_no_pass(self):
         """ Test that we are not able to login without a password."""
@@ -57,6 +61,8 @@ class TestAPI(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertNotIn('token', response.json())
 
+        print("\n[+] test_no_pass PASSED")
+
     def test_no_credentials(self):
         """ Test that we are not able to login without a password."""
 
@@ -66,12 +72,16 @@ class TestAPI(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertNotIn('token', response.json())
 
+        print("\n[+] test_no_credentials PASSED")
+
     def test_api_no_auth(self):
         """ Test that we are not able to see API without credentials. """
 
         response = self.client.get(self.config.API_URL)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertNotIn('token', response.json())
+
+        print("\n[+] test_api_no_auth PASSED")
 
     def test_api_auth(self):
         """ Test that we are able to see API with credentials."""
@@ -86,6 +96,8 @@ class TestAPI(TestCase):
             self.config.API_URL, headers={"Authorization": f"Token {self.token}"})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        print("\n[+] test_api_auth PASSED")
 
 
 class TestApiSensor(TestCase):
@@ -120,6 +132,8 @@ class TestApiSensor(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+        print("\n[+] test_api_sensor_get_all PASSED")
+
     def test_api_sensor_get_id(self):
         """ Retrieve a single sensor that we initialized and test the data is correct. """
 
@@ -130,6 +144,8 @@ class TestApiSensor(TestCase):
         self.assertEqual(response.json()['name'], 'name')
         self.assertEqual(response.json()['description'], 'description')
         self.assertEqual(response.json()['external_id'], 'external_id')
+
+        print("\n[+] test_api_sensor_get_id PASSED")
 
     def test_api_sensor_create(self):
         """ Create a sensor and test the data is valid. """
@@ -143,3 +159,5 @@ class TestApiSensor(TestCase):
             response.json()['description'], self.data.sensor_request['description'])
         self.assertEqual(
             response.json()['external_id'], self.data.sensor_request['external_id'])
+        
+        print("\n[+] test_api_sensor_create PASSED")
